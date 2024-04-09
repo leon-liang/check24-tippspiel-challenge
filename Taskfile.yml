@@ -1,0 +1,32 @@
+version: '3'
+
+tasks:
+  build-containers:
+    desc: Build containers
+    aliases: [ build ]
+    cmds:
+      - docker compose build {{.CLI_ARGS}}
+
+  up:
+    desc: Start the containers
+    aliases: [ start ]
+    cmds:
+      - docker compose up -d {{.CLI_ARGS}}
+
+  down:
+    desc: Stop the containers
+    aliases: [ stop ]
+    cmds:
+      - docker compose down {{.CLI_ARGS}}
+
+  restart:
+    desc: Restart the containers
+    cmds:
+      - docker compose down {{.CLI_ARGS}}
+      - docker compose up -d {{.CLI_ARGS}}
+
+  down-volume:
+    desc: Stop the containers and remove all volumes
+    aliases: [ downv ]
+    cmds:
+      - docker compose down -v

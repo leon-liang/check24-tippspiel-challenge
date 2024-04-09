@@ -1,0 +1,42 @@
+name: check24-tippspiel-challenge
+version: "3.9"
+
+services:
+  client:
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: development
+    ports:
+    - "3000:3000"
+    volumes:
+      - ./client:/app
+      - node-modules-client:/app/node_modules/
+    healthcheck:
+      test: "curl -f http://localhost:3000 || exit 1"
+      interval: 5s
+    entrypoint: npm run dev
+    networks:
+      - client
+      - server
+
+  server:
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    entrypoint: CompileDaemon -build="go build -o /build/server" -command="/build/server"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server:/app
+    networks:
+      - server
+
+networks:
+  client:
+  server:
+
+volumes:
+  node-modules-client:
