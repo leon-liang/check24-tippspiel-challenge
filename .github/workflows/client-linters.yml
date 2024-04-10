@@ -28,7 +28,7 @@ jobs:
       - name: Run `npm run prettier --check .`
         run: |
           cd client
-          npm run prettier --check .
+          prettier --check .
 
       - name: Run `tsc build`
         run: |
