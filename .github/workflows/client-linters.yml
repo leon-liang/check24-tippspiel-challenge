@@ -23,7 +23,7 @@ jobs:
       - name: Run `npm run lint .`
         run: |
           cd client
-          npm lint .
+          npm run lint .
 
       - name: Run `npm run prettier --check .`
         run: |
