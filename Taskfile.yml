@@ -30,3 +30,19 @@ tasks:
     aliases: [ downv ]
     cmds:
       - docker compose down -v
+
+  format:
+    desc: Run formatter
+    aliases: [ fmt ]
+    cmds:
+      - docker compose run --rm --entrypoint="npm run fmt" client
+
+  lint:
+    desc: Run linter
+    cmds:
+      - docker compose run --rm --entrypoint="npm run lint ." client
+
+  logs:
+    desc: View logs
+    cmds:
+      - docker compose logs -f {{.CLI_ARGS}}
