@@ -3,7 +3,7 @@ name: Client Linters
 on: [pull_request, workflow_dispatch]
 jobs:
   lint:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -23,12 +23,12 @@ jobs:
       - name: Run `npm run lint .`
         run: |
           cd client
-          npm lint .
+          npm run lint .
 
-      - name: Run `npm run prettier --check .`
+      - name: Run `npx prettier --check .`
         run: |
           cd client
-          npm run prettier --check .
+          npx prettier --check .
 
       - name: Run `tsc build`
         run: |

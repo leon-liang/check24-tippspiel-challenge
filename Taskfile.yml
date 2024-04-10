@@ -31,6 +31,15 @@ tasks:
     cmds:
       - docker compose down -v
 
+  generate-api-client:
+    aliases: [ generate-client ]
+    desc: Run openapi generator
+    deps:
+      - task: up
+        vars: { CLI_ARGS: 'server' }
+    cmds:
+      - docker compose run --rm --entrypoint="npm run generate-api-client" client
+
   format:
     desc: Run formatter
     aliases: [ fmt ]
