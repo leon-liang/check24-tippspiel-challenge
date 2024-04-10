@@ -1,0 +1,22 @@
+definitions:
+  model.RootResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Check24 Tippspiel Challenge
+  version: "1.0"
+paths:
+  /:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.RootResponse'
+      summary: Get Root
+swagger: "2.0"

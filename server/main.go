@@ -1,19 +1,23 @@
 package main
 
 import (
-	"github.com/labstack/echo/v4"
-	"net/http"
+	_ "github.com/leon-liang/check24-tippspiel-challenge/server/docs"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/handler"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
+	"github.com/swaggo/echo-swagger"
 )
 
+// @title Check24 Tippspiel Challenge
+// @version 1.0
 func main() {
-	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		var response struct {
-			Message string `json:"message"`
-		}
-		response.Message = "Hello World!"
-		return c.JSON(http.StatusOK, &response)
-	})
+	r := router.New()
 
-	e.Logger.Fatal(e.Start(":8000"))
+	h := handler.NewHandler()
+
+	v1 := r.Group("/")
+	h.Register(v1)
+
+	r.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	r.Logger.Fatal(r.Start(":8000"))
 }
