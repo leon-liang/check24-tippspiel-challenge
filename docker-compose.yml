@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
       target: development
     ports:
-    - "3000:3000"
+      - "3000:3000"
     volumes:
       - ./client:/app
       - node-modules-client:/app/node_modules/
@@ -20,6 +20,25 @@ services:
     networks:
       - client
       - server
+
+  storyboook:
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "6006:6006"
+    volumes:
+      - ./client:/app
+      - node-modules-storybook:/app/node_modules/
+    healthcheck:
+      test: "curl -f http://localhost:6006 || exit 1"
+      interval: 5s
+    working_dir: /app
+    command: npm run storybook
+    networks:
+      - client
 
   server:
     restart: always
@@ -64,4 +83,5 @@ networks:
 
 volumes:
   node-modules-client:
+  node-modules-storybook:
   db-data:
