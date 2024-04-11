@@ -27,10 +27,34 @@ services:
       context: ./server
       dockerfile: Dockerfile
     entrypoint: CompileDaemon -build="go build -o /build/server" -command="/build/server"
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "8000:8000"
     volumes:
       - ./server:/app
+    networks:
+      - server
+
+  db:
+    restart: always
+    build:
+      context: ./docker/postgresql
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dev
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U root -d dev'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
     networks:
       - server
 
@@ -40,3 +64,4 @@ networks:
 
 volumes:
   node-modules-client:
+  db-data:
