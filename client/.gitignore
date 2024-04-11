@@ -38,3 +38,5 @@ next-env.d.ts
 # generated api-client
 src/api-client/generated
 
+
+*storybook.log
