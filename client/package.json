@@ -9,11 +9,13 @@
     "lint": "next lint",
     "fmt": "prettier --write .",
     "prepare": "cd .. && husky client/.husky",
-    "generate-api-client": "openapi-generator-cli generate -i http://server:8000/swagger/doc.yaml -g typescript-axios -o src/api-client/generated",
+    "generate-api-client": "openapi-generator-cli generate -i http://server:8000/swagger/doc.yaml -g typescript-axios -o src/lib/api-client",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.29.2",
+    "@tanstack/react-query-devtools": "^5.29.2",
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18"
@@ -29,6 +31,7 @@
     "@storybook/nextjs": "^8.0.7",
     "@storybook/react": "^8.0.7",
     "@storybook/test": "^8.0.7",
+    "@tanstack/eslint-plugin-query": "^5.28.11",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

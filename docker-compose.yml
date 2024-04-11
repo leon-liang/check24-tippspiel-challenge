@@ -21,7 +21,7 @@ services:
       - client
       - server
 
-  storyboook:
+  storybook:
     restart: always
     build:
       context: ./client
