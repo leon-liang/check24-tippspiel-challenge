@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useGetExample } from "@/api/example.api";
+import { useGetExample } from "@/hooks/example.api";
 
 export default function Home() {
   const { isLoading, error, data } = useGetExample();

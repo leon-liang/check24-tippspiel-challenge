@@ -38,7 +38,7 @@ tasks:
       - task: up
         vars: { CLI_ARGS: 'server' }
     cmds:
-      - docker compose run --rm --entrypoint="npm run generate-api-client" client
+      - docker compose run --rm --entrypoint="npm run generate-hooks-client" client
 
   format:
     desc: Run formatter
