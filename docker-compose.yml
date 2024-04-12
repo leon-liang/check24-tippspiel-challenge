@@ -44,12 +44,6 @@ services:
       target: development
     ports:
       - "3000:3000"
-    environment:
-      KEYCLOAK_CLIENT_ID: client
-      KEYCLOAK_CLIENT_SECRET: CNymMJAcIoYEDUYlzCwOGjHKmfyzXgqi
-      KEYCLOAK_ISSUER: http://keycloak:8080/realms/development
-      NEXTAUTH_URL: http://localhost:3000
-      NEXTAUTH_SECRET: feZJWB3mcQ93VBmqHKQI5er5NEIxcDPb3wtT/KaLB9s=
     volumes:
       - ./client:/app
       - node-modules-client:/app/node_modules/
