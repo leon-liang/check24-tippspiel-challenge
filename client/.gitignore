@@ -35,8 +35,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# generated hooks-client
-src/api-client/generated
-
-
 *storybook.log
