@@ -17,11 +17,10 @@ func main() {
 	r.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	keycloakClient := keycloak.New()
-	r.Use(authMiddleware.ValidateToken(keycloakClient))
 
 	h := handler.NewHandler()
 
-	v1 := r.Group("/")
+	v1 := r.Group("/", authMiddleware.ValidateToken(keycloakClient))
 	h.Register(v1)
 
 	d := db.New()
