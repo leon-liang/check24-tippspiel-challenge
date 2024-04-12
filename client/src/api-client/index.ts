@@ -1,4 +1,4 @@
-import { Configuration, DefaultApiFactory } from "@/lib/api-client";
+import { Configuration, DefaultApiFactory } from "@/api-client/generated";
 
 import globalAxios from "axios";
 import { getSession } from "next-auth/react";
