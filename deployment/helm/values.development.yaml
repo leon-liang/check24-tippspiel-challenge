@@ -29,13 +29,23 @@ deployments:
     containerPort: 8000
     env:
       - name: AUTH_SERVER_URL
-        value: http://{{ .Chart.Name }}-keycloak-cluster-ip-service:8080
+        value: "http://{{ .Chart.Name }}-keycloak-cluster-ip-service:8080"
       - name: AUTH_CLIENT_ID
         value: webclient
       - name: AUTH_CLIENT_SECRET
         value: SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe
       - name: AUTH_REALM
         value: development
+      - name: POSTGRES_HOST
+        value: "{{ .Chart.Name }}-postgresql-cluster-ip-service"
+      - name: POSTGRES_PORT
+        value: "{{ .Values.services.postgresql.port | quote }}"
+      - name: POSTGRES_DB
+        value: master
+      - name: POSTGRES_USER
+        value: root
+      - name: POSTGRES_PASSWORD
+        value: password
 
   keycloak:
     replicas: 1

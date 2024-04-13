@@ -24,6 +24,7 @@ spec:
           volumeMounts:
             - mountPath: {{ .Values.deployments.postgresql.volumeMounts.mountPath }}
               name:  {{ .Values.deployments.postgresql.volumeMounts.name }}
+              subPath: postgres
           env:
             {{- range .Values.deployments.postgresql.env}}
                 - name: {{ .name }}
