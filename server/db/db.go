@@ -8,7 +8,7 @@ import (
 )
 
 func New() *gorm.DB {
-	dbUrl := "postgresql://db:5432/dev?user=root&password=password"
+	dbUrl := "postgresql://db:5432/master?user=root&password=password"
 	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
 
 	if err != nil {
