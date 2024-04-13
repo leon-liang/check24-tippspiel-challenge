@@ -1,0 +1,32 @@
+apiVersion: skaffold/v3
+kind: Config
+build:
+  local:
+    push: false
+  artifacts:
+    - image: check24-tippspiel-challenge/keycloak
+      context: docker/keycloak
+      docker:
+        dockerfile: Dockerfile
+    - image: check24-tippspiel-challenge/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+    - image: check24-tippspiel-challenge/server
+      context: server
+      docker:
+        dockerfile: Dockerfile
+    - image: check24-tippspiel-challenge/db
+      context: docker/postgresql
+      docker:
+        dockerfile: Dockerfile
+manifests:
+  helm:
+    releases:
+      - name: allianz-gi-project
+        chartPath: ./deployment/helm
+        valuesFiles:
+          - ./deployment/helm/values.development.yaml
+
+deploy:
+  kubectl: {}

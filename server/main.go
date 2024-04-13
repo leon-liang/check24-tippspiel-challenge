@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	keycloak "github.com/leon-liang/check24-tippspiel-challenge/server/auth"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/db"
 	_ "github.com/leon-liang/check24-tippspiel-challenge/server/docs"
@@ -8,11 +9,18 @@ import (
 	authMiddleware "github.com/leon-liang/check24-tippspiel-challenge/server/middleware"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"log"
 )
 
 // @title Check24 Tippspiel Challenge
 // @version 1.0
 func main() {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	r := router.New()
 	r.GET("/swagger/*", echoSwagger.WrapHandler)
 

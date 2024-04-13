@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-postgresql-cluster-ip-service
+spec:
+  type: {{ .Values.services.postgresql.type }}
+  selector:
+    component: {{ .Chart.Name }}-postgresql
+  ports:
+    - port: {{ .Values.services.postgresql.port }}
+      targetPort: {{ .Values.services.postgresql.port }}

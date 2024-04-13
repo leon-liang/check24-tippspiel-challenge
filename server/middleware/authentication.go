@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/labstack/echo/v4"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/auth"
+	"log"
 	"strings"
 )
 
@@ -19,13 +20,20 @@ func ValidateToken(keycloak *auth.Keycloak) echo.MiddlewareFunc {
 			token = extractBearerToken(token)
 
 			if token == "" {
+				log.Fatal("Access Token missing")
 				return echo.ErrUnauthorized
 			}
 
 			// Call Keycloak API to verify Access token
 			result, err := keycloak.GoCloak.RetrospectToken(context.Background(), token, keycloak.ClientId, keycloak.ClientSecret, keycloak.Realm)
 
-			if err != nil || !*result.Active {
+			if err != nil {
+				log.Fatal(err)
+				return echo.ErrUnauthorized
+			}
+
+			if !*result.Active {
+				log.Fatal("Access Token expired")
 				return echo.ErrUnauthorized
 			}
 

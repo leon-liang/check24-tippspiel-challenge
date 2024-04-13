@@ -7,6 +7,7 @@ services:
     build:
       context: ./docker/keycloak
       dockerfile: Dockerfile
+      target: development
     ports:
       - "8080:8080"
     command:
@@ -79,6 +80,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+      target: development
     entrypoint: CompileDaemon -build="go build -o /build/server" -command="/build/server"
     depends_on:
       db:

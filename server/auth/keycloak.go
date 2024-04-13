@@ -1,6 +1,9 @@
 package auth
 
-import "github.com/Nerzal/gocloak/v13"
+import (
+	"github.com/Nerzal/gocloak/v13"
+	"os"
+)
 
 type Keycloak struct {
 	GoCloak      gocloak.GoCloak
@@ -11,9 +14,9 @@ type Keycloak struct {
 
 func New() *Keycloak {
 	return &Keycloak{
-		GoCloak:      *gocloak.NewClient("http://keycloak:8080"),
-		ClientId:     "webclient",
-		ClientSecret: "SXiMvr1GG10bk2J63ODZC9SOaoAZ4dbe",
-		Realm:        "development",
+		GoCloak:      *gocloak.NewClient(os.Getenv("AUTH_SERVER_URL")),
+		ClientId:     os.Getenv("AUTH_CLIENT_ID"),
+		ClientSecret: os.Getenv("AUTH_CLIENT_SECRET"),
+		Realm:        os.Getenv("AUTH_REALM"),
 	}
 }

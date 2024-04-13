@@ -55,3 +55,19 @@ tasks:
     desc: View logs
     cmds:
       - docker compose logs -f {{.CLI_ARGS}}
+
+  k8s-up:
+    desc: Create k8s cluster
+    cmds:
+      - kind create cluster --config ./deployment/kind-config.yaml --name check24-tippspiel-challenge
+      - kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+      - |
+        while ! kubectl -n ingress-nginx describe pod ingress-nginx --request-timeout "5s" &> /dev/null; do sleep 5; done
+      - kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=180s
+      - skaffold dev
+      - task: k8s-down
+
+  k8s-down:
+    desc: Delete k8s cluster
+    cmds:
+      - kind delete cluster --name check24-tippspiel-challenge
