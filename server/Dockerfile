@@ -1,4 +1,4 @@
-FROM golang:alpine3.18
+FROM golang:alpine3.18 as development
 
 ENV PROJECT_DIR=/app \
     GO111MODULE=on \
@@ -16,3 +16,21 @@ RUN go get github.com/githubnemo/CompileDaemon
 RUN go install github.com/githubnemo/CompileDaemon
 
 EXPOSE 8000
+
+FROM golang:alpine3.18
+
+ENV PROJECT_DIR=/app \
+    CGO_ENABLED=0
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY ./ ./
+
+RUN go build -o /server
+
+EXPOSE 8000
+
+CMD ["/server"]

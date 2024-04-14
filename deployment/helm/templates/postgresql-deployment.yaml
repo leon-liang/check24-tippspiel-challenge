@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-postgresql-deployment
+spec:
+  replicas: {{ .Values.deployments.postgresql.replicas }}
+  selector:
+    matchLabels:
+      component: {{ .Chart.Name }}-postgresql
+  template:
+    metadata:
+      labels:
+        component: {{ .Chart.Name }}-postgresql
+    spec:
+      volumes:
+        - name: {{ .Values.deployments.postgresql.volumes.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Chart.Name }}-database-persistent-volume-claim
+      containers:
+        - name: postgresql
+          image: {{ .Values.deployments.postgresql.image.repository }}:{{ .Values.deployments.postgresql.image.tag }}
+          ports:
+            - containerPort: {{ .Values.deployments.postgresql.containerPort }}
+          volumeMounts:
+            - mountPath: {{ .Values.deployments.postgresql.volumeMounts.mountPath }}
+              name:  {{ .Values.deployments.postgresql.volumeMounts.name }}
+              subPath: postgres
+          env:
+            {{- range .Values.deployments.postgresql.env}}
+                - name: {{ .name }}
+                  value: {{ tpl .value $ }}
+            {{- end}}

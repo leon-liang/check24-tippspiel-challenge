@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-server-deployment
+spec:
+  replicas: {{ .Values.deployments.server.replicas }}
+  selector:
+    matchLabels:
+      component: {{ .Chart.Name }}-server
+  template:
+    metadata:
+      labels:
+        component: {{ .Chart.Name }}-server
+    spec:
+      containers:
+        - name: server
+          image: {{ .Values.deployments.server.image.repository }}:{{ .Values.deployments.server.image.tag }}
+          ports:
+            - containerPort: {{ .Values.deployments.server.containerPort }}
+          env:
+          {{- range .Values.deployments.server.env}}
+            - name: {{ .name }}
+              value: {{ tpl .value $ }}
+          {{- end}}
