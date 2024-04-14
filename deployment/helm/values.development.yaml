@@ -113,5 +113,5 @@ services:
 
 persistentVolumeClaim:
   database:
-    accessModes: ReadWriteOnce
+    accessModes: ReadWriteMany
     requestedStorage: 2Gi
