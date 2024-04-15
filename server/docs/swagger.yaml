@@ -23,8 +23,7 @@ paths:
       summary: Get Root
 securityDefinitions:
   OAuth2Implicit:
-    authorizationUrl: http://localhost:8080/realms/development/protocol/openid-connect/auth,
-      http://auth.local.gendev.leonliang.lu/realms/development/protocol/openid-connect/auth
+    authorizationUrl: http://localhost:8080/realms/development/protocol/openid-connect/auth
     flow: implicit
     type: oauth2
 swagger: "2.0"

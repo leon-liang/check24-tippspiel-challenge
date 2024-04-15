@@ -51,7 +51,7 @@ const docTemplate = `{
         "OAuth2Implicit": {
             "type": "oauth2",
             "flow": "implicit",
-            "authorizationUrl": "http://localhost:8080/realms/development/protocol/openid-connect/auth, http://auth.local.gendev.leonliang.lu/realms/development/protocol/openid-connect/auth"
+            "authorizationUrl": "http://localhost:8080/realms/development/protocol/openid-connect/auth"
         }
     }
 }`
