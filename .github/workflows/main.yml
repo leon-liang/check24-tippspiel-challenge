@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -76,3 +79,16 @@ jobs:
           echo "Pushing image to ECR..."
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"   
+
+      - name: Package and push helm chart to Amazon ECR
+        id: package-helm-chart
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.HELM_REPO_NAME }}
+          IMAGE_TAG: latest
+        run: |
+          cd deployment
+          helm package helm --version "0.1.0"
+          helm push $ECR_REPOSITORY-0.1.0.tgz oci://$AWS_ACCOUNT_ID.dkr.ecr.eu-north-1/amazonaws.com/
+          
