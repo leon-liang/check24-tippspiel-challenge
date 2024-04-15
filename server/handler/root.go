@@ -12,6 +12,8 @@ import (
 //	@Produce json
 //	@Success 200 {object} model.RootResponse
 //	@Router / [get]
+//
+// @Security OAuth2Implicit
 func (h *Handler) GetRoot(c echo.Context) error {
 	var response model.RootResponse
 	response.Message = "Hello World!"

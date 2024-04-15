@@ -18,5 +18,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.RootResponse'
+      security:
+      - OAuth2Implicit: []
       summary: Get Root
+securityDefinitions:
+  OAuth2Implicit:
+    authorizationUrl: http://localhost:8080/realms/development/protocol/openid-connect/auth
+    flow: implicit
+    type: oauth2
 swagger: "2.0"
