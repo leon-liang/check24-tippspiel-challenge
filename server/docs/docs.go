@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/": {
             "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -40,6 +45,13 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "OAuth2Implicit": {
+            "type": "oauth2",
+            "flow": "implicit",
+            "authorizationUrl": "http://localhost:8080/realms/development/protocol/openid-connect/auth, http://auth.local.gendev.leonliang.lu/realms/development/protocol/openid-connect/auth"
         }
     }
 }`

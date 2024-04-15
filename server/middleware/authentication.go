@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/auth"
-	"log"
 	"strings"
 )
 
@@ -20,7 +20,7 @@ func ValidateToken(keycloak *auth.Keycloak) echo.MiddlewareFunc {
 			token = extractBearerToken(token)
 
 			if token == "" {
-				log.Fatal("Access Token missing")
+				fmt.Println("Access Token missing")
 				return echo.ErrUnauthorized
 			}
 
@@ -28,12 +28,12 @@ func ValidateToken(keycloak *auth.Keycloak) echo.MiddlewareFunc {
 			result, err := keycloak.GoCloak.RetrospectToken(context.Background(), token, keycloak.ClientId, keycloak.ClientSecret, keycloak.Realm)
 
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println(err)
 				return echo.ErrUnauthorized
 			}
 
 			if !*result.Active {
-				log.Fatal("Access Token expired")
+				fmt.Println("Access Token expired")
 				return echo.ErrUnauthorized
 			}
 

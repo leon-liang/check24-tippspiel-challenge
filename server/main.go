@@ -10,10 +10,16 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"log"
+	"os"
 )
 
 // @title Check24 Tippspiel Challenge
 // @version 1.0
+// @securitydefinitions.oauth2.implicit OAuth2Implicit
+// @in header
+// @name Authorization
+// @authorizationurl http://localhost:8080/realms/development/protocol/openid-connect/auth
+
 func main() {
 	err := godotenv.Load(".env")
 
@@ -22,7 +28,11 @@ func main() {
 	}
 
 	r := router.New()
-	r.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	// Only render swagger docs in development
+	if os.Getenv("ENVIRONMENT") == "development" {
+		r.GET("/swagger/*", echoSwagger.WrapHandler)
+	}
 
 	keycloakClient := keycloak.New()
 
