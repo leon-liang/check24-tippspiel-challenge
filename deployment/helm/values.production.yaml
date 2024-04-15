@@ -6,7 +6,7 @@ deployments:
   client:
     replicas: 1
     image:
-      repository: "check24-tippspiel-challenge/client"
+      repository: "289782752698.dkr.ecr.eu-north-1.amazonaws.com/check24-tippspiel-challenge/client"
       tag: "latest"
     containerPort: 3000
     env:
@@ -24,7 +24,7 @@ deployments:
   server:
     replicas: 1
     image:
-      repository: "check24-tippspiel-challenge/server"
+      repository: "289782752698.dkr.ecr.eu-north-1.amazonaws.com/check24-tippspiel-challenge/server"
       tag: "latest"
     containerPort: 8000
     env:
@@ -50,7 +50,7 @@ deployments:
   keycloak:
     replicas: 1
     image:
-      repository: "check24-tippspiel-challenge/keycloak"
+      repository: "289782752698.dkr.ecr.eu-north-1.amazonaws.com/check24-tippspiel-challenge/keycloak"
       tag: "latest"
     containerPort: 8080
     env:
@@ -74,10 +74,11 @@ deployments:
         value: "jdbc:postgresql://{{ .Chart.Name }}-postgresql-cluster-ip-service:5432/master"
       - name: KC_HOSTNAME
         value: "{{ .Values.services.ingress.authHost }}"
+
   postgresql:
     replicas: 1
     image:
-      repository: "check24-tippspiel-challenge/db"
+      repository: "289782752698.dkr.ecr.eu-north-1.amazonaws.com/check24-tippspiel-challenge/db"
       tag: "latest"
     containerPort: 5432
     volumes:
@@ -107,9 +108,9 @@ services:
     type: ClusterIP
     port: 5432
   ingress:
-    clientHost: local.gendev.leonliang.lu
-    authHost: auth.local.gendev.leonliang.lu
-    serverHost: api.local.gendev.leonliang.lu
+    clientHost: gendev.leonliang.lu
+    authHost: auth.gendev.leonliang.lu
+    serverHost: api.gendev.leonliang.lu
 
 persistentVolumeClaim:
   database:
