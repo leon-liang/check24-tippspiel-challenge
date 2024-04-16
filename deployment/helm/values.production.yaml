@@ -6,7 +6,7 @@ deployments:
   client:
     replicas: 1
     image:
-      repository: "289782752698.dkr.ecr.eu-north-1.amazonaws.com/check24-tippspiel-challenge/client"
+      repository: "289782752698.dkr.ecr.us-east-1.amazonaws.com/check24-tippspiel-challenge/client"
       tag: "latest"
     containerPort: 3000
     env:
@@ -24,7 +24,7 @@ deployments:
   server:
     replicas: 1
     image:
-      repository: "289782752698.dkr.ecr.eu-north-1.amazonaws.com/check24-tippspiel-challenge/server"
+      repository: "289782752698.dkr.ecr.us-east-1.amazonaws.com/check24-tippspiel-challenge/server"
       tag: "latest"
     containerPort: 8000
     env:
@@ -50,7 +50,7 @@ deployments:
   keycloak:
     replicas: 1
     image:
-      repository: "289782752698.dkr.ecr.eu-north-1.amazonaws.com/check24-tippspiel-challenge/keycloak"
+      repository: "289782752698.dkr.ecr.us-east-1.amazonaws.com/check24-tippspiel-challenge/keycloak"
       tag: "latest"
     containerPort: 8080
     env:
@@ -78,7 +78,7 @@ deployments:
   postgresql:
     replicas: 1
     image:
-      repository: "289782752698.dkr.ecr.eu-north-1.amazonaws.com/check24-tippspiel-challenge/db"
+      repository: "289782752698.dkr.ecr.us-east-1.amazonaws.com/check24-tippspiel-challenge/db"
       tag: "latest"
     containerPort: 5432
     volumes:

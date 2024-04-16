@@ -3,7 +3,7 @@
 variable "region" {
   type = string
   description = "Name of the region to select"
-  default = "eu-north-1"
+  default = "us-east-1"
 }
 
 variable "aws_access_key" {}
