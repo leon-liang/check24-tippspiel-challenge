@@ -37,9 +37,9 @@ jobs:
         run: |
           cd client
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG public.ecr.aws/g9i0m9k0/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG public.ecr.aws/g9i0m9k0/$ECR_REPOSITORY:$IMAGE_TAG
           echo "Pushing image to ECR..."
-          docker push public.ecr.aws/g9i0m9k0/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push public.ecr.aws/g9i0m9k0/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       - name: Build, tag, and push server image to Amazon ECR
@@ -51,9 +51,9 @@ jobs:
         run: |
           cd server
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG public.ecr.aws/g9i0m9k0/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG public.ecr.aws/g9i0m9k0/$ECR_REPOSITORY:$IMAGE_TAG
           echo "Pushing image to ECR..."
-          docker push public.ecr.aws/g9i0m9k0/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push public.ecr.aws/g9i0m9k0/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
       - name: Build, tag, and push keycloak image to Amazon ECR
@@ -65,9 +65,9 @@ jobs:
         run: |
           cd docker/keycloak
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG public.ecr.aws/g9i0m9k0/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG public.ecr.aws/g9i0m9k0//$ECR_REPOSITORY:$IMAGE_TAG
           echo "Pushing image to ECR..."
-          docker push public.ecr.aws/g9i0m9k0/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push public.ecr.aws/g9i0m9k0/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"   
 
       - name: Build, tag, and push db image to Amazon ECR
@@ -79,9 +79,9 @@ jobs:
         run: |
           cd docker/postgresql
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG public.ecr.aws/g9i0m9k0/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG public.ecr.aws/g9i0m9k0/$ECR_REPOSITORY:$IMAGE_TAG
           echo "Pushing image to ECR..."
-          docker push public.ecr.aws/g9i0m9k0/$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push public.ecr.aws/g9i0m9k0/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"   
 
       - name: Package and push helm chart to Amazon ECR
