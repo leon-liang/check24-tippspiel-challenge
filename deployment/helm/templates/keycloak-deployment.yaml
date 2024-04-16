@@ -24,3 +24,5 @@ spec:
               value: {{ tpl .value $ }}
             {{- end}}
           {{- end}}
+      imagePullSecrets:
+        - name: keycloak-ecr-secret

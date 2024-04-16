@@ -22,3 +22,5 @@ spec:
             - name: {{ .name }}
               value: {{ tpl .value $ }}
           {{- end}}
+      imagePullSecrets:
+        - name: server-ecr-secret

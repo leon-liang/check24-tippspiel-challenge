@@ -30,3 +30,5 @@ spec:
                 - name: {{ .name }}
                   value: {{ tpl .value $ }}
             {{- end}}
+      imagePullSecrets:
+        - name: db-ecr-secret
