@@ -17,7 +17,7 @@ variable "vpc_name" {}
 variable "azs" {
   type = list(string)
   description = "A list of availability zones"
-  default = ["eu-north-1c", "eu-north-1a", "eu-north-1b"]
+  default = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
 variable "public_subnets" {
