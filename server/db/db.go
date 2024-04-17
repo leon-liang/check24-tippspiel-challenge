@@ -2,9 +2,10 @@ package db
 
 import (
 	"fmt"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"gorm.io/driver/postgres"
-	_ "gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 	"os"
 )
 
@@ -28,5 +29,13 @@ func New() *gorm.DB {
 }
 
 func AutoMigrate(db *gorm.DB) {
-	db.AutoMigrate()
+	err := db.AutoMigrate(
+		&model.User{},
+		&model.Community{},
+		&model.UserCommunity{},
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
