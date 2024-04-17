@@ -102,5 +102,5 @@ jobs:
         run: |
           cd deployment
           helm package helm --version "0.1.0"
-          helm push $ECR_REPOSITORY-0.1.0.tgz oci://$AWS_ACCOUNT_ID.dkr.ecr.eu-north-1.amazonaws.com/
+          helm push $ECR_REPOSITORY-0.1.0.tgz oci://$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/
           
