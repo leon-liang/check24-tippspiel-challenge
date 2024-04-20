@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/app/providers";
-import SessionGuard from "@/components/session-guard/SessionGuard";
+import SessionGuard from "@/components/auth/session-guard/SessionGuard";
+import Topbar from "@/components/topbar/Topbar";
+import Sidebar from "@/components/sidebar/Sidebar";
+import Navigation from "@/components/navigation/Navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,9 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-colors-gray-1`}>
         <Providers>
-          <SessionGuard>{children}</SessionGuard>
+          <SessionGuard>
+            <Navigation>{children}</Navigation>
+          </SessionGuard>
         </Providers>
       </body>
     </html>
