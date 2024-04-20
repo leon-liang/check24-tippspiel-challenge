@@ -14,13 +14,15 @@ export interface SidebarItemProps {
 const SidebarItem = ({ icon, label, nestedItems }: SidebarItemProps) => {
   const [showNestedItems, setShowNestedItems] = useState<boolean>(true);
 
+  const toggleNestedItems = () => {
+    nestedItems && setShowNestedItems(!showNestedItems);
+  };
+
   return (
     <div className="flex flex-col">
       <div
         className="flex flex-row justify-between py-2"
-        onClick={() => {
-          nestedItems && setShowNestedItems(!showNestedItems);
-        }}
+        onClick={toggleNestedItems}
       >
         <div className="flex flex-row items-center gap-4">
           <span>{icon ?? null}</span>
