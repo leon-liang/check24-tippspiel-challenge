@@ -1,4 +1,8 @@
-import { Configuration, RootApiFactory } from "@/api-client/generated";
+import {
+  Configuration,
+  RootApiFactory,
+  UsersApiFactory,
+} from "@/api-client/generated";
 
 import globalAxios from "axios";
 import { getSession } from "next-auth/react";
@@ -29,3 +33,4 @@ const configuration: Configuration = {
 };
 
 export const defaultApiFactory = RootApiFactory(configuration);
+export const usersApiFactory = UsersApiFactory(configuration);

@@ -106,7 +106,7 @@ func GetCurrentUser(h *handler.Handler) echo.MiddlewareFunc {
 				return echo.ErrInternalServerError
 			}
 
-			c.Set("current_user", newUser)
+			c.Set("current_user", &newUser)
 			return next(c)
 		}
 	}
