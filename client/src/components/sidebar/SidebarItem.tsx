@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import ChevronUp from "@/components/icons/ChevronUp";
 import { motion, AnimatePresence } from "framer-motion";
+import cn from "classnames";
+import { usePathname } from "next/navigation";
 
 export interface SidebarItemProps {
   icon?: React.ReactNode;
@@ -11,7 +13,10 @@ export interface SidebarItemProps {
   nestedItems?: SidebarItemProps[];
 }
 
-const SidebarItem = ({ icon, label, nestedItems }: SidebarItemProps) => {
+const SidebarItem = ({ icon, label, link, nestedItems }: SidebarItemProps) => {
+  const currentPath = usePathname();
+
+  console.log(currentPath);
   const [showNestedItems, setShowNestedItems] = useState<boolean>(true);
 
   const toggleNestedItems = () => {
@@ -21,7 +26,12 @@ const SidebarItem = ({ icon, label, nestedItems }: SidebarItemProps) => {
   return (
     <div className="flex flex-col">
       <div
-        className="flex flex-row justify-between py-2"
+        className={cn(
+          "flex cursor-pointer flex-row justify-between rounded-md p-2 text-gray-12 hover:bg-colors-gray-3",
+          {
+            "bg-colors-gray-3": link && link.startsWith(currentPath ?? ""),
+          },
+        )}
         onClick={toggleNestedItems}
       >
         <div className="flex flex-row items-center gap-4">
@@ -44,7 +54,7 @@ const SidebarItem = ({ icon, label, nestedItems }: SidebarItemProps) => {
               return (
                 <motion.div
                   key={index}
-                  className="border-l-2 border-gray-6"
+                  className="border-l-2 border-gray-6 hover:border-gray-8"
                   initial="collapsed"
                   animate="open"
                   exit="collapsed"

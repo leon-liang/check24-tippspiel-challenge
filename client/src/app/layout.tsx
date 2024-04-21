@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-colors-gray-1 text-gray-12`}>
+      <body className={`${inter.className} bg-colors-white text-gray-12`}>
         <Providers>
           <SessionGuard>
             <Navigation>{children}</Navigation>

@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const colors = {
+  white: "#FFFFFF",
   gray: {
     1: "#FCFCFC",
     2: "#F9F9F9",
