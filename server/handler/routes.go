@@ -5,6 +5,6 @@ import (
 )
 
 func (h *Handler) Register(v1 *echo.Group) {
-	root := v1.Group("")
-	root.GET("", h.GetRoot)
+	users := v1.Group("/users")
+	users.GET("/me", h.GetCurrentUser)
 }

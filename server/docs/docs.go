@@ -17,6 +17,25 @@ const docTemplate = `{
     "paths": {
         "/": {
             "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Root"
+                ],
+                "summary": "Example",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.rootResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/me": {
+            "get": {
                 "security": [
                     {
                         "OAuth2Implicit": []
@@ -25,12 +44,15 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get Root",
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get current user",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.RootResponse"
+                            "$ref": "#/definitions/handler.userResponse"
                         }
                     }
                 }
@@ -38,11 +60,36 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.RootResponse": {
+        "handler.rootResponse": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "handler.userResponse": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "object",
+                    "properties": {
+                        "email": {
+                            "type": "string"
+                        },
+                        "firstName": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "lastName": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         }

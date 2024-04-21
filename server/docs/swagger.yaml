@@ -1,8 +1,24 @@
 definitions:
-  model.RootResponse:
+  handler.rootResponse:
     properties:
       message:
         type: string
+    type: object
+  handler.userResponse:
+    properties:
+      user:
+        properties:
+          email:
+            type: string
+          firstName:
+            type: string
+          id:
+            type: string
+          lastName:
+            type: string
+          username:
+            type: string
+        type: object
     type: object
 info:
   contact: {}
@@ -17,10 +33,24 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.RootResponse'
+            $ref: '#/definitions/handler.rootResponse'
+      summary: Example
+      tags:
+      - Root
+  /v1/users/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.userResponse'
       security:
       - OAuth2Implicit: []
-      summary: Get Root
+      summary: Get current user
+      tags:
+      - Users
 securityDefinitions:
   OAuth2Implicit:
     authorizationUrl: http://localhost:8080/realms/development/protocol/openid-connect/auth
