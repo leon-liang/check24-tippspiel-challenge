@@ -7,12 +7,11 @@ import cn from "classnames";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-export interface SidebarItemProps {
-  icon?: React.ReactNode;
-  label: string;
-  link?: string;
-  nestedItems?: SidebarItemProps[];
-}
+type SidebarItem = { icon?: React.ReactNode; label: string };
+type SidebarItemLink = { link: string; nestedItems?: never };
+type SidebarItemParent = { nestedItems: SidebarItemProps[]; link?: never };
+export type SidebarItemProps = SidebarItem &
+  (SidebarItemLink | SidebarItemParent);
 
 const SidebarItem = ({ icon, label, link, nestedItems }: SidebarItemProps) => {
   const currentPath = usePathname();
