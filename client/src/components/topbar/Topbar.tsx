@@ -3,7 +3,7 @@ import Button from "../button/Button";
 
 const Topbar = () => {
   return (
-    <div className="fixed left-0 top-0 flex h-16 w-full flex-row justify-between border-b border-gray-6 px-6 py-4">
+    <div className="fixed left-0 top-0 z-10 flex h-16 w-full flex-row justify-between border-b border-gray-6 bg-colors-gray-1 px-6 py-4">
       <div className="relative h-full w-32">
         <Image
           src="/check24-logo.svg"

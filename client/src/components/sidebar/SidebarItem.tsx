@@ -37,7 +37,7 @@ const SidebarItem = ({ icon, label, nestedItems }: SidebarItemProps) => {
           </motion.div>
         )}
       </div>
-      <div className="ml-4">
+      <div className="ml-3">
         <AnimatePresence>
           {showNestedItems &&
             nestedItems?.map((nestedItemProps, index) => {
