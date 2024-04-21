@@ -6,8 +6,9 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/db"
 	_ "github.com/leon-liang/check24-tippspiel-challenge/server/docs"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler"
-	authMiddleware "github.com/leon-liang/check24-tippspiel-challenge/server/middleware"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
+	authMiddleware "github.com/leon-liang/check24-tippspiel-challenge/server/router/middleware"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"log"
 	"os"
@@ -36,13 +37,18 @@ func main() {
 
 	keycloakClient := keycloak.New()
 
-	h := handler.NewHandler()
-
-	v1 := r.Group("/", authMiddleware.ValidateToken(keycloakClient))
-	h.Register(v1)
-
 	d := db.New()
 	db.AutoMigrate(d)
+
+	us := store.NewUserStore(d)
+	h := handler.NewHandler(*us)
+
+	r.GET("", h.GetRoot)
+
+	v1 := r.Group("/v1", authMiddleware.ValidateToken(keycloakClient))
+	v1.Use(authMiddleware.GetCurrentUser(h))
+
+	h.Register(v1)
 
 	r.Logger.Fatal(r.Start(":8000"))
 }
