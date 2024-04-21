@@ -42,28 +42,78 @@ import {
 /**
  *
  * @export
- * @interface ModelRootResponse
+ * @interface HandlerRootResponse
  */
-export interface ModelRootResponse {
+export interface HandlerRootResponse {
   /**
    *
    * @type {string}
-   * @memberof ModelRootResponse
+   * @memberof HandlerRootResponse
    */
   message?: string;
 }
+/**
+ *
+ * @export
+ * @interface HandlerUserResponse
+ */
+export interface HandlerUserResponse {
+  /**
+   *
+   * @type {HandlerUserResponseUser}
+   * @memberof HandlerUserResponse
+   */
+  user?: HandlerUserResponseUser;
+}
+/**
+ *
+ * @export
+ * @interface HandlerUserResponseUser
+ */
+export interface HandlerUserResponseUser {
+  /**
+   *
+   * @type {string}
+   * @memberof HandlerUserResponseUser
+   */
+  email?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HandlerUserResponseUser
+   */
+  firstName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HandlerUserResponseUser
+   */
+  id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HandlerUserResponseUser
+   */
+  lastName?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HandlerUserResponseUser
+   */
+  username?: string;
+}
 
 /**
- * DefaultApi - axios parameter creator
+ * RootApi - axios parameter creator
  * @export
  */
-export const DefaultApiAxiosParamCreator = function (
+export const RootApiAxiosParamCreator = function (
   configuration?: Configuration,
 ) {
   return {
     /**
      *
-     * @summary Get Root
+     * @summary Example
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -104,15 +154,15 @@ export const DefaultApiAxiosParamCreator = function (
 };
 
 /**
- * DefaultApi - functional programming interface
+ * RootApi - functional programming interface
  * @export
  */
-export const DefaultApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration);
+export const RootApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = RootApiAxiosParamCreator(configuration);
   return {
     /**
      *
-     * @summary Get Root
+     * @summary Example
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -122,13 +172,13 @@ export const DefaultApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<ModelRootResponse>
+      ) => AxiosPromise<HandlerRootResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.rootGet(options);
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
       const localVarOperationServerBasePath =
-        operationServerMap["DefaultApi.rootGet"]?.[localVarOperationServerIndex]
+        operationServerMap["RootApi.rootGet"]?.[localVarOperationServerIndex]
           ?.url;
       return (axios, basePath) =>
         createRequestFunction(
@@ -142,23 +192,23 @@ export const DefaultApiFp = function (configuration?: Configuration) {
 };
 
 /**
- * DefaultApi - factory interface
+ * RootApi - factory interface
  * @export
  */
-export const DefaultApiFactory = function (
+export const RootApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
   axios?: AxiosInstance,
 ) {
-  const localVarFp = DefaultApiFp(configuration);
+  const localVarFp = RootApiFp(configuration);
   return {
     /**
      *
-     * @summary Get Root
+     * @summary Example
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    rootGet(options?: any): AxiosPromise<ModelRootResponse> {
+    rootGet(options?: any): AxiosPromise<HandlerRootResponse> {
       return localVarFp
         .rootGet(options)
         .then((request) => request(axios, basePath));
@@ -167,22 +217,166 @@ export const DefaultApiFactory = function (
 };
 
 /**
- * DefaultApi - object-oriented interface
+ * RootApi - object-oriented interface
  * @export
- * @class DefaultApi
+ * @class RootApi
  * @extends {BaseAPI}
  */
-export class DefaultApi extends BaseAPI {
+export class RootApi extends BaseAPI {
   /**
    *
-   * @summary Get Root
+   * @summary Example
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DefaultApi
+   * @memberof RootApi
    */
   public rootGet(options?: RawAxiosRequestConfig) {
-    return DefaultApiFp(this.configuration)
+    return RootApiFp(this.configuration)
       .rootGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
+ * UsersApi - axios parameter creator
+ * @export
+ */
+export const UsersApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Get current user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1UsersMeGet: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/users/me`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * UsersApi - functional programming interface
+ * @export
+ */
+export const UsersApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary Get current user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1UsersMeGet(
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HandlerUserResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1UsersMeGet(options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["UsersApi.v1UsersMeGet"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * UsersApi - factory interface
+ * @export
+ */
+export const UsersApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = UsersApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary Get current user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1UsersMeGet(options?: any): AxiosPromise<HandlerUserResponse> {
+      return localVarFp
+        .v1UsersMeGet(options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * UsersApi - object-oriented interface
+ * @export
+ * @class UsersApi
+ * @extends {BaseAPI}
+ */
+export class UsersApi extends BaseAPI {
+  /**
+   *
+   * @summary Get current user
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UsersApi
+   */
+  public v1UsersMeGet(options?: RawAxiosRequestConfig) {
+    return UsersApiFp(this.configuration)
+      .v1UsersMeGet(options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
