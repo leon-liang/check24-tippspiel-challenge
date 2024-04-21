@@ -23,7 +23,7 @@ build:
 manifests:
   helm:
     releases:
-      - name: allianz-gi-project
+      - name: check24-tippspiel-challenge
         chartPath: ./deployment/helm
         valuesFiles:
           - ./deployment/helm/values.development.yaml

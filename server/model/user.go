@@ -1,0 +1,25 @@
+package model
+
+import (
+	"gorm.io/gorm"
+	"time"
+)
+
+type User struct {
+	gorm.Model
+	Username           string `gorm:"unique_index;not null"`
+	Email              string `gorm:"unique_index;not null"`
+	FirstName          string
+	LastName           string
+	CreatedAt          time.Time
+	CreatedCommunities []*Community `gorm:"foreignKey:Owner"`
+	JoinedCommunities  []*Community `gorm:"many2many:user_community;"`
+}
+
+type UserCommunity struct {
+	gorm.Model
+	UserID      int `gorm:"primaryKey"`
+	CommunityID int `gorm:"primaryKey"`
+	Score       int
+	PinnedUsers []*User `gorm:"many2many:user_community_pinned_users;"`
+}

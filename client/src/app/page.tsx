@@ -9,7 +9,6 @@ export default function Home() {
   return (
     <main>
       <p>{isLoading ? "Loading..." : data?.data.message}</p>
-      <button onClick={() => signOut()}>Sign out</button>
     </main>
   );
 }
