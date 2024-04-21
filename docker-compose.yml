@@ -21,7 +21,7 @@ services:
         condition: service_healthy
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://db:5432/master
+      KC_DB_URL: jdbc:postgresql://db:5432/keycloak
       KC_DB_USERNAME: root
       KC_DB_PASSWORD: password
       KC_HTTPS_CERTIFICATE_FILE: /opt/keycloak/conf/server.crt.pem
@@ -100,9 +100,8 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: master
     healthcheck:
-      test: [ "CMD-SHELL", "sh -c 'pg_isready -U root -d dev'" ]
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U root -d master'" ]
       interval: 10s
       timeout: 3s
       retries: 3
