@@ -34,7 +34,7 @@ const UserBadge = () => {
         </div>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content className="mb-2 w-[var(--radix-popover-trigger-width)] rounded-md border border-gray-6 shadow-lg will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade">
+        <Popover.Content className="mb-2 w-[var(--radix-popover-trigger-width)] rounded-md border border-gray-6 bg-colors-white shadow-lg will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade">
           <div className="flex flex-col p-1.5 align-top">
             <p className="p-2 text-sm text-gray-11">Leon Liang</p>
             <hr className="my-2 border-gray-6" />
