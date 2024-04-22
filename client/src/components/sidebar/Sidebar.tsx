@@ -1,7 +1,7 @@
 import SidebarItem, {
   SidebarItemProps,
 } from "@/components/sidebar/SidebarItem";
-import UserBadge from "@/views/user-badge/UserBadge";
+import UserBadge from "@/components/user-badge/UserBadge";
 
 interface SidebarProps {
   sidebarItems: SidebarItemProps[];
