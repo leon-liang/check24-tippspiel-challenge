@@ -1,4 +1,4 @@
-const ChevronDown = ({ width, height }: IconProps) => {
+const ChevronIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       width={width}
@@ -6,6 +6,9 @@ const ChevronDown = ({ width, height }: IconProps) => {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      style={{
+        verticalAlign: "middle",
+      }}
     >
       <path
         d="M6 9L12 15L18 9"
@@ -18,4 +21,4 @@ const ChevronDown = ({ width, height }: IconProps) => {
   );
 };
 
-export default ChevronDown;
+export default ChevronIcon;

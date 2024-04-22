@@ -1,20 +1,24 @@
-import { PropsWithChildren } from "react";
+"use client";
+
+import React, { PropsWithChildren } from "react";
 import Topbar from "@/components/topbar/Topbar";
 import Sidebar from "@/components/sidebar/Sidebar";
 import HomeIcon from "@/components/icons/HomeIcon";
 import UserGroupIcon from "@/components/icons/UserGroupIcon";
 import SettingsIcon from "@/components/icons/SettingsIcon";
 import DocumentIcon from "@/components/icons/DocumentIcon";
+import Button from "@/components/button/Button";
+import CreateCommunity from "@/views/create-community/CreateCommunity";
 
 const Navigation = ({ children }: PropsWithChildren) => {
   const sidebarItems = [
     {
-      icon: <HomeIcon width={28} height={28} />,
+      icon: <HomeIcon width={22} height={22} />,
       label: "Dashboard",
       link: "/dashboard",
     },
     {
-      icon: <UserGroupIcon width={28} height={28} />,
+      icon: <UserGroupIcon width={22} height={22} />,
       label: "Communities",
       nestedItems: [
         {
@@ -28,12 +32,12 @@ const Navigation = ({ children }: PropsWithChildren) => {
       ],
     },
     {
-      icon: <SettingsIcon width={28} height={28} />,
+      icon: <SettingsIcon width={22} height={22} />,
       label: "Settings",
       link: "/settings",
     },
     {
-      icon: <DocumentIcon width={28} height={28} />,
+      icon: <DocumentIcon width={22} height={22} />,
       label: "Docs",
       link: "/docs",
     },
@@ -41,7 +45,10 @@ const Navigation = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <Topbar />
+      <Topbar>
+        <Button>Join Community</Button>
+        <CreateCommunity />
+      </Topbar>
       <Sidebar sidebarItems={sidebarItems} />
       <div className="ml-64 mt-16">{children}</div>
     </>

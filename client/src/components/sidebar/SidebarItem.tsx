@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import ChevronUp from "@/components/icons/ChevronUp";
+import ChevronIcon from "@/components/icons/ChevronIcon";
 import { motion, AnimatePresence } from "framer-motion";
 import cn from "classnames";
 import { usePathname } from "next/navigation";
@@ -17,7 +17,7 @@ const SidebarItem = ({ icon, label, link, nestedItems }: SidebarItemProps) => {
   const currentPath = usePathname();
   const router = useRouter();
 
-  const [showNestedItems, setShowNestedItems] = useState<boolean>(true);
+  const [showNestedItems, setShowNestedItems] = useState<boolean>(false);
 
   const toggleNestedItems = () => {
     setShowNestedItems(!showNestedItems);
@@ -36,16 +36,16 @@ const SidebarItem = ({ icon, label, link, nestedItems }: SidebarItemProps) => {
           link ? () => router.push(link) : nestedItems && toggleNestedItems
         }
       >
-        <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-row items-center gap-2.5">
           <span>{icon ?? null}</span>
           <p>{label}</p>
         </div>
         {nestedItems && (
           <motion.div
-            animate={{ rotate: showNestedItems ? 0 : -180 }}
+            animate={{ rotate: showNestedItems ? -180 : 0 }}
             transition={{ ease: "linear", duration: 0.1 }}
           >
-            <ChevronUp width={28} height={28} />
+            <ChevronIcon width={28} height={28} />
           </motion.div>
         )}
       </div>
