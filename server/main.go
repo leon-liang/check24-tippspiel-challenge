@@ -41,7 +41,8 @@ func main() {
 	db.AutoMigrate(d)
 
 	us := store.NewUserStore(d)
-	h := handler.NewHandler(*us)
+	cs := store.NewCommunityStore(d)
+	h := handler.NewHandler(*us, *cs)
 
 	r.GET("", h.GetRoot)
 

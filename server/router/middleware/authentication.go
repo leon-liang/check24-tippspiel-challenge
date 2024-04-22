@@ -17,9 +17,9 @@ func extractBearerToken(token string) string {
 
 func ValidateToken(keycloak *auth.Keycloak) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
+		return func(ctx echo.Context) error {
 			// Extract authorization parameter from HTTP Header
-			token := c.Request().Header.Get("Authorization")
+			token := ctx.Request().Header.Get("Authorization")
 			token = extractBearerToken(token)
 
 			if token == "" {
@@ -40,24 +40,24 @@ func ValidateToken(keycloak *auth.Keycloak) echo.MiddlewareFunc {
 				return echo.ErrUnauthorized
 			}
 
-			return next(c)
+			return next(ctx)
 		}
 	}
 }
 
 func ValidatePermissions(requiredPermissions []string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
+		return func(ctx echo.Context) error {
 			// TODO
-			return next(c)
+			return next(ctx)
 		}
 	}
 }
 
 func GetCurrentUser(h *handler.Handler) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			token := c.Request().Header.Get("Authorization")
+		return func(ctx echo.Context) error {
+			token := ctx.Request().Header.Get("Authorization")
 			token = extractBearerToken(token)
 
 			if token == "" {
@@ -89,8 +89,8 @@ func GetCurrentUser(h *handler.Handler) echo.MiddlewareFunc {
 			}
 
 			if user != nil {
-				c.Set("current_user", user)
-				return next(c)
+				ctx.Set("current_user", user)
+				return next(ctx)
 			}
 
 			// create user if not in database
@@ -106,8 +106,8 @@ func GetCurrentUser(h *handler.Handler) echo.MiddlewareFunc {
 				return echo.ErrInternalServerError
 			}
 
-			c.Set("current_user", &newUser)
-			return next(c)
+			ctx.Set("current_user", &newUser)
+			return next(ctx)
 		}
 	}
 }

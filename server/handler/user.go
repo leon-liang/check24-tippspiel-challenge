@@ -14,9 +14,9 @@ import (
 // @Router /v1/users/me [GET]
 //
 // @Security OAuth2Implicit
-func (h *Handler) GetCurrentUser(c echo.Context) error {
-	currentUser := c.Get("current_user").(*model.User)
+func (h *Handler) GetCurrentUser(ctx echo.Context) error {
+	currentUser := ctx.Get("current_user").(*model.User)
 	response := newUserResponse(currentUser)
 
-	return c.JSON(http.StatusOK, &response)
+	return ctx.JSON(http.StatusOK, &response)
 }

@@ -34,6 +34,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/communities": {
+            "post": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Create a new community",
+                "parameters": [
+                    {
+                        "description": "Create Community",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.communityCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.communityResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me": {
             "get": {
                 "security": [
@@ -60,6 +98,35 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handler.communityCreateRequest": {
+            "type": "object",
+            "properties": {
+                "community": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "handler.communityResponse": {
+            "type": "object",
+            "properties": {
+                "community": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "handler.rootResponse": {
             "type": "object",
             "properties": {

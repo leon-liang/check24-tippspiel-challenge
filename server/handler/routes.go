@@ -7,4 +7,7 @@ import (
 func (h *Handler) Register(v1 *echo.Group) {
 	users := v1.Group("/users")
 	users.GET("/me", h.GetCurrentUser)
+
+	communities := v1.Group("/communities")
+	communities.POST("", h.CreateCommunity)
 }

@@ -33,3 +33,18 @@ func newUserResponse(u *model.User) *userResponse {
 
 	return r
 }
+
+type communityResponse struct {
+	Community struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"community"`
+}
+
+func newCommunityResponse(c *model.Community) *communityResponse {
+	r := new(communityResponse)
+	r.Community.ID = c.ID
+	r.Community.Name = c.Name
+
+	return r
+}
