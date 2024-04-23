@@ -34,6 +34,66 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/communities": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Retrieve all communities the current user is part of",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.communitiesResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Create a new community",
+                "parameters": [
+                    {
+                        "description": "Create Community",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.communityCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.communityResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me": {
             "get": {
                 "security": [
@@ -60,6 +120,46 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handler.communitiesResponse": {
+            "type": "object",
+            "properties": {
+                "communities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.communityResponse"
+                    }
+                }
+            }
+        },
+        "handler.communityCreateRequest": {
+            "type": "object",
+            "properties": {
+                "community": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "handler.communityResponse": {
+            "type": "object",
+            "properties": {
+                "community": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "handler.rootResponse": {
             "type": "object",
             "properties": {

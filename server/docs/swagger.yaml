@@ -1,4 +1,29 @@
 definitions:
+  handler.communitiesResponse:
+    properties:
+      communities:
+        items:
+          $ref: '#/definitions/handler.communityResponse'
+        type: array
+    type: object
+  handler.communityCreateRequest:
+    properties:
+      community:
+        properties:
+          name:
+            type: string
+        type: object
+    type: object
+  handler.communityResponse:
+    properties:
+      community:
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+        type: object
+    type: object
   handler.rootResponse:
     properties:
       message:
@@ -37,6 +62,42 @@ paths:
       summary: Example
       tags:
       - Root
+  /v1/communities:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.communitiesResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Retrieve all communities the current user is part of
+      tags:
+      - Communities
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create Community
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.communityCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.communityResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Create a new community
+      tags:
+      - Communities
   /v1/users/me:
     get:
       produces:

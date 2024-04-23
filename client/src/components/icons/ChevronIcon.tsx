@@ -1,4 +1,4 @@
-const ChevronDown = ({ width, height }: IconProps) => {
+const ChevronIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       width={width}
@@ -18,4 +18,4 @@ const ChevronDown = ({ width, height }: IconProps) => {
   );
 };
 
-export default ChevronDown;
+export default ChevronIcon;

@@ -34,10 +34,10 @@ const UserBadge = () => {
     <Popover.Root>
       <Popover.Trigger
         asChild
-        className="flex h-16 cursor-pointer flex-row gap-3 rounded-md p-3 hover:bg-colors-gray-3 data-[state=open]:bg-colors-gray-3"
+        className="flex h-14 cursor-pointer flex-row gap-3 rounded-md p-2 hover:bg-colors-gray-3 data-[state=open]:bg-colors-gray-3"
       >
         <div>
-          <div className="flex h-10 w-10 items-center justify-center rounded bg-colors-purple-5">
+          <div className="flex h-10 w-10 items-center justify-center rounded bg-colors-indigo-5">
             {getInitials(fullName)}
           </div>
           <div className="flex flex-col">
@@ -49,7 +49,7 @@ const UserBadge = () => {
         </div>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content className="mb-2 w-[var(--radix-popover-trigger-width)] rounded-md border border-gray-6 bg-colors-white shadow-lg will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade">
+        <Popover.Content className="mb-2 w-[var(--radix-popover-trigger-width)] rounded-md border border-gray-6 bg-colors-white-A12 shadow-lg will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade">
           <div className="flex flex-col p-1.5 align-top">
             <p className="p-2 text-sm text-gray-11">
               {truncateText(fullName, 25)}

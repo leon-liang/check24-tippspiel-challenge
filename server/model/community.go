@@ -6,6 +6,6 @@ type Community struct {
 	gorm.Model
 	ID      string `gorm:"type:uuid;default:gen_random_uuid()"`
 	Name    string
-	Owner   uint
+	Owner   string
 	Members []*User `gorm:"many2many:user_community;"`
 }
