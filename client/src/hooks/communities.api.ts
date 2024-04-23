@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { communitiesApiFactory } from "@/api-client";
 import { HandlerCommunityCreateRequest } from "@/api-client/generated";
 
@@ -12,5 +12,12 @@ export const useCreateCommunity = () => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["communities"] });
     },
+  });
+};
+
+export const useGetUserCommunities = () => {
+  return useQuery({
+    queryFn: communitiesApiFactory.v1CommunitiesGet,
+    queryKey: ["communities"],
   });
 };

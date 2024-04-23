@@ -7,8 +7,12 @@ import HomeIcon from "@/components/icons/HomeIcon";
 import UserGroupIcon from "@/components/icons/UserGroupIcon";
 import SettingsIcon from "@/components/icons/SettingsIcon";
 import DocumentIcon from "@/components/icons/DocumentIcon";
+import { useGetUserCommunities } from "@/hooks/communities.api";
 
 const Navigation = ({ children }: PropsWithChildren) => {
+  const { data, isLoading, error } = useGetUserCommunities();
+  const communities = data?.data.communities;
+
   const sidebarItems = [
     {
       icon: <HomeIcon width={22} height={22} />,
@@ -18,16 +22,13 @@ const Navigation = ({ children }: PropsWithChildren) => {
     {
       icon: <UserGroupIcon width={22} height={22} />,
       label: "Communities",
-      nestedItems: [
-        {
-          label: "Community A",
-          link: "/communities/0748f5be-466a-40b5-bf54-cb249567ceb7",
-        },
-        {
-          label: "Community B",
-          link: "/communities/ca5a2eda-0386-46b5-8a98-9fa5d3e15fff",
-        },
-      ],
+      nestedItems:
+        communities?.map((community) => {
+          return {
+            label: community.community?.name ?? "",
+            link: `/communities/${community.community?.id}`,
+          };
+        }) ?? [],
     },
     {
       icon: <SettingsIcon width={22} height={22} />,

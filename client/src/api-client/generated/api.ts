@@ -42,6 +42,19 @@ import {
 /**
  *
  * @export
+ * @interface HandlerCommunitiesResponse
+ */
+export interface HandlerCommunitiesResponse {
+  /**
+   *
+   * @type {Array<HandlerCommunityResponse>}
+   * @memberof HandlerCommunitiesResponse
+   */
+  communities?: Array<HandlerCommunityResponse>;
+}
+/**
+ *
+ * @export
  * @interface HandlerCommunityCreateRequest
  */
 export interface HandlerCommunityCreateRequest {
@@ -171,6 +184,54 @@ export const CommunitiesApiAxiosParamCreator = function (
   return {
     /**
      *
+     * @summary Retrieve all communities the current user is part of
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1CommunitiesGet: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/communities`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @summary Create a new community
      * @param {HandlerCommunityCreateRequest} data Create Community
      * @param {*} [options] Override http request option.
@@ -241,6 +302,35 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
+     * @summary Retrieve all communities the current user is part of
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1CommunitiesGet(
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HandlerCommunitiesResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1CommunitiesGet(options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["CommunitiesApi.v1CommunitiesGet"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
      * @summary Create a new community
      * @param {HandlerCommunityCreateRequest} data Create Community
      * @param {*} [options] Override http request option.
@@ -286,6 +376,17 @@ export const CommunitiesApiFactory = function (
   return {
     /**
      *
+     * @summary Retrieve all communities the current user is part of
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1CommunitiesGet(options?: any): AxiosPromise<HandlerCommunitiesResponse> {
+      return localVarFp
+        .v1CommunitiesGet(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @summary Create a new community
      * @param {HandlerCommunityCreateRequest} data Create Community
      * @param {*} [options] Override http request option.
@@ -309,6 +410,19 @@ export const CommunitiesApiFactory = function (
  * @extends {BaseAPI}
  */
 export class CommunitiesApi extends BaseAPI {
+  /**
+   *
+   * @summary Retrieve all communities the current user is part of
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CommunitiesApi
+   */
+  public v1CommunitiesGet(options?: RawAxiosRequestConfig) {
+    return CommunitiesApiFp(this.configuration)
+      .v1CommunitiesGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @summary Create a new community
