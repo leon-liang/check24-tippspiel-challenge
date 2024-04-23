@@ -5,10 +5,12 @@ import { useCreateCommunity } from "@/hooks/communities.api";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 const CreateCommunityDialog = () => {
   const mutation = useCreateCommunity();
   const [open, setOpen] = React.useState(false);
+  const router = useRouter();
 
   const FormSchema = z.object({
     communityName: z.string().min(1),
@@ -22,12 +24,13 @@ const CreateCommunityDialog = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data, event) => {
     event?.target.reset();
-    await mutation.mutateAsync({
+    const response = await mutation.mutateAsync({
       community: {
         name: data.communityName,
       },
     });
     setOpen(false);
+    router.push(`/communities/${response.data.community?.id}`);
   };
 
   return (
