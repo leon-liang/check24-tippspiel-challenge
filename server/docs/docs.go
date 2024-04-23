@@ -35,6 +35,28 @@ const docTemplate = `{
             }
         },
         "/v1/communities": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Retrieve all communities the current user is part of",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.communitiesResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -98,6 +120,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handler.communitiesResponse": {
+            "type": "object",
+            "properties": {
+                "communities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.communityResponse"
+                    }
+                }
+            }
+        },
         "handler.communityCreateRequest": {
             "type": "object",
             "properties": {

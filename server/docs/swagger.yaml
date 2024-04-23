@@ -1,4 +1,11 @@
 definitions:
+  handler.communitiesResponse:
+    properties:
+      communities:
+        items:
+          $ref: '#/definitions/handler.communityResponse'
+        type: array
+    type: object
   handler.communityCreateRequest:
     properties:
       community:
@@ -56,6 +63,19 @@ paths:
       tags:
       - Root
   /v1/communities:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.communitiesResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Retrieve all communities the current user is part of
+      tags:
+      - Communities
     post:
       consumes:
       - application/json
