@@ -1,16 +1,15 @@
 import React, { forwardRef, PropsWithChildren } from "react";
 
-interface ButtonProps {
-  onClick?: () => void;
-  variant?: "solid" | "soft";
-}
+type ButtonProps = React.ComponentProps<"button"> & {
+  variant?: "action" | "mute";
+};
 
 const Button = forwardRef(function Button(
-  { onClick, children }: PropsWithChildren<ButtonProps>,
+  { children, ...rest }: PropsWithChildren<ButtonProps>,
   ref: React.ForwardedRef<HTMLButtonElement>,
 ) {
   return (
-    <button ref={ref} className="text-sm" onClick={onClick}>
+    <button ref={ref} className={`text-sm`} {...rest}>
       {children}
     </button>
   );

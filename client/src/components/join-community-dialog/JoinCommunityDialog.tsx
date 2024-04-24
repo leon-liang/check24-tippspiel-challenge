@@ -53,12 +53,12 @@ const JoinCommunityDialog = () => {
             />
           </fieldset>
           <div className="mt-[25px] flex justify-end">
-            <button
+            <Button
               type="submit"
               className="inline-flex h-[35px] w-[80px] items-center justify-center rounded-[4px] bg-colors-gray-12 px-[15px] leading-none text-white-A12 hover:bg-colors-gray-11 focus:shadow-[0_0_0_2px] focus:shadow-gray-7 focus:outline-none"
             >
               Join
-            </button>
+            </Button>
           </div>
         </form>
       </DialogContent>
