@@ -15,10 +15,8 @@ func NewError(err error) Error {
 	e := Error{}
 	e.Errors = make(map[string]interface{})
 
-	var v *echo.HTTPError
-
-	switch {
-	case errors.As(err, &v):
+	switch v := err.(type) {
+	case *echo.HTTPError:
 		e.Errors["body"] = v.Message
 	default:
 		e.Errors["body"] = v.Error()

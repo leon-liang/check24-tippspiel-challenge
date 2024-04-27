@@ -19,7 +19,7 @@ import (
 func (h *Handler) CreateCommunity(ctx echo.Context) error {
 	var c model.Community
 
-	req := &communityCreateRequest{}
+	req := newCommunityCreateRequest()
 	if err := req.bind(ctx, &c); err != nil {
 		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
@@ -52,5 +52,35 @@ func (h *Handler) GetUserCommunities(ctx echo.Context) error {
 	}
 
 	response := newCommunitiesResponse(communities)
+	return ctx.JSON(http.StatusOK, &response)
+}
+
+// JoinCommunity godoc
+// @Tags Communities
+// @Summary Join the specified community
+// @Produce json
+// @Success 200 {object} handler.communityResponse
+// @Param community_id path string true "Community ID"
+// @Router /v1/communities/{community_id}/join [POST]
+// @Security OAuth2Implicit
+func (h *Handler) JoinCommunity(ctx echo.Context) error {
+	communityId := ctx.Param("community_id")
+	community, err := h.CommunityStore.GetCommunitiesById(communityId)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+	}
+
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	if err := h.CommunityStore.Join(currentUser, community); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	response := newCommunityResponse(community)
 	return ctx.JSON(http.StatusOK, &response)
 }
