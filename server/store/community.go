@@ -33,7 +33,7 @@ func (cs *CommunityStore) Join(user *model.User, community *model.Community) (er
 		return errors.New("user is owner of the community")
 	}
 
-	community.Members = append(community.Members, user)
+	community.Members = append(community.Members, *user)
 
 	if err := cs.db.Save(&community).Error; err != nil {
 		return err
@@ -59,9 +59,11 @@ func (cs *CommunityStore) GetCommunitiesById(id string) (*model.Community, error
 func (cs *CommunityStore) GetUserCommunities(user *model.User) ([]model.Community, error) {
 	var communities []model.Community
 
-	if err := cs.db.Where("owner = ?", user.ID).Or("id IN (SELECT community_id FROM user_community WHERE user_id = ?)", user.ID).Find(&communities).Error; err != nil {
+	if err := cs.db.Preload("JoinedCommunities").Preload("CreatedCommunities").Model(&user).Find(&user).Error; err != nil {
 		return nil, err
 	}
+
+	communities = append(user.CreatedCommunities, user.JoinedCommunities...)
 
 	return communities, nil
 }

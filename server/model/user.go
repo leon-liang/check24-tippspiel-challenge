@@ -13,8 +13,8 @@ type User struct {
 	FirstName          string
 	LastName           string
 	CreatedAt          time.Time
-	CreatedCommunities []*Community `gorm:"foreignKey:Owner"`
-	JoinedCommunities  []*Community `gorm:"many2many:user_community;"`
+	CreatedCommunities []Community `gorm:"foreignKey:Owner"`
+	JoinedCommunities  []Community `gorm:"many2many:user_community;"`
 }
 
 type UserCommunity struct {
@@ -22,5 +22,5 @@ type UserCommunity struct {
 	UserID      int `gorm:"primaryKey"`
 	CommunityID int `gorm:"primaryKey"`
 	Score       int
-	PinnedUsers []*User `gorm:"many2many:user_community_pinned_users;"`
+	PinnedUsers []User `gorm:"many2many:user_community_pinned_users;"`
 }
