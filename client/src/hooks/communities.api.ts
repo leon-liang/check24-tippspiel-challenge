@@ -15,6 +15,21 @@ export const useCreateCommunity = () => {
   });
 };
 
+export const useJoinCommunity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (communityId: string) => {
+      return communitiesApiFactory.v1CommunitiesCommunityIdJoinPost(
+        communityId,
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["communities"] });
+    },
+  });
+};
+
 export const useGetUserCommunities = () => {
   return useQuery({
     queryFn: communitiesApiFactory.v1CommunitiesGet,
