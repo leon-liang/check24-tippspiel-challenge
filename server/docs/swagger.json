@@ -118,6 +118,39 @@
                 }
             }
         },
+        "/v1/communities/{community_id}/members": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Retrieve all users that are part of a community",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.communitiesResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users/me": {
             "get": {
                 "security": [

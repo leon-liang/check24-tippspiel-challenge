@@ -119,3 +119,30 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 	response := newCommunityResponse(community)
 	return ctx.JSON(http.StatusOK, &response)
 }
+
+// GetCommunityMembers godoc
+// @Tags Communities
+// @Summary Retrieve all users that are part of a community
+// @Produce json
+// @Success 200 {object} handler.communitiesResponse
+// @Param community_id path string true "Community ID"
+// @Router /v1/communities/{community_id}/members [GET]
+// @Security OAuth2Implicit
+func (h *Handler) GetCommunityMembers(ctx echo.Context) error {
+	communityId := ctx.Param("community_id")
+
+	community, err := h.CommunityStore.GetCommunitiesById(communityId)
+
+	if err != nil {
+		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+	}
+
+	users, err := h.CommunityStore.GetCommunityMembers(community)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	response := newUsersResponse(users)
+	return ctx.JSON(http.StatusOK, &response)
+}

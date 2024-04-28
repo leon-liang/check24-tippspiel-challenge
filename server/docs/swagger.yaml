@@ -118,6 +118,26 @@ paths:
       summary: Join the specified community
       tags:
       - Communities
+  /v1/communities/{community_id}/members:
+    get:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.communitiesResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Retrieve all users that are part of a community
+      tags:
+      - Communities
   /v1/users/me:
     get:
       produces:

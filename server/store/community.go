@@ -58,3 +58,20 @@ func (cs *CommunityStore) GetUserCommunities(user *model.User) ([]model.Communit
 	})
 	return communities, nil
 }
+
+func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]model.User, error) {
+
+	var owner model.User
+
+	if err := cs.db.Find(&owner, "id = ?", community.Owner).Error; err != nil {
+		return nil, err
+	}
+
+	if err := cs.db.Preload("Members").First(&community).Error; err != nil {
+		return nil, err
+	}
+
+	members := append(community.Members, owner)
+
+	return members, nil
+}
