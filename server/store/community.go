@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"gorm.io/gorm"
+	"sort"
 )
 
 type CommunityStore struct {
@@ -21,18 +22,6 @@ func (cs *CommunityStore) Create(community *model.Community) (err error) {
 }
 
 func (cs *CommunityStore) Join(user *model.User, community *model.Community) (err error) {
-	// Check if the user is already a member of the community
-	for _, member := range community.Members {
-		if member.ID == user.ID {
-			return errors.New("user is already a member of the community")
-		}
-	}
-
-	// Check if the user is the owner of the community
-	if user.ID == community.Owner {
-		return errors.New("user is owner of the community")
-	}
-
 	community.Members = append(community.Members, *user)
 
 	if err := cs.db.Save(&community).Error; err != nil {
@@ -64,6 +53,8 @@ func (cs *CommunityStore) GetUserCommunities(user *model.User) ([]model.Communit
 	}
 
 	communities = append(user.CreatedCommunities, user.JoinedCommunities...)
-
+	sort.Slice(communities, func(i, j int) bool {
+		return communities[i].Name < communities[j].Name
+	})
 	return communities, nil
 }

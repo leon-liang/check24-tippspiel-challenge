@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"github.com/labstack/echo/v4"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/utils"
@@ -17,6 +18,18 @@ import (
 // @Param data body handler.communityCreateRequest true "Create Community"
 // @Security OAuth2Implicit
 func (h *Handler) CreateCommunity(ctx echo.Context) error {
+	// User can be part of at most 5 communities
+	currentUser := ctx.Get("current_user").(*model.User)
+	communities, err := h.CommunityStore.GetUserCommunities(currentUser)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if len(communities) >= 5 {
+		return ctx.JSON(http.StatusForbidden, utils.NewError(errors.New("user can be part of at most 5 communities")))
+	}
+
 	var c model.Community
 
 	req := newCommunityCreateRequest()
@@ -26,8 +39,7 @@ func (h *Handler) CreateCommunity(ctx echo.Context) error {
 
 	c.Name = req.Community.Name
 
-	err := h.CommunityStore.Create(&c)
-	if err != nil {
+	if err := h.CommunityStore.Create(&c); err != nil {
 		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
 
@@ -76,6 +88,29 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 	}
 
 	currentUser := ctx.Get("current_user").(*model.User)
+
+	// Check if the user is already a member of the community
+	for _, member := range community.Members {
+		if member.ID == currentUser.ID {
+			return errors.New("user is already a member of the community")
+		}
+	}
+
+	// Check if the user is the owner of the community
+	if currentUser.ID == community.Owner {
+		return errors.New("user is owner of the community")
+	}
+
+	// User can be part of at most 5 communities
+	communities, err := h.CommunityStore.GetUserCommunities(currentUser)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if len(communities) >= 5 {
+		return ctx.JSON(http.StatusForbidden, utils.NewError(errors.New("user can be part of at most 5 communities")))
+	}
 
 	if err := h.CommunityStore.Join(currentUser, community); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
