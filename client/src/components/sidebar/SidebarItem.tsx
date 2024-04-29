@@ -24,10 +24,10 @@ const SidebarItem = ({ icon, label, link, nestedItems }: SidebarItemProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col">
       <div
         className={cn(
-          "flex cursor-pointer flex-row justify-between rounded-md p-2 text-gray-12 hover:bg-colors-gray-3",
+          "mt-1 flex cursor-pointer flex-row justify-between rounded-md p-2 text-gray-12 hover:bg-colors-gray-3",
           {
             "bg-colors-gray-3": link && link.startsWith(currentPath ?? ""),
           },
