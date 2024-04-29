@@ -11,4 +11,6 @@ func (h *Handler) Register(v1 *echo.Group) {
 	communities := v1.Group("/communities")
 	communities.POST("", h.CreateCommunity)
 	communities.GET("", h.GetUserCommunities)
+	communities.POST("/:community_id/join", h.JoinCommunity)
+	communities.GET("/:community_id/members", h.GetCommunityMembers)
 }

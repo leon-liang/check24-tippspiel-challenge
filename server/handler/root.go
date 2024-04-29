@@ -10,7 +10,7 @@ import (
 // @Summary Example
 // @Produce json
 // @Success 200 {object} handler.rootResponse
-// @Router / [get]
+// @Router / [GET]
 func (h *Handler) GetRoot(ctx echo.Context) error {
 	var response = newRootResponse("Hello World!")
 	return ctx.JSON(http.StatusOK, &response)

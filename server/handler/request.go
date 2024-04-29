@@ -11,7 +11,7 @@ type communityCreateRequest struct {
 	} `json:"community"`
 }
 
-func newCommunityRequest() *communityCreateRequest {
+func newCommunityCreateRequest() *communityCreateRequest {
 	return new(communityCreateRequest)
 }
 

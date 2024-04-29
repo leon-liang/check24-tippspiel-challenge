@@ -36,6 +36,28 @@ func newUserResponse(u *model.User) *userResponse {
 	return r
 }
 
+type usersResponse struct {
+	Users []userResponse `json:"users"`
+}
+
+func newUsersResponse(users []model.User) *usersResponse {
+	r := new(usersResponse)
+	ur := userResponse{}
+
+	r.Users = make([]userResponse, 0)
+	for _, u := range users {
+		ur.User.ID = u.ID
+		ur.User.Email = u.Email
+		ur.User.Username = u.Username
+		ur.User.FirstName = u.FirstName
+		ur.User.LastName = u.LastName
+
+		r.Users = append(r.Users, ur)
+	}
+
+	return r
+}
+
 type communityResponse struct {
 	Community struct {
 		ID   string `json:"id"`
