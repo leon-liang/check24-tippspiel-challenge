@@ -60,7 +60,6 @@ func (cs *CommunityStore) GetUserCommunities(user *model.User) ([]model.Communit
 }
 
 func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]model.User, error) {
-
 	var owner model.User
 
 	if err := cs.db.Find(&owner, "id = ?", community.Owner).Error; err != nil {
@@ -72,6 +71,5 @@ func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]mod
 	}
 
 	members := append(community.Members, owner)
-
 	return members, nil
 }
