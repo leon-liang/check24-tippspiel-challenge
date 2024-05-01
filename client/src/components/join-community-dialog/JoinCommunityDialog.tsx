@@ -12,11 +12,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useJoinCommunity } from "@/hooks/communities.api";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const JoinCommunityDialog = () => {
   const mutation = useJoinCommunity();
   const [open, setOpen] = React.useState<boolean>(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   const FormSchema = z.object({
     communityTag: z.string().min(36),
@@ -29,15 +31,29 @@ const JoinCommunityDialog = () => {
 
   const onSubmit: SubmitHandler<FormData> = async (data, event) => {
     event?.target.reset();
-    const response = await mutation.mutateAsync(data.communityTag);
+    try {
+      const response = await mutation.mutateAsync(data.communityTag);
+      toast({
+        variant: "success",
+        title: "Successfully joined",
+        description: "Place a bet to get started!",
+      });
+      router.push(`/communities/${response.data.community?.id}`);
+    } catch (e) {
+      toast({
+        variant: "error",
+        title: "Failed to join the community",
+        description: "Please try again later!",
+      });
+      router.push("/");
+    }
     setOpen(false);
-    router.push(`/communities/${response.data.community?.id}`);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Join Community</Button>
+        <Button variant="mute">Join Community</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Join a Community</DialogTitle>
@@ -59,12 +75,7 @@ const JoinCommunityDialog = () => {
             />
           </fieldset>
           <div className="mt-[25px] flex justify-end">
-            <Button
-              type="submit"
-              className="inline-flex h-[35px] w-[80px] items-center justify-center rounded-[4px] bg-colors-gray-12 px-[15px] leading-none text-white-A12 hover:bg-colors-gray-11 focus:shadow-[0_0_0_2px] focus:shadow-gray-7 focus:outline-none"
-            >
-              Join
-            </Button>
+            <Button type="submit">Join</Button>
           </div>
         </form>
       </DialogContent>

@@ -29,7 +29,8 @@ const SidebarItem = ({ icon, label, link, nestedItems }: SidebarItemProps) => {
         className={cn(
           "mt-1 flex cursor-pointer flex-row justify-between rounded-md p-2 text-gray-12 hover:bg-colors-gray-3",
           {
-            "bg-colors-gray-3": link && link.startsWith(currentPath ?? ""),
+            "bg-colors-indigo-3 text-indigo-12":
+              link && link.startsWith(currentPath ?? ""),
           },
         )}
         onClick={

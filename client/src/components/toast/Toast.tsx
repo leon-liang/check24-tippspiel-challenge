@@ -4,6 +4,7 @@ import * as ToastPrimitive from "@radix-ui/react-toast";
 import React from "react";
 import CheckIcon from "@/components/icons/CheckIcon";
 import CrossIcon from "@/components/icons/CrossIcon";
+import { colors } from "../../../tailwind.config";
 
 const ToastProvider = ToastPrimitive.Provider;
 
@@ -34,14 +35,14 @@ const Toast = React.forwardRef<
     switch (variant) {
       case "success":
         return (
-          <div className="rounded bg-colors-green-4 p-2 text-green-12">
-            <CheckIcon height={24} width={24} />
+          <div className="rounded bg-colors-green-4 p-2">
+            <CheckIcon stroke={colors.green["11"]} height={24} width={24} />
           </div>
         );
       case "error":
         return (
-          <div className="rounded bg-colors-red-4 p-2 text-red-11">
-            <CrossIcon height={24} width={24} />
+          <div className="rounded bg-colors-red-4 p-2">
+            <CrossIcon stroke={colors.red["11"]} height={24} width={24} />
           </div>
         );
       default:
