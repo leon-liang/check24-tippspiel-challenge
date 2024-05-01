@@ -87,18 +87,24 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
 	}
 
+	members, err := h.CommunityStore.GetCommunityMembers(community)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
 	currentUser := ctx.Get("current_user").(*model.User)
 
 	// Check if the user is already a member of the community
-	for _, member := range community.Members {
+	for _, member := range members {
 		if member.ID == currentUser.ID {
-			return errors.New("user is already a member of the community")
+			return ctx.JSON(http.StatusInternalServerError, "user is already a member of the community")
 		}
 	}
 
 	// Check if the user is the owner of the community
 	if currentUser.ID == community.Owner {
-		return errors.New("user is owner of the community")
+		return ctx.JSON(http.StatusInternalServerError, "user is owner of the community")
 	}
 
 	// User can be part of at most 5 communities

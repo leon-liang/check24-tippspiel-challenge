@@ -1,5 +1,4 @@
 name: check24-tippspiel-challenge
-version: "3.9"
 
 services:
   keycloak:

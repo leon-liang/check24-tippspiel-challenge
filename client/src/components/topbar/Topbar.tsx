@@ -10,7 +10,6 @@ const Topbar = () => {
         <Image src="/check24-logo.svg" alt="Check24 Logo" fill priority />
       </div>
       <div className="flex flex-row gap-4">
-        <JoinCommunityDialog />
         <CreateCommunityDialog />
       </div>
     </div>

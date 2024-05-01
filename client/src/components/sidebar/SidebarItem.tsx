@@ -17,7 +17,7 @@ const SidebarItem = ({ icon, label, link, nestedItems }: SidebarItemProps) => {
   const currentPath = usePathname();
   const router = useRouter();
 
-  const [showNestedItems, setShowNestedItems] = useState<boolean>(false);
+  const [showNestedItems, setShowNestedItems] = useState<boolean>(true);
 
   const toggleNestedItems = () => {
     setShowNestedItems(!showNestedItems);
