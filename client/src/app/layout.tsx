@@ -5,6 +5,7 @@ import Providers from "@/app/providers";
 import SessionGuard from "@/components/auth/session-guard/SessionGuard";
 import Navigation from "@/components/navigation/Navigation";
 import React from "react";
+import { Toaster } from "@/components/toast/Toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,10 @@ export default function RootLayout({
       <body className={`${inter.className} bg-colors-white text-gray-12`}>
         <Providers>
           <SessionGuard>
-            <Navigation>{children}</Navigation>
+            <Navigation>
+              {children}
+              <Toaster />
+            </Navigation>
           </SessionGuard>
         </Providers>
       </body>

@@ -10,10 +10,7 @@ export default function Providers({ children }: PropsWithChildren) {
 
   return (
     <SessionProvider refetchInterval={4 * 60}>
-      <QueryClientProvider client={queryClient}>
-        {children}
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </SessionProvider>
   );
 }

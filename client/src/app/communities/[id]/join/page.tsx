@@ -22,7 +22,14 @@ const JoinCommunity = () => {
     })();
   }, [params]);
 
-  return <div></div>;
+  return (
+    <div>
+      {/*<Toast*/}
+      {/*  title="Successfully joined the community"*/}
+      {/*  description="Place a bet to get started!"*/}
+      {/*/>*/}
+    </div>
+  );
 };
 
 export default JoinCommunity;
