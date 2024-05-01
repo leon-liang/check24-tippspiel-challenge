@@ -9,7 +9,7 @@ const ChevronIcon = ({ width, height, stroke }: IconProps) => {
     >
       <path
         d="M6 9L12 15L18 9"
-        stroke={stroke}
+        stroke={stroke ?? "currentColor"}
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
