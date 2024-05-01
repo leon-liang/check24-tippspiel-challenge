@@ -5,7 +5,7 @@ const SettingsIcon = ({ width, height, stroke }: IconProps) => {
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth="1.5"
-      stroke={stroke}
+      stroke={stroke ?? "currentColor"}
       width={width}
       height={height}
     >

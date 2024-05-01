@@ -7,7 +7,7 @@ const HomeIcon = ({ width, height, stroke }: IconProps) => {
       height={height}
       viewBox="0 0 24 24"
       strokeWidth="1.5"
-      stroke={stroke}
+      stroke={stroke ?? "currentColor"}
       className="align-middle"
     >
       <path
