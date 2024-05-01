@@ -8,7 +8,8 @@ const Dashboard = () => {
       <Banner
         title="Dashboard"
         descriptions={[
-          "View your global standings and a preview of your communities on the dashboard.",
+          "View your global standings and a preview of your communities in the dashboard.",
+          "Get a snapshot of where you stand worldwide and what's happening in your communities.",
         ]}
       />
     </>
