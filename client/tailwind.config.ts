@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-const colors = {
+export const colors = {
   white: {
     A1: "rgba(255, 255, 255, 0.05)",
     A2: "rgba(255, 255, 255, 0.1)",
