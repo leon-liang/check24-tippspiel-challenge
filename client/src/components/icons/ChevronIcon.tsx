@@ -1,4 +1,4 @@
-const ChevronIcon = ({ width, height }: IconProps) => {
+const ChevronIcon = ({ width, height, stroke }: IconProps) => {
   return (
     <svg
       width={width}
@@ -9,7 +9,7 @@ const ChevronIcon = ({ width, height }: IconProps) => {
     >
       <path
         d="M6 9L12 15L18 9"
-        stroke="currentColor"
+        stroke={stroke}
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"

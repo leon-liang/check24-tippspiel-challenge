@@ -1,4 +1,4 @@
-const CrossIcon = ({ stroke, width, height }: IconProps) => {
+const CrossIcon = ({ width, height, stroke }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
