@@ -8,7 +8,7 @@ export const DialogContent = React.forwardRef(function DialogContent(
 ) {
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-20 bg-colors-black-A6 data-[state=open]:animate-overlayShow" />
+      <DialogPrimitive.Overlay className="fixed inset-0 z-20 bg-colors-black-A3 data-[state=open]:animate-overlayShow" />
       <DialogPrimitive.Content
         {...props}
         ref={forwardedRef}
