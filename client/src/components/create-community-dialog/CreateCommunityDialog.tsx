@@ -40,7 +40,7 @@ const CreateCommunityDialog = () => {
     setOpen(false);
     toast({
       variant: "success",
-      title: "Successfully created community",
+      title: "Successfully created",
       description: "Place a bet to get started!",
     });
     router.push(`/communities/${response.data.community?.id}`);
