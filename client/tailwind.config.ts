@@ -71,6 +71,20 @@ const colors = {
     11: "#218358",
     12: "#193B2D",
   },
+  red: {
+    1: "#FFF7F7",
+    2: "#FFF7F7",
+    3: "#FEEBEC",
+    4: "#FFDBDC",
+    5: "#FFCDCE",
+    6: "#FDBDBE",
+    7: "#F4A9AA",
+    8: "#EB8E90",
+    9: "#E5484D",
+    10: "#DC3E42",
+    11: "#CE2C31",
+    12: "#641723",
+  },
 };
 
 const config: Config = {

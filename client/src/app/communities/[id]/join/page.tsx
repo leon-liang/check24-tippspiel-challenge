@@ -3,10 +3,12 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useJoinCommunity } from "@/hooks/communities.api";
+import { useToast } from "@/hooks/use-toast";
 
 const JoinCommunity = () => {
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const { toast } = useToast();
 
   const mutation = useJoinCommunity();
 
@@ -14,22 +16,24 @@ const JoinCommunity = () => {
     (async function () {
       try {
         await mutation.mutateAsync(params.id);
-      } catch {
-        console.log("You are already part of the community");
-      } finally {
+        toast({
+          variant: "success",
+          title: "Successfully joined",
+          description: "Place a bet to get started!",
+        });
         router.push(`/communities/${params.id}`);
+      } catch (error) {
+        toast({
+          variant: "error",
+          title: "Failed to join the community",
+          description: "Please try again later!",
+        });
+        router.push("/");
       }
     })();
-  }, [params]);
+  }, []);
 
-  return (
-    <div>
-      {/*<Toast*/}
-      {/*  title="Successfully joined the community"*/}
-      {/*  description="Place a bet to get started!"*/}
-      {/*/>*/}
-    </div>
-  );
+  return <></>;
 };
 
 export default JoinCommunity;

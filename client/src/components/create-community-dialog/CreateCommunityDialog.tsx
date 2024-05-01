@@ -12,9 +12,11 @@ import {
   DialogTrigger,
 } from "@/components/dialog/Dialog";
 import Button from "@/components/button/Button";
+import { useToast } from "@/hooks/use-toast";
 
 const CreateCommunityDialog = () => {
   const mutation = useCreateCommunity();
+  const { toast } = useToast();
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
 
@@ -36,6 +38,11 @@ const CreateCommunityDialog = () => {
       },
     });
     setOpen(false);
+    toast({
+      variant: "success",
+      title: "Successfully created community",
+      description: "Place a bet to get started!",
+    });
     router.push(`/communities/${response.data.community?.id}`);
   };
 
