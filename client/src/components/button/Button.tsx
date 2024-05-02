@@ -7,6 +7,7 @@ type ButtonProps = React.ComponentProps<"button"> & {
 };
 const buttonVariants = cva(
   [
+    "whitespace-nowrap",
     "rounded-md",
     "px-5",
     "font-medium",

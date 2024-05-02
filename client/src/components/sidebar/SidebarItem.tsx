@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import ChevronIcon from "@/components/icons/ChevronIcon";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import { motion, AnimatePresence } from "framer-motion";
 import cn from "classnames";
 import { usePathname } from "next/navigation";
@@ -46,7 +46,7 @@ const SidebarItem = ({ icon, label, link, nestedItems }: SidebarItemProps) => {
             animate={{ rotate: showNestedItems ? -180 : 0 }}
             transition={{ ease: "linear", duration: 0.1 }}
           >
-            <ChevronIcon width={28} height={28} />
+            <ChevronDownIcon width={28} height={28} />
           </motion.div>
         )}
       </div>
