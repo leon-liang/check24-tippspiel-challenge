@@ -1,9 +1,11 @@
-import Banner from "@/components/banner/Banner";
+import Banner, { BannerTitle } from "@/components/banner/Banner";
 
 const Settings = () => {
   return (
     <>
-      <Banner title={"Settings"}></Banner>
+      <Banner>
+        <BannerTitle>Settings</BannerTitle>
+      </Banner>
     </>
   );
 };

@@ -1,9 +1,11 @@
-import Banner from "@/components/banner/Banner";
+import Banner, { BannerTitle } from "@/components/banner/Banner";
 
 const Docs = () => {
   return (
     <>
-      <Banner title={"Documentation"}></Banner>
+      <Banner>
+        <BannerTitle>Documentation</BannerTitle>
+      </Banner>
     </>
   );
 };
