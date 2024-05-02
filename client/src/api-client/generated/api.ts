@@ -184,6 +184,65 @@ export const CommunitiesApiAxiosParamCreator = function (
   return {
     /**
      *
+     * @summary Retrieve a community with the given id
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1CommunitiesCommunityIdGet: async (
+      communityId: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'communityId' is not null or undefined
+      assertParamExists(
+        "v1CommunitiesCommunityIdGet",
+        "communityId",
+        communityId,
+      );
+      const localVarPath = `/v1/communities/{community_id}`.replace(
+        `{${"community_id"}}`,
+        encodeURIComponent(String(communityId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @summary Join the specified community
      * @param {string} communityId Community ID
      * @param {*} [options] Override http request option.
@@ -212,6 +271,65 @@ export const CommunitiesApiAxiosParamCreator = function (
 
       const localVarRequestOptions = {
         method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary Retrieve all users that are part of a community
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1CommunitiesCommunityIdMembersGet: async (
+      communityId: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'communityId' is not null or undefined
+      assertParamExists(
+        "v1CommunitiesCommunityIdMembersGet",
+        "communityId",
+        communityId,
+      );
+      const localVarPath = `/v1/communities/{community_id}/members`.replace(
+        `{${"community_id"}}`,
+        encodeURIComponent(String(communityId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
         ...baseOptions,
         ...options,
       };
@@ -361,6 +479,40 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
+     * @summary Retrieve a community with the given id
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1CommunitiesCommunityIdGet(
+      communityId: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HandlerCommunityResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1CommunitiesCommunityIdGet(
+          communityId,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["CommunitiesApi.v1CommunitiesCommunityIdGet"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
      * @summary Join the specified community
      * @param {string} communityId Community ID
      * @param {*} [options] Override http request option.
@@ -385,6 +537,40 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
         operationServerMap["CommunitiesApi.v1CommunitiesCommunityIdJoinPost"]?.[
           localVarOperationServerIndex
         ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
+     * @summary Retrieve all users that are part of a community
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1CommunitiesCommunityIdMembersGet(
+      communityId: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HandlerCommunitiesResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1CommunitiesCommunityIdMembersGet(
+          communityId,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap[
+          "CommunitiesApi.v1CommunitiesCommunityIdMembersGet"
+        ]?.[localVarOperationServerIndex]?.url;
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -469,6 +655,21 @@ export const CommunitiesApiFactory = function (
   return {
     /**
      *
+     * @summary Retrieve a community with the given id
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1CommunitiesCommunityIdGet(
+      communityId: string,
+      options?: any,
+    ): AxiosPromise<HandlerCommunityResponse> {
+      return localVarFp
+        .v1CommunitiesCommunityIdGet(communityId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @summary Join the specified community
      * @param {string} communityId Community ID
      * @param {*} [options] Override http request option.
@@ -480,6 +681,21 @@ export const CommunitiesApiFactory = function (
     ): AxiosPromise<HandlerCommunityResponse> {
       return localVarFp
         .v1CommunitiesCommunityIdJoinPost(communityId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Retrieve all users that are part of a community
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1CommunitiesCommunityIdMembersGet(
+      communityId: string,
+      options?: any,
+    ): AxiosPromise<HandlerCommunitiesResponse> {
+      return localVarFp
+        .v1CommunitiesCommunityIdMembersGet(communityId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -520,6 +736,23 @@ export const CommunitiesApiFactory = function (
 export class CommunitiesApi extends BaseAPI {
   /**
    *
+   * @summary Retrieve a community with the given id
+   * @param {string} communityId Community ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CommunitiesApi
+   */
+  public v1CommunitiesCommunityIdGet(
+    communityId: string,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return CommunitiesApiFp(this.configuration)
+      .v1CommunitiesCommunityIdGet(communityId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @summary Join the specified community
    * @param {string} communityId Community ID
    * @param {*} [options] Override http request option.
@@ -532,6 +765,23 @@ export class CommunitiesApi extends BaseAPI {
   ) {
     return CommunitiesApiFp(this.configuration)
       .v1CommunitiesCommunityIdJoinPost(communityId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Retrieve all users that are part of a community
+   * @param {string} communityId Community ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CommunitiesApi
+   */
+  public v1CommunitiesCommunityIdMembersGet(
+    communityId: string,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return CommunitiesApiFp(this.configuration)
+      .v1CommunitiesCommunityIdMembersGet(communityId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

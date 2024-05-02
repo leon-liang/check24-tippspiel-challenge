@@ -47,6 +47,26 @@ func (h *Handler) CreateCommunity(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, &response)
 }
 
+// GetCommunity godoc
+// @Tags Communities
+// @Summary Retrieve a community with the given id
+// @Produce json
+// @Success 200 {object} handler.communityResponse
+// @Param community_id path string true "Community ID"
+// @Router /v1/communities/{community_id} [GET]
+// @Security OAuth2Implicit
+func (h *Handler) GetCommunity(ctx echo.Context) error {
+	communityId := ctx.Param("community_id")
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+	}
+
+	response := newCommunityResponse(community)
+	return ctx.JSON(http.StatusOK, &response)
+}
+
 // GetUserCommunities godoc
 // @Tags Communities
 // @Summary Retrieve all communities the current user is part of
@@ -77,7 +97,7 @@ func (h *Handler) GetUserCommunities(ctx echo.Context) error {
 // @Security OAuth2Implicit
 func (h *Handler) JoinCommunity(ctx echo.Context) error {
 	communityId := ctx.Param("community_id")
-	community, err := h.CommunityStore.GetCommunitiesById(communityId)
+	community, err := h.CommunityStore.GetCommunityById(communityId)
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
@@ -137,7 +157,7 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 func (h *Handler) GetCommunityMembers(ctx echo.Context) error {
 	communityId := ctx.Param("community_id")
 
-	community, err := h.CommunityStore.GetCommunitiesById(communityId)
+	community, err := h.CommunityStore.GetCommunityById(communityId)
 
 	if err != nil {
 		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
