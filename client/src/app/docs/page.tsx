@@ -1,5 +1,11 @@
+import Banner from "@/components/banner/Banner";
+
 const Docs = () => {
-  return <div></div>;
+  return (
+    <>
+      <Banner title={"Documentation"}></Banner>
+    </>
+  );
 };
 
 export default Docs;

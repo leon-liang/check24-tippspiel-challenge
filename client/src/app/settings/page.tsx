@@ -1,5 +1,11 @@
+import Banner from "@/components/banner/Banner";
+
 const Settings = () => {
-  return <div></div>;
+  return (
+    <>
+      <Banner title={"Settings"}></Banner>
+    </>
+  );
 };
 
 export default Settings;

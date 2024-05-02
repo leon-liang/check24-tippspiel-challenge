@@ -45,7 +45,6 @@ const JoinCommunityDialog = () => {
         title: "Failed to join the community",
         description: "Please try again later!",
       });
-      router.push("/");
     }
     setOpen(false);
   };
