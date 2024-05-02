@@ -26,23 +26,14 @@ const CopyToClipboard = ({ text }: CopyToClipboardProps) => {
     <>
       <TooltipProvider>
         <Tooltip delayDuration={300}>
-          <TooltipTrigger
-            ref={ref}
-            onClick={(event) => {
-              event.preventDefault();
-            }}
-          >
+          <TooltipTrigger ref={ref}>
             <ReactCopyToClipboard text={text} onCopy={() => setCopied(true)}>
               <p className="flex cursor-default flex-row gap-1 rounded-md px-2 align-middle hover:bg-colors-gray-3">
                 {text}
               </p>
             </ReactCopyToClipboard>
           </TooltipTrigger>
-          <TooltipContent
-            onPointerDownOutside={(event) => {
-              event.preventDefault();
-            }}
-          >
+          <TooltipContent>
             <p>{copied ? "Copied" : "Click to copy"}</p>
           </TooltipContent>
         </Tooltip>
