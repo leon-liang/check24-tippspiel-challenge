@@ -2,6 +2,12 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { Select } from "@/components/select/Select";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/tabs/Tabs";
 
 const Bets = () => {
   return (
@@ -31,7 +37,22 @@ const Bets = () => {
           </p>
         </BannerContent>
       </Banner>
-      <div className="flex flex-row items-center gap-6 py-12 md:px-32"></div>
+      <div className="flex flex-row items-center gap-6 py-6 md:px-32">
+        <Tabs defaultValue="friday">
+          <TabsList>
+            <TabsTrigger value="friday">Friday, 14.06.24</TabsTrigger>
+            <TabsTrigger value="saturday">Saturday, 15.06.24</TabsTrigger>
+            <TabsTrigger value="sunday">Sunday, 16.06.24</TabsTrigger>
+            <TabsTrigger value="monday">Monday, 17.06.24</TabsTrigger>
+            <TabsTrigger value="tuesday">Tuesday, 18.06.24</TabsTrigger>
+          </TabsList>
+          <TabsContent value="friday"></TabsContent>
+          <TabsContent value="saturday"></TabsContent>
+          <TabsContent value="sunday"></TabsContent>
+          <TabsContent value="monday"></TabsContent>
+          <TabsContent value="tuesday"></TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };
