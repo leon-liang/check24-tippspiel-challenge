@@ -76,7 +76,7 @@ const JoinCommunityDialog = () => {
           </fieldset>
           <div className="mt-[25px] flex justify-end">
             <Button className="flex flex-row items-center gap-2" type="submit">
-              Join <ArrowRight className="stroke-2" width={18} height={18} />
+              Join <ArrowRight className="stroke-2" width={16} height={16} />
             </Button>
           </div>
         </form>

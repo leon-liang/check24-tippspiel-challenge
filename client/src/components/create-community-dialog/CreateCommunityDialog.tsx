@@ -85,7 +85,7 @@ const CreateCommunityDialog = () => {
           </fieldset>
           <div className="mt-[25px] flex justify-end">
             <Button className="flex flex-row items-center gap-2" type="submit">
-              Save <ArrowRight className="stroke-2" width={18} height={18} />
+              Save <ArrowRight className="stroke-2" width={16} height={16} />
             </Button>
           </div>
         </form>
