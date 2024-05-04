@@ -13,6 +13,7 @@ import {
 } from "@/components/dialog/Dialog";
 import Button from "@/components/button/Button";
 import { useToast } from "@/hooks/use-toast";
+import ArrowRight from "@/components/icons/ArrowRight";
 
 const CreateCommunityDialog = () => {
   const mutation = useCreateCommunity();
@@ -83,7 +84,9 @@ const CreateCommunityDialog = () => {
             />
           </fieldset>
           <div className="mt-[25px] flex justify-end">
-            <Button type="submit">Save</Button>
+            <Button className="flex flex-row items-center gap-2" type="submit">
+              Save <ArrowRight className="stroke-2" width={18} height={18} />
+            </Button>
           </div>
         </form>
       </DialogContent>

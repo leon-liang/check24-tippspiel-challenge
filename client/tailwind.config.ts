@@ -13,7 +13,7 @@ export const colors = {
     A9: "rgba(255, 255, 255, 0.7)",
     A10: "rgba(255, 255, 255, 0.8)",
     A11: "rgba(255, 255, 255, 0.9)",
-    A12: "rgba(255, 255, 255, 0.95)",
+    A12: "rgba(255, 255, 255, 1.0)",
   },
   black: {
     A1: "rgba(0, 0, 0, 0.05)",
@@ -27,7 +27,7 @@ export const colors = {
     A9: "rgba(0, 0, 0, 0.7)",
     A10: "rgba(0, 0, 0, 0.8)",
     A11: "rgba(0, 0, 0, 0.9)",
-    A12: "rgba(0, 0, 0, 0.95)",
+    A12: "rgba(0, 0, 0, 1.0)",
   },
   gray: {
     1: "#FCFCFC",
@@ -197,6 +197,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };
 export default config;

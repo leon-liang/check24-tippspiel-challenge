@@ -8,6 +8,15 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/tabs/Tabs";
+import GameView from "@/components/game-view/GameView";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/sheet/Sheet";
 
 const Bets = () => {
   return (
@@ -46,7 +55,25 @@ const Bets = () => {
             <TabsTrigger value="monday">Monday, 17.06.24</TabsTrigger>
             <TabsTrigger value="tuesday">Tuesday, 18.06.24</TabsTrigger>
           </TabsList>
-          <TabsContent value="friday"></TabsContent>
+          <TabsContent value="friday">
+            <div className="grid grid-cols-3 gap-4">
+              <Sheet>
+                <SheetTrigger>
+                  <GameView />
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle></SheetTitle>
+                    <SheetDescription></SheetDescription>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
+              <GameView />
+              <GameView />
+              <GameView />
+              <GameView />
+            </div>
+          </TabsContent>
           <TabsContent value="saturday"></TabsContent>
           <TabsContent value="sunday"></TabsContent>
           <TabsContent value="monday"></TabsContent>

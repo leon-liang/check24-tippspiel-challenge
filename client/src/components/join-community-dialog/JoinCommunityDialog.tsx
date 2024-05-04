@@ -13,6 +13,7 @@ import { z } from "zod";
 import { useJoinCommunity } from "@/hooks/communities.api";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import ArrowRight from "@/components/icons/ArrowRight";
 
 const JoinCommunityDialog = () => {
   const mutation = useJoinCommunity();
@@ -74,7 +75,9 @@ const JoinCommunityDialog = () => {
             />
           </fieldset>
           <div className="mt-[25px] flex justify-end">
-            <Button type="submit">Join</Button>
+            <Button className="flex flex-row items-center gap-2" type="submit">
+              Join <ArrowRight className="stroke-2" width={18} height={18} />
+            </Button>
           </div>
         </form>
       </DialogContent>
