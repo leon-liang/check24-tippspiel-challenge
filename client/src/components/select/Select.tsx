@@ -1,6 +1,5 @@
 import React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import cn from "classnames";
 
