@@ -9,14 +9,8 @@ import {
   TabsTrigger,
 } from "@/components/tabs/Tabs";
 import GameView from "@/components/game-view/GameView";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/sheet/Sheet";
+import React from "react";
+import SubmitBet from "@/components/submit-bet/SubmitBet";
 
 const Bets = () => {
   return (
@@ -57,17 +51,7 @@ const Bets = () => {
           </TabsList>
           <TabsContent value="friday">
             <div className="grid grid-cols-3 gap-4">
-              <Sheet>
-                <SheetTrigger>
-                  <GameView />
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle></SheetTitle>
-                    <SheetDescription></SheetDescription>
-                  </SheetHeader>
-                </SheetContent>
-              </Sheet>
+              <SubmitBet />
               <GameView />
               <GameView />
               <GameView />

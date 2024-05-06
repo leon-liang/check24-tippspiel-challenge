@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
-import CreateCommunityDialog from "@/components/create-community-dialog/CreateCommunityDialog";
-import JoinCommunityDialog from "@/components/join-community-dialog/JoinCommunityDialog";
+import JoinCommunity from "@/components/join-community/JoinCommunity";
+import CreateCommunity from "@/components/create-community/CreateCommunity";
 
 const Topbar = () => {
   return (
@@ -10,8 +10,8 @@ const Topbar = () => {
         <Image src="/check24-logo.svg" alt="Check24 Logo" fill priority />
       </div>
       <div className="flex flex-row gap-3 align-middle">
-        <JoinCommunityDialog />
-        <CreateCommunityDialog />
+        <JoinCommunity />
+        <CreateCommunity />
       </div>
     </div>
   );
