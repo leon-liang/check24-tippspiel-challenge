@@ -12,7 +12,7 @@ import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
 
-const SubmitBet = () => {
+const Bet = () => {
   return (
     <>
       <Sheet>
@@ -85,4 +85,4 @@ const SubmitBet = () => {
   );
 };
 
-export default SubmitBet;
+export default Bet;

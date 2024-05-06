@@ -8,9 +8,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/tabs/Tabs";
-import GameView from "@/components/game-view/GameView";
 import React from "react";
-import SubmitBet from "@/components/submit-bet/SubmitBet";
+import Bet from "@/components/bet/Bet";
 
 const Bets = () => {
   return (
@@ -51,11 +50,11 @@ const Bets = () => {
           </TabsList>
           <TabsContent value="friday">
             <div className="grid grid-cols-3 gap-4">
-              <SubmitBet />
-              <GameView />
-              <GameView />
-              <GameView />
-              <GameView />
+              <Bet />
+              <Bet />
+              <Bet />
+              <Bet />
+              <Bet />
             </div>
           </TabsContent>
           <TabsContent value="saturday"></TabsContent>
