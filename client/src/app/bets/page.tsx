@@ -50,11 +50,56 @@ const Bets = () => {
           </TabsList>
           <TabsContent value="friday">
             <div className="grid grid-cols-3 gap-4">
-              <Bet />
-              <Bet />
-              <Bet />
-              <Bet />
-              <Bet />
+              <Bet
+                teamA={{
+                  name: "Luxembourg",
+                  bet: 2,
+                }}
+                teamB={{
+                  name: "Portugal",
+                  bet: 1,
+                }}
+              />
+              <Bet
+                teamA={{
+                  name: "Luxembourg",
+                  bet: 2,
+                }}
+                teamB={{
+                  name: "Portugal",
+                  bet: 1,
+                }}
+              />
+              <Bet
+                teamA={{
+                  name: "Luxembourg",
+                  bet: 2,
+                }}
+                teamB={{
+                  name: "Portugal",
+                  bet: 1,
+                }}
+              />
+              <Bet
+                teamA={{
+                  name: "Luxembourg",
+                  bet: 2,
+                }}
+                teamB={{
+                  name: "Portugal",
+                  bet: 1,
+                }}
+              />
+              <Bet
+                teamA={{
+                  name: "Luxembourg",
+                  bet: 2,
+                }}
+                teamB={{
+                  name: "Portugal",
+                  bet: 1,
+                }}
+              />
             </div>
           </TabsContent>
           <TabsContent value="saturday"></TabsContent>

@@ -1,8 +1,6 @@
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -70,15 +68,13 @@ const CreateCommunity = () => {
         <SheetContent>
           <SheetHeader className="flex flex-col gap-8">
             <SheetTitle>Create Community</SheetTitle>
-            <SheetDescription>
-              <div className="flex flex-col gap-6">
-                <p>
-                  Bring your friends together in communities and compete against
-                  them for the top spot!
-                </p>
-                <p>Give your community a name. Click save when you are done.</p>
-              </div>
-            </SheetDescription>
+            <div className="flex flex-col gap-6 text-sm text-gray-11">
+              <p>
+                Bring your friends together in communities and compete against
+                them for the top spot!
+              </p>
+              <p>Give your community a name. Click save when you are done.</p>
+            </div>
             <form
               className="flex flex-col gap-8"
               onSubmit={handleSubmit(onSubmit)}
@@ -97,9 +93,9 @@ const CreateCommunity = () => {
                 />
               </div>
               <div className="flex justify-end gap-3">
-                <SheetClose>
-                  <Button variant="mute">Cancel</Button>
-                </SheetClose>
+                <Button onClick={() => setOpen(false)} variant="mute">
+                  Cancel
+                </Button>
                 <Button
                   variant="action"
                   className="flex flex-row items-center gap-2"
