@@ -10,8 +10,8 @@ import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
 import { z } from "zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler } from "react-hook-form";
+import Form, { Input } from "@/components/form/Form";
 
 interface Team {
   name: string;
@@ -31,19 +31,14 @@ const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
     teamAScore: z.number().int(),
     teamBScore: z.number().int(),
   });
-
   type FormData = z.infer<typeof FormSchema>;
 
-  const { register, handleSubmit, reset } = useForm<FormData>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      teamAScore: teamA.bet,
-      teamBScore: teamB.bet,
-    },
-  });
+  const defaultValues = {
+    teamAScore: teamA.bet,
+    teamBScore: teamB.bet,
+  };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    reset();
     setOpen(false);
   };
 
@@ -68,39 +63,22 @@ const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
                 <li>0 points for everything else</li>
               </ul>
             </div>
-            <form
-              className="flex flex-col gap-8"
-              onSubmit={handleSubmit(onSubmit)}
+            <Form
+              schema={FormSchema}
+              onSubmit={onSubmit}
+              defaultValues={defaultValues}
             >
               <div className="flex flex-col gap-4">
-                <fieldset className="flex flex-col items-start gap-2">
-                  <label
-                    className="text-right text-[15px] text-indigo-11"
-                    htmlFor="team-a-score"
-                  >
-                    {`${teamA.name} final score:`}
-                  </label>
-                  <input
-                    type="number"
-                    className="inline-flex h-[35px] w-full items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
-                    id="team-a-score"
-                    {...register("teamAScore", { valueAsNumber: true })}
-                  />
-                </fieldset>
-                <fieldset className="flex flex-col items-start gap-2">
-                  <label
-                    className="text-right text-[15px] text-indigo-11"
-                    htmlFor="team-b-score"
-                  >
-                    {`${teamB.name}'s final score:`}
-                  </label>
-                  <input
-                    type="number"
-                    className="inline-flex h-[35px] w-full items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
-                    id="team-b-score"
-                    {...register("teamBScore", { valueAsNumber: true })}
-                  />
-                </fieldset>
+                <Input
+                  name="teamAScore"
+                  displayName={`${teamA.name} final score:`}
+                  type="number"
+                />
+                <Input
+                  name="teamBScore"
+                  displayName={`${teamB.name} final score:`}
+                  type="number"
+                />
               </div>
               <div className="flex justify-end gap-3">
                 <Button
@@ -120,7 +98,7 @@ const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
                   <ArrowRight className="stroke-2" width={16} height={16} />
                 </Button>
               </div>
-            </form>
+            </Form>
           </SheetHeader>
         </SheetContent>
       </Sheet>

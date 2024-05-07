@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Form from "@/components/form/Form";
 
 const CreateCommunity = () => {
   const mutation = useCreateCommunity();
@@ -73,10 +74,7 @@ const CreateCommunity = () => {
               </p>
               <p>Give your community a name. Click save when you are done.</p>
             </div>
-            <form
-              className="flex flex-col gap-8"
-              onSubmit={handleSubmit(onSubmit)}
-            >
+            <Form schema={FormSchema} onSubmit={handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-2">
                 <label
                   className="text-[15px] text-indigo-11"
@@ -103,7 +101,7 @@ const CreateCommunity = () => {
                   <ArrowRight className="stroke-2" width={16} height={16} />
                 </Button>
               </div>
-            </form>
+            </Form>
           </SheetHeader>
         </SheetContent>
       </Sheet>
