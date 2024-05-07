@@ -12,9 +12,7 @@ import { useCreateCommunity } from "@/hooks/communities.api";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Form from "@/components/form/Form";
+import Form, { Input } from "@/components/form/Form";
 
 const CreateCommunity = () => {
   const mutation = useCreateCommunity();
@@ -25,15 +23,9 @@ const CreateCommunity = () => {
   const FormSchema = z.object({
     communityName: z.string().min(1),
   });
-
   type FormData = z.infer<typeof FormSchema>;
 
-  const { register, handleSubmit, reset } = useForm<FormData>({
-    resolver: zodResolver(FormSchema),
-  });
-
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    reset();
+  const onSubmit = async (data: FormData) => {
     try {
       const response = await mutation.mutateAsync({
         community: {
@@ -74,18 +66,12 @@ const CreateCommunity = () => {
               </p>
               <p>Give your community a name. Click save when you are done.</p>
             </div>
-            <Form schema={FormSchema} onSubmit={handleSubmit(onSubmit)}>
+            <Form schema={FormSchema} onSubmit={onSubmit}>
               <div className="flex flex-col gap-2">
-                <label
-                  className="text-[15px] text-indigo-11"
-                  htmlFor="community-name"
-                >
-                  Community Name
-                </label>
-                <input
-                  className="inline-flex h-[35px] w-full items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
-                  {...register("communityName")}
-                  id="community-name"
+                <Input
+                  name="communityName"
+                  displayName="Community Name"
+                  type="text"
                 />
               </div>
               <div className="flex justify-end gap-3">

@@ -13,7 +13,7 @@ type FormData = z.infer<FormSchema>;
 
 interface FormProps {
   schema: FormSchema;
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: FormData) => Promise<void>;
   defaultValues?: Record<string, any>;
 }
 
@@ -28,11 +28,11 @@ const Form = ({
     resolver: zodResolver(schema),
   });
 
-  const submitHandler: SubmitHandler<FormData> = (
+  const submitHandler: SubmitHandler<FormData> = async (
     data: z.infer<typeof schema>,
   ) => {
     methods.reset();
-    onSubmit(data);
+    await onSubmit(data);
   };
 
   return (

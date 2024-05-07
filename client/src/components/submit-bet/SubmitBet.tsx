@@ -37,7 +37,7 @@ const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
     teamBScore: teamB.bet,
   };
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     setOpen(false);
   };
 

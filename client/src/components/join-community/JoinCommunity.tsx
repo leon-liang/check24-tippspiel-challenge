@@ -12,8 +12,7 @@ import { useJoinCommunity } from "@/hooks/communities.api";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import Form, { Input } from "@/components/form/Form";
 
 const JoinCommunity = () => {
   const mutation = useJoinCommunity();
@@ -24,14 +23,9 @@ const JoinCommunity = () => {
   const FormSchema = z.object({
     communityTag: z.string().min(36),
   });
-
   type FormData = z.infer<typeof FormSchema>;
-  const { register, handleSubmit, reset } = useForm<FormData>({
-    resolver: zodResolver(FormSchema),
-  });
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    reset();
+  const onSubmit = async (data: FormData) => {
     try {
       const response = await mutation.mutateAsync(data.communityTag);
       toast({
@@ -68,21 +62,12 @@ const JoinCommunity = () => {
                 Alternatively, you can join a community using their invite link.
               </p>
             </div>
-            <form
-              className="flex flex-col gap-8"
-              onSubmit={handleSubmit(onSubmit)}
-            >
+            <Form schema={FormSchema} onSubmit={onSubmit}>
               <div className="flex flex-col gap-2">
-                <label
-                  className="text-[15px] text-indigo-11"
-                  htmlFor="community-tag"
-                >
-                  Community Tag
-                </label>
-                <input
-                  className="inline-flex h-[35px] w-full items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
-                  {...register("communityTag")}
-                  id="community-tag"
+                <Input
+                  displayName="Community Tag"
+                  name="communityTag"
+                  type="text"
                 />
               </div>
               <div className="flex justify-end gap-3">
@@ -98,7 +83,7 @@ const JoinCommunity = () => {
                   <ArrowRight className="stroke-2" width={16} height={16} />
                 </Button>
               </div>
-            </form>
+            </Form>
           </SheetHeader>
         </SheetContent>
       </Sheet>
