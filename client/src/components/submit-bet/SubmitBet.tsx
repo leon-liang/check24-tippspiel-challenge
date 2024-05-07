@@ -19,28 +19,31 @@ interface Team {
   result?: number;
 }
 
-interface BetProps {
+interface SubmitBetProps {
   teamA: Team;
   teamB: Team;
 }
 
-const Bet = ({ teamA, teamB }: BetProps) => {
+const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
   const [open, setOpen] = React.useState(false);
 
   const FormSchema = z.object({
-    teamAScore: z.number(),
-    teamBScore: z.number(),
+    teamAScore: z.number().int(),
+    teamBScore: z.number().int(),
   });
 
   type FormData = z.infer<typeof FormSchema>;
 
   const { register, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      teamAScore: teamA.bet,
+      teamBScore: teamB.bet,
+    },
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     reset();
-    console.log("Here");
     setOpen(false);
   };
 
@@ -73,25 +76,29 @@ const Bet = ({ teamA, teamB }: BetProps) => {
                 <fieldset className="flex flex-col items-start gap-2">
                   <label
                     className="text-right text-[15px] text-indigo-11"
-                    htmlFor="community-tag"
+                    htmlFor="team-a-score"
                   >
                     {`${teamA.name} final score:`}
                   </label>
                   <input
+                    type="number"
                     className="inline-flex h-[35px] w-full items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
-                    id="community-tag"
+                    id="team-a-score"
+                    {...register("teamAScore", { valueAsNumber: true })}
                   />
                 </fieldset>
                 <fieldset className="flex flex-col items-start gap-2">
                   <label
                     className="text-right text-[15px] text-indigo-11"
-                    htmlFor="community-tag"
+                    htmlFor="team-b-score"
                   >
                     {`${teamB.name}'s final score:`}
                   </label>
                   <input
+                    type="number"
                     className="inline-flex h-[35px] w-full items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
-                    id="community-tag"
+                    id="team-b-score"
+                    {...register("teamBScore", { valueAsNumber: true })}
                   />
                 </fieldset>
               </div>
@@ -121,4 +128,4 @@ const Bet = ({ teamA, teamB }: BetProps) => {
   );
 };
 
-export default Bet;
+export default SubmitBet;

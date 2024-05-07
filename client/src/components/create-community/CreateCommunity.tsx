@@ -53,9 +53,7 @@ const CreateCommunity = () => {
         title: "Failed to create community",
         description: "Please try again later!",
       });
-      router.push("/");
     }
-
     setOpen(false);
   };
 

@@ -9,7 +9,7 @@ import {
   TabsTrigger,
 } from "@/components/tabs/Tabs";
 import React from "react";
-import Bet from "@/components/bet/Bet";
+import SubmitBet from "@/components/submit-bet/SubmitBet";
 
 const Bets = () => {
   return (
@@ -50,7 +50,7 @@ const Bets = () => {
           </TabsList>
           <TabsContent value="friday">
             <div className="grid grid-cols-3 gap-4">
-              <Bet
+              <SubmitBet
                 teamA={{
                   name: "Luxembourg",
                   bet: 2,
@@ -60,7 +60,7 @@ const Bets = () => {
                   bet: 1,
                 }}
               />
-              <Bet
+              <SubmitBet
                 teamA={{
                   name: "Luxembourg",
                   bet: 2,
@@ -70,7 +70,7 @@ const Bets = () => {
                   bet: 1,
                 }}
               />
-              <Bet
+              <SubmitBet
                 teamA={{
                   name: "Luxembourg",
                   bet: 2,
@@ -80,7 +80,7 @@ const Bets = () => {
                   bet: 1,
                 }}
               />
-              <Bet
+              <SubmitBet
                 teamA={{
                   name: "Luxembourg",
                   bet: 2,
@@ -90,7 +90,7 @@ const Bets = () => {
                   bet: 1,
                 }}
               />
-              <Bet
+              <SubmitBet
                 teamA={{
                   name: "Luxembourg",
                   bet: 2,
