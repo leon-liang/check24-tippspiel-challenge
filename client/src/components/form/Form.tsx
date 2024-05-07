@@ -8,9 +8,12 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+type FormSchema = z.Schema;
+type FormData = z.infer<FormSchema>;
+
 interface FormProps {
-  schema: z.ZodObject<any>;
-  onSubmit: SubmitHandler<any>;
+  schema: FormSchema;
+  onSubmit: (data: FormData) => void;
   defaultValues?: Record<string, any>;
 }
 
@@ -20,18 +23,23 @@ const Form = ({
   children,
   defaultValues,
 }: PropsWithChildren<FormProps>) => {
-  type FormData = z.infer<typeof schema>;
-
   const methods = useForm<FormData>({
     defaultValues,
     resolver: zodResolver(schema),
   });
 
+  const submitHandler: SubmitHandler<FormData> = (
+    data: z.infer<typeof schema>,
+  ) => {
+    methods.reset();
+    onSubmit(data);
+  };
+
   return (
     <FormProvider {...methods}>
       <form
         className="flex flex-col gap-8"
-        onSubmit={methods.handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(submitHandler)}
       >
         {children}
       </form>
@@ -62,7 +70,7 @@ export const Input = ({ name, displayName, type }: FormInputProps) => {
         className="inline-flex h-[35px] w-full items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
         id={name}
         type={type}
-        {...register(name, { valueAsNumber: type === "text" })}
+        {...register(name, { valueAsNumber: type === "number" })}
         disabled={isSubmitting}
       />
     </fieldset>

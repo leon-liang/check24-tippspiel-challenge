@@ -10,7 +10,6 @@ import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
 import { z } from "zod";
-import { SubmitHandler } from "react-hook-form";
 import Form, { Input } from "@/components/form/Form";
 
 interface Team {
@@ -38,7 +37,7 @@ const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
     teamBScore: teamB.bet,
   };
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit = (data: FormData) => {
     setOpen(false);
   };
 
