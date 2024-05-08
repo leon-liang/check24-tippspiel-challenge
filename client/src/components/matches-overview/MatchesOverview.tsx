@@ -43,7 +43,7 @@ const MatchesOverview = ({ matches }: MatchOverviewProps) => {
 
   useEffect(() => {
     setSelectedTab(getClosestDate(currentDate, dates));
-  }, []);
+  }, [currentDate]);
 
   return (
     <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(value)}>

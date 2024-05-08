@@ -2,24 +2,24 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { Select } from "@/components/select/Select";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import MatchesOverview from "@/components/matches-overview/MatchesOverview";
 import { DateTime, Interval } from "luxon";
 
-// Match day 1    [14.06; 18.06]
-// Match day 2    [19.06; 22.06]
-// Match day 3    [23.06; 26.06]
-// Round of 16    [29.06; 02.07]
-// Quarter Finals [05.07; 06.07]
-// Semi Finals    [09.07; 10.07]
-// Finals         [14.07]
+// Match day 1    [14.06; 19.06)
+// Match day 2    [19.06; 23.06)
+// Match day 3    [23.06; 27.06)
+// Round of 16    [29.06; 03.07)
+// Quarter Finals [05.07; 07.07)
+// Semi Finals    [09.07; 11.07)
+// Finals         [14.07; 15.07)
 
 const Bets = () => {
   const currentDate = DateTime.now().toISODate();
   const [selectedRound, setSelectedRound] = useState("");
 
-  useEffect(() => {
-    const rounds = [
+  const rounds = useMemo(
+    () => [
       {
         name: "Match day 1",
         dates: Interval.fromDateTimes(
@@ -69,8 +69,11 @@ const Bets = () => {
           DateTime.local(2024, 7, 15),
         ),
       },
-    ];
+    ],
+    [],
+  );
 
+  useEffect(() => {
     const currentRound = rounds.find((round) =>
       round.dates.contains(DateTime.fromISO(currentDate)),
     );
@@ -81,9 +84,13 @@ const Bets = () => {
     {
       teamA: {
         name: "Germany",
+        bet: 2,
+        result: 2,
       },
       teamB: {
         name: "Scotland",
+        bet: 1,
+        result: 2,
       },
       round: "Match day 1",
       date: DateTime.local(2024, 6, 14, 21, 0),
@@ -447,15 +454,7 @@ const Bets = () => {
           <h1>Your Bets</h1>
           <Select
             value={selectedRound}
-            items={[
-              "Match day 1",
-              "Match day 2",
-              "Match day 3",
-              "Round of 16",
-              "Quarter-finals",
-              "Semi-finals",
-              "Finals",
-            ]}
+            items={rounds.map((round) => round.name)}
             onValueChange={(value) => {
               setSelectedRound(value);
             }}
