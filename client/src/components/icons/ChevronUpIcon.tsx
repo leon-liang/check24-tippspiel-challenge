@@ -1,4 +1,4 @@
-const ChevronUpIcon = ({ stroke, width, height }: IconProps) => {
+const ChevronUpIcon = ({ className, stroke, width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +8,7 @@ const ChevronUpIcon = ({ stroke, width, height }: IconProps) => {
       stroke={stroke ?? "currentColor"}
       width={width}
       height={height}
+      className={className}
     >
       <path
         strokeLinecap="round"

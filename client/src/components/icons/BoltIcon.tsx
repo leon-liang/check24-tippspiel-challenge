@@ -1,4 +1,4 @@
-const BoltIcon = ({ stroke, width, height }: IconProps) => {
+const BoltIcon = ({ className, stroke, width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +8,7 @@ const BoltIcon = ({ stroke, width, height }: IconProps) => {
       stroke={stroke ?? "currentColor"}
       width={width}
       height={height}
+      className={className}
     >
       <path
         strokeLinecap="round"

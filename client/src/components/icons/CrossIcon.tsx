@@ -1,4 +1,4 @@
-const CrossIcon = ({ width, height, stroke }: IconProps) => {
+const CrossIcon = ({ className, width, height, stroke }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +8,7 @@ const CrossIcon = ({ width, height, stroke }: IconProps) => {
       stroke={stroke ?? "currentColor"}
       width={width}
       height={height}
+      className={className}
     >
       <path
         strokeLinecap="round"
