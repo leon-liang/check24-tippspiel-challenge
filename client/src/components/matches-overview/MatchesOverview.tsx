@@ -7,6 +7,7 @@ import {
 import SubmitBet from "@/components/submit-bet/SubmitBet";
 import React, { useEffect, useState } from "react";
 import { DateTime } from "luxon";
+import { getClosestDate } from "@/utils/date";
 
 interface Team {
   name: string;
@@ -38,24 +39,10 @@ const MatchesOverview = ({ matches }: MatchOverviewProps) => {
     ...new Set(matches.map((match) => match.date.toISODate() ?? "")),
   ];
 
-  const findClosestDate = (currentDate: string, dates: string[]) => {
-    let differences = dates.map(
-      (date) =>
-        DateTime.fromISO(currentDate).diff(DateTime.fromISO(date), "days").days,
-    );
-
-    let minIndex = differences.reduce(
-      (minIndex, diff, index) =>
-        Math.abs(diff) < differences[minIndex] ? index : minIndex,
-      0,
-    );
-    return dates[minIndex];
-  };
-
-  const [selectedTab, setSelectedTab] = useState("");
+  const [selectedTab, setSelectedTab] = useState(dates[0]);
 
   useEffect(() => {
-    setSelectedTab(findClosestDate(currentDate, dates));
+    setSelectedTab(getClosestDate(currentDate, dates));
   }, []);
 
   return (

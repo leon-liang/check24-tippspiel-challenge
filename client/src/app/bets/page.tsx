@@ -6,9 +6,9 @@ import React, { useEffect, useState } from "react";
 import MatchesOverview from "@/components/matches-overview/MatchesOverview";
 import { DateTime, Interval } from "luxon";
 
-// MATCHDAY1      [14.06; 18.06]
-// MATCHDAY2      [19.06; 22.06]
-// MATCHDAY3      [23.06; 26.06]
+// Match day 1    [14.06; 18.06]
+// Match day 2    [19.06; 22.06]
+// Match day 3    [23.06; 26.06]
 // Round of 16    [29.06; 02.07]
 // Quarter Finals [05.07; 06.07]
 // Semi Finals    [09.07; 10.07]
@@ -440,7 +440,6 @@ const Bets = () => {
     },
   ];
 
-  // @ts-ignore
   return (
     <div>
       <Banner>
