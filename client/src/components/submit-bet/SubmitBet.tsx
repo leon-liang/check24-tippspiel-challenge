@@ -11,6 +11,7 @@ import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
 import { z } from "zod";
 import Form, { Input } from "@/components/form/Form";
+import { DateTime } from "luxon";
 
 interface Team {
   name: string;
@@ -21,9 +22,10 @@ interface Team {
 interface SubmitBetProps {
   teamA: Team;
   teamB: Team;
+  date: DateTime;
 }
 
-const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
+const SubmitBet = ({ teamA, teamB, date }: SubmitBetProps) => {
   const [open, setOpen] = React.useState(false);
 
   const FormSchema = z.object({
@@ -45,7 +47,13 @@ const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
     <>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
-          <GameView teamA={teamA} teamB={teamB} gameTime="18:00" />
+          <GameView
+            teamA={teamA}
+            teamB={teamB}
+            gameTime={date
+              .setLocale("en")
+              .toLocaleString(DateTime.TIME_24_SIMPLE)}
+          />
         </SheetTrigger>
         <SheetContent>
           <SheetHeader className="flex flex-col gap-8">
@@ -70,12 +78,12 @@ const SubmitBet = ({ teamA, teamB }: SubmitBetProps) => {
               <div className="flex flex-col gap-4">
                 <Input
                   name="teamAScore"
-                  displayName={`${teamA.name} final score:`}
+                  displayName={`${teamA.name}'s final score:`}
                   type="number"
                 />
                 <Input
                   name="teamBScore"
-                  displayName={`${teamB.name} final score:`}
+                  displayName={`${teamB.name}'s final score:`}
                   type="number"
                 />
               </div>
