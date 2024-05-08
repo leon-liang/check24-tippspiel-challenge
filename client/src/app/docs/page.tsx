@@ -1,5 +1,13 @@
+import Banner, { BannerTitle } from "@/components/banner/Banner";
+
 const Docs = () => {
-  return <div></div>;
+  return (
+    <>
+      <Banner>
+        <BannerTitle>Documentation</BannerTitle>
+      </Banner>
+    </>
+  );
 };
 
 export default Docs;

@@ -8,6 +8,7 @@ import UserGroupIcon from "@/components/icons/UserGroupIcon";
 import SettingsIcon from "@/components/icons/SettingsIcon";
 import DocumentIcon from "@/components/icons/DocumentIcon";
 import { useGetUserCommunities } from "@/hooks/communities.api";
+import BoltIcon from "@/components/icons/BoltIcon";
 
 const Navigation = ({ children }: PropsWithChildren) => {
   const { data, isLoading, error } = useGetUserCommunities();
@@ -18,6 +19,11 @@ const Navigation = ({ children }: PropsWithChildren) => {
       icon: <HomeIcon width={22} height={22} />,
       label: "Dashboard",
       link: "/dashboard",
+    },
+    {
+      icon: <BoltIcon width={22} height={22} />,
+      label: "Your Bets",
+      link: "/bets",
     },
     {
       icon: <UserGroupIcon width={22} height={22} />,

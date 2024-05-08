@@ -1,4 +1,4 @@
-const HomeIcon = ({ width, height, stroke }: IconProps) => {
+const HomeIcon = ({ className, width, height, stroke }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +8,7 @@ const HomeIcon = ({ width, height, stroke }: IconProps) => {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke={stroke ?? "currentColor"}
-      className="align-middle"
+      className={className}
     >
       <path
         strokeLinecap="round"

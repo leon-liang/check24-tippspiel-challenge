@@ -1,4 +1,4 @@
-const UserGroupIcon = ({ width, height, stroke }: IconProps) => {
+const UserGroupIcon = ({ className, width, height, stroke }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +8,7 @@ const UserGroupIcon = ({ width, height, stroke }: IconProps) => {
       stroke={stroke ?? "currentColor"}
       width={width}
       height={height}
-      className="align-middle"
+      className={className}
     >
       <path
         strokeLinecap="round"
