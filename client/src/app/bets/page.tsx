@@ -15,7 +15,6 @@ import { DateTime, Interval } from "luxon";
 // Finals         [14.07; 15.07)
 
 const Bets = () => {
-  const currentDate = DateTime.now().toISODate();
   const [selectedRound, setSelectedRound] = useState("");
 
   const rounds = useMemo(
@@ -74,11 +73,12 @@ const Bets = () => {
   );
 
   useEffect(() => {
+    const currentDate = DateTime.now();
     const currentRound = rounds.find((round) =>
-      round.dates.contains(DateTime.fromISO(currentDate)),
+      round.dates.contains(currentDate),
     );
     setSelectedRound(currentRound ? currentRound.name : "Match day 1");
-  }, [currentDate]);
+  }, []);
 
   const matches = [
     {

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Tabs,
   TabsContent,
@@ -34,7 +36,6 @@ interface MatchOverviewProps {
 }
 
 const MatchesOverview = ({ matches }: MatchOverviewProps) => {
-  const currentDate = DateTime.now().toISODate();
   const dates = [
     ...new Set(matches.map((match) => match.date.toISODate() ?? "")),
   ];
@@ -42,8 +43,11 @@ const MatchesOverview = ({ matches }: MatchOverviewProps) => {
   const [selectedTab, setSelectedTab] = useState(dates[0]);
 
   useEffect(() => {
-    setSelectedTab(getClosestDate(currentDate, dates));
-  }, [currentDate]);
+    const currentDate = DateTime.now();
+    const matchDates = dates.map((date) => DateTime.fromISO(date));
+
+    setSelectedTab(getClosestDate(currentDate, matchDates)?.toISODate() ?? "");
+  }, []);
 
   return (
     <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(value)}>

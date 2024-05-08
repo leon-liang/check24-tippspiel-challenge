@@ -1,10 +1,8 @@
 import { DateTime } from "luxon";
 
-export const getClosestDate = (currentDate: string, dates: string[]) => {
-  let differences = dates.map(
-    (date) =>
-      DateTime.fromISO(currentDate).diff(DateTime.fromISO(date), "days").days,
-  );
+// Returns the closest date in the dates array to the current date
+export const getClosestDate = (currentDate: DateTime, dates: DateTime[]) => {
+  let differences = dates.map((date) => currentDate.diff(date, "days").days);
 
   let minIndex = differences.reduce(
     (minIndex, diff, index) =>
