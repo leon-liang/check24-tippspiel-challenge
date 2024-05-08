@@ -2,9 +2,9 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { Select } from "@/components/select/Select";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MatchesOverview from "@/components/matches-overview/MatchesOverview";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 // MATCHDAY1      [14.06; 18.06]
 // MATCHDAY2      [19.06; 22.06]
@@ -15,7 +15,67 @@ import { DateTime } from "luxon";
 // Finals         [14.07]
 
 const Bets = () => {
-  const [selectedRound, setSelectedRound] = useState("Match day 1");
+  const currentDate = DateTime.now().toISODate();
+  const [selectedRound, setSelectedRound] = useState("");
+
+  useEffect(() => {
+    const rounds = [
+      {
+        name: "Match day 1",
+        dates: Interval.fromDateTimes(
+          DateTime.local(2024, 6, 14),
+          DateTime.local(2024, 6, 19),
+        ),
+      },
+      {
+        name: "Match day 2",
+        dates: Interval.fromDateTimes(
+          DateTime.local(2024, 6, 19),
+          DateTime.local(2024, 6, 23),
+        ),
+      },
+      {
+        name: "Match day 3",
+        dates: Interval.fromDateTimes(
+          DateTime.local(2024, 6, 23),
+          DateTime.local(2024, 6, 27),
+        ),
+      },
+      {
+        name: "Round of 16",
+        dates: Interval.fromDateTimes(
+          DateTime.local(2024, 6, 29),
+          DateTime.local(2024, 7, 3),
+        ),
+      },
+      {
+        name: "Quarter-finals",
+        dates: Interval.fromDateTimes(
+          DateTime.local(2024, 7, 5),
+          DateTime.local(2024, 7, 7),
+        ),
+      },
+      {
+        name: "Semi-finals",
+        dates: Interval.fromDateTimes(
+          DateTime.local(2024, 7, 9),
+          DateTime.local(2024, 7, 11),
+        ),
+      },
+      {
+        name: "Finals",
+        dates: Interval.fromDateTimes(
+          DateTime.local(2024, 7, 14),
+          DateTime.local(2024, 7, 15),
+        ),
+      },
+    ];
+
+    const currentRound = rounds.find((round) =>
+      round.dates.contains(DateTime.fromISO(currentDate)),
+    );
+    setSelectedRound(currentRound ? currentRound.name : "Match day 1");
+  }, [currentDate]);
 
   const matches = [
     {
@@ -387,7 +447,7 @@ const Bets = () => {
         <BannerTitle>
           <h1>Your Bets</h1>
           <Select
-            defaultValue={selectedRound}
+            value={selectedRound}
             items={[
               "Match day 1",
               "Match day 2",

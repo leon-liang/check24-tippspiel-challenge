@@ -5,58 +5,53 @@ import cn from "classnames";
 
 interface SelectProps {
   items: string[];
-  defaultValue: string;
+  value: string;
   onValueChange: (value: string) => void;
 }
 
 export const Select = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> & SelectProps
->(
-  (
-    { items, defaultValue, onValueChange, children, ...props },
-    forwardedRef,
-  ) => {
-    return (
-      <SelectPrimitive.Root
-        defaultValue={defaultValue}
-        onValueChange={onValueChange}
-        {...props}
+>(({ items, value, onValueChange, children, ...props }, forwardedRef) => {
+  return (
+    <SelectPrimitive.Root
+      value={value}
+      onValueChange={onValueChange}
+      {...props}
+    >
+      <SelectPrimitive.Trigger
+        className="inline-flex h-[35px] w-[200px] items-center justify-between gap-4 rounded-[4px] px-[15px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none hover:bg-colors-indigo-2 focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
+        ref={forwardedRef}
       >
-        <SelectPrimitive.Trigger
-          className="inline-flex h-[35px] w-[200px] items-center justify-between gap-4 rounded-[4px] px-[15px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none hover:bg-colors-indigo-2 focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
-          ref={forwardedRef}
+        <SelectPrimitive.Value />
+        <SelectPrimitive.Icon>
+          <ChevronDownIcon width={20} height={20} />
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+      <SelectPrimitive.Portal>
+        <SelectPrimitive.Content
+          sideOffset={5}
+          position="popper"
+          className="w-[var(--radix-select-trigger-width)] overflow-hidden rounded-md border border-gray-6 bg-colors-white-A12 shadow-lg"
         >
-          <SelectPrimitive.Value />
-          <SelectPrimitive.Icon>
-            <ChevronDownIcon width={20} height={20} />
-          </SelectPrimitive.Icon>
-        </SelectPrimitive.Trigger>
-        <SelectPrimitive.Portal>
-          <SelectPrimitive.Content
-            sideOffset={5}
-            position="popper"
-            className="w-[var(--radix-select-trigger-width)] overflow-hidden rounded-md border border-gray-6 bg-colors-white-A12 shadow-lg"
-          >
-            <SelectPrimitive.Viewport className="p-[5px]">
-              {items.map((item, index) => {
-                return (
-                  <SelectItem
-                    defaultChecked={index == 0}
-                    key={index}
-                    value={item}
-                  >
-                    {item}
-                  </SelectItem>
-                );
-              })}
-            </SelectPrimitive.Viewport>
-          </SelectPrimitive.Content>
-        </SelectPrimitive.Portal>
-      </SelectPrimitive.Root>
-    );
-  },
-);
+          <SelectPrimitive.Viewport className="p-[5px]">
+            {items.map((item, index) => {
+              return (
+                <SelectItem
+                  defaultChecked={index == 0}
+                  key={index}
+                  value={item}
+                >
+                  {item}
+                </SelectItem>
+              );
+            })}
+          </SelectPrimitive.Viewport>
+        </SelectPrimitive.Content>
+      </SelectPrimitive.Portal>
+    </SelectPrimitive.Root>
+  );
+});
 
 Select.displayName = SelectPrimitive.Root.displayName;
 
