@@ -33,12 +33,27 @@ interface MatchOverviewProps {
 }
 
 const MatchesOverview = ({ matches }: MatchOverviewProps) => {
+  const currentDate = DateTime.now().toISODate();
   const dates = [
     ...new Set(matches.map((match) => match.date.toISODate() ?? "")),
   ];
 
+  const findClosestDate = (currentDate: string, dates: string[]) => {
+    let differences = dates.map(
+      (date) =>
+        DateTime.fromISO(currentDate).diff(DateTime.fromISO(date), "days").days,
+    );
+
+    let minIndex = differences.reduce(
+      (minIndex, diff, index) =>
+        Math.abs(diff) < differences[minIndex] ? index : minIndex,
+      0,
+    );
+    return dates[minIndex];
+  };
+
   return (
-    <Tabs defaultValue={dates[0] ?? ""}>
+    <Tabs value={findClosestDate(currentDate, dates)}>
       <TabsList>
         {dates.map((date, index) => (
           <TabsTrigger key={index} value={date}>
