@@ -5,7 +5,7 @@ import {
   TabsTrigger,
 } from "@/components/tabs/Tabs";
 import SubmitBet from "@/components/submit-bet/SubmitBet";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 
 interface Team {
@@ -52,8 +52,14 @@ const MatchesOverview = ({ matches }: MatchOverviewProps) => {
     return dates[minIndex];
   };
 
+  const [selectedTab, setSelectedTab] = useState("");
+
+  useEffect(() => {
+    setSelectedTab(findClosestDate(currentDate, dates));
+  }, []);
+
   return (
-    <Tabs value={findClosestDate(currentDate, dates)}>
+    <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(value)}>
       <TabsList>
         {dates.map((date, index) => (
           <TabsTrigger key={index} value={date}>
