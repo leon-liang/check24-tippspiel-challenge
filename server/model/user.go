@@ -15,6 +15,7 @@ type User struct {
 	CreatedAt          time.Time
 	CreatedCommunities []Community `gorm:"foreignKey:Owner"`
 	JoinedCommunities  []Community `gorm:"many2many:user_community;"`
+	Bets               []Bet       `gorm:"foreignKey:Bettor"`
 }
 
 type UserCommunity struct {

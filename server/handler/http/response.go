@@ -1,4 +1,4 @@
-package handler
+package http
 
 import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
