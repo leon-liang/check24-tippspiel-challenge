@@ -42,136 +42,393 @@ import {
 /**
  *
  * @export
- * @interface HandlerCommunitiesResponse
+ * @interface HttpBetResponse
  */
-export interface HandlerCommunitiesResponse {
+export interface HttpBetResponse {
   /**
    *
-   * @type {Array<HandlerCommunityResponse>}
-   * @memberof HandlerCommunitiesResponse
+   * @type {number}
+   * @memberof HttpBetResponse
    */
-  communities?: Array<HandlerCommunityResponse>;
+  awayTeam?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof HttpBetResponse
+   */
+  homeTeam?: number;
+  /**
+   *
+   * @type {HttpMatchResponse}
+   * @memberof HttpBetResponse
+   */
+  match?: HttpMatchResponse;
 }
 /**
  *
  * @export
- * @interface HandlerCommunityCreateRequest
+ * @interface HttpBetsResponse
  */
-export interface HandlerCommunityCreateRequest {
+export interface HttpBetsResponse {
   /**
    *
-   * @type {HandlerCommunityCreateRequestCommunity}
-   * @memberof HandlerCommunityCreateRequest
+   * @type {Array<HttpBetResponse>}
+   * @memberof HttpBetsResponse
    */
-  community?: HandlerCommunityCreateRequestCommunity;
+  bets?: Array<HttpBetResponse>;
 }
 /**
  *
  * @export
- * @interface HandlerCommunityCreateRequestCommunity
+ * @interface HttpCommunitiesResponse
  */
-export interface HandlerCommunityCreateRequestCommunity {
+export interface HttpCommunitiesResponse {
+  /**
+   *
+   * @type {Array<HttpCommunityResponse>}
+   * @memberof HttpCommunitiesResponse
+   */
+  communities?: Array<HttpCommunityResponse>;
+}
+/**
+ *
+ * @export
+ * @interface HttpCommunityCreateRequest
+ */
+export interface HttpCommunityCreateRequest {
+  /**
+   *
+   * @type {HttpCommunityCreateRequestCommunity}
+   * @memberof HttpCommunityCreateRequest
+   */
+  community?: HttpCommunityCreateRequestCommunity;
+}
+/**
+ *
+ * @export
+ * @interface HttpCommunityCreateRequestCommunity
+ */
+export interface HttpCommunityCreateRequestCommunity {
   /**
    *
    * @type {string}
-   * @memberof HandlerCommunityCreateRequestCommunity
+   * @memberof HttpCommunityCreateRequestCommunity
    */
   name?: string;
 }
 /**
  *
  * @export
- * @interface HandlerCommunityResponse
+ * @interface HttpCommunityResponse
  */
-export interface HandlerCommunityResponse {
+export interface HttpCommunityResponse {
   /**
    *
-   * @type {HandlerCommunityResponseCommunity}
-   * @memberof HandlerCommunityResponse
+   * @type {HttpCommunityResponseCommunity}
+   * @memberof HttpCommunityResponse
    */
-  community?: HandlerCommunityResponseCommunity;
+  community?: HttpCommunityResponseCommunity;
 }
 /**
  *
  * @export
- * @interface HandlerCommunityResponseCommunity
+ * @interface HttpCommunityResponseCommunity
  */
-export interface HandlerCommunityResponseCommunity {
+export interface HttpCommunityResponseCommunity {
   /**
    *
    * @type {string}
-   * @memberof HandlerCommunityResponseCommunity
+   * @memberof HttpCommunityResponseCommunity
    */
   id?: string;
   /**
    *
    * @type {string}
-   * @memberof HandlerCommunityResponseCommunity
+   * @memberof HttpCommunityResponseCommunity
    */
   name?: string;
 }
 /**
  *
  * @export
- * @interface HandlerRootResponse
+ * @interface HttpMatchResponse
  */
-export interface HandlerRootResponse {
+export interface HttpMatchResponse {
+  /**
+   *
+   * @type {HttpMatchResponseMatch}
+   * @memberof HttpMatchResponse
+   */
+  match?: HttpMatchResponseMatch;
+}
+/**
+ *
+ * @export
+ * @interface HttpMatchResponseMatch
+ */
+export interface HttpMatchResponseMatch {
+  /**
+   *
+   * @type {HttpTeam}
+   * @memberof HttpMatchResponseMatch
+   */
+  awayTeam?: HttpTeam;
   /**
    *
    * @type {string}
-   * @memberof HandlerRootResponse
+   * @memberof HttpMatchResponseMatch
+   */
+  gameTime?: string;
+  /**
+   *
+   * @type {HttpTeam}
+   * @memberof HttpMatchResponseMatch
+   */
+  homeTeam?: HttpTeam;
+  /**
+   *
+   * @type {string}
+   * @memberof HttpMatchResponseMatch
+   */
+  id?: string;
+}
+/**
+ *
+ * @export
+ * @interface HttpMatchesResponse
+ */
+export interface HttpMatchesResponse {
+  /**
+   *
+   * @type {Array<HttpMatchResponse>}
+   * @memberof HttpMatchesResponse
+   */
+  matches?: Array<HttpMatchResponse>;
+}
+/**
+ *
+ * @export
+ * @interface HttpRootResponse
+ */
+export interface HttpRootResponse {
+  /**
+   *
+   * @type {string}
+   * @memberof HttpRootResponse
    */
   message?: string;
 }
 /**
  *
  * @export
- * @interface HandlerUserResponse
+ * @interface HttpTeam
  */
-export interface HandlerUserResponse {
+export interface HttpTeam {
   /**
    *
-   * @type {HandlerUserResponseUser}
-   * @memberof HandlerUserResponse
+   * @type {string}
+   * @memberof HttpTeam
    */
-  user?: HandlerUserResponseUser;
+  name?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof HttpTeam
+   */
+  result?: number;
 }
 /**
  *
  * @export
- * @interface HandlerUserResponseUser
+ * @interface HttpUserResponse
  */
-export interface HandlerUserResponseUser {
+export interface HttpUserResponse {
+  /**
+   *
+   * @type {HttpUserResponseUser}
+   * @memberof HttpUserResponse
+   */
+  user?: HttpUserResponseUser;
+}
+/**
+ *
+ * @export
+ * @interface HttpUserResponseUser
+ */
+export interface HttpUserResponseUser {
   /**
    *
    * @type {string}
-   * @memberof HandlerUserResponseUser
+   * @memberof HttpUserResponseUser
    */
   email?: string;
   /**
    *
    * @type {string}
-   * @memberof HandlerUserResponseUser
+   * @memberof HttpUserResponseUser
    */
   firstName?: string;
   /**
    *
    * @type {string}
-   * @memberof HandlerUserResponseUser
+   * @memberof HttpUserResponseUser
    */
   id?: string;
   /**
    *
    * @type {string}
-   * @memberof HandlerUserResponseUser
+   * @memberof HttpUserResponseUser
    */
   lastName?: string;
   /**
    *
    * @type {string}
-   * @memberof HandlerUserResponseUser
+   * @memberof HttpUserResponseUser
    */
   username?: string;
+}
+
+/**
+ * BetsApi - axios parameter creator
+ * @export
+ */
+export const BetsApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Retrieve all bets from the current user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1BetsGet: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/bets`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * BetsApi - functional programming interface
+ * @export
+ */
+export const BetsApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = BetsApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary Retrieve all bets from the current user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1BetsGet(
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HttpBetsResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1BetsGet(options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["BetsApi.v1BetsGet"]?.[localVarOperationServerIndex]
+          ?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * BetsApi - factory interface
+ * @export
+ */
+export const BetsApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = BetsApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary Retrieve all bets from the current user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1BetsGet(options?: any): AxiosPromise<HttpBetsResponse> {
+      return localVarFp
+        .v1BetsGet(options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * BetsApi - object-oriented interface
+ * @export
+ * @class BetsApi
+ * @extends {BaseAPI}
+ */
+export class BetsApi extends BaseAPI {
+  /**
+   *
+   * @summary Retrieve all bets from the current user
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof BetsApi
+   */
+  public v1BetsGet(options?: RawAxiosRequestConfig) {
+    return BetsApiFp(this.configuration)
+      .v1BetsGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
 }
 
 /**
@@ -410,12 +667,12 @@ export const CommunitiesApiAxiosParamCreator = function (
     /**
      *
      * @summary Create a new community
-     * @param {HandlerCommunityCreateRequest} data Create Community
+     * @param {HttpCommunityCreateRequest} data Create Community
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1CommunitiesPost: async (
-      data: HandlerCommunityCreateRequest,
+      data: HttpCommunityCreateRequest,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'data' is not null or undefined
@@ -491,7 +748,7 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<HandlerCommunityResponse>
+      ) => AxiosPromise<HttpCommunityResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.v1CommunitiesCommunityIdGet(
@@ -525,7 +782,7 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<HandlerCommunityResponse>
+      ) => AxiosPromise<HttpCommunityResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.v1CommunitiesCommunityIdJoinPost(
@@ -559,7 +816,7 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<HandlerCommunitiesResponse>
+      ) => AxiosPromise<HttpCommunitiesResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.v1CommunitiesCommunityIdMembersGet(
@@ -591,7 +848,7 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<HandlerCommunitiesResponse>
+      ) => AxiosPromise<HttpCommunitiesResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.v1CommunitiesGet(options);
@@ -611,18 +868,18 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Create a new community
-     * @param {HandlerCommunityCreateRequest} data Create Community
+     * @param {HttpCommunityCreateRequest} data Create Community
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async v1CommunitiesPost(
-      data: HandlerCommunityCreateRequest,
+      data: HttpCommunityCreateRequest,
       options?: RawAxiosRequestConfig,
     ): Promise<
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<HandlerCommunityResponse>
+      ) => AxiosPromise<HttpCommunityResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.v1CommunitiesPost(data, options);
@@ -663,7 +920,7 @@ export const CommunitiesApiFactory = function (
     v1CommunitiesCommunityIdGet(
       communityId: string,
       options?: any,
-    ): AxiosPromise<HandlerCommunityResponse> {
+    ): AxiosPromise<HttpCommunityResponse> {
       return localVarFp
         .v1CommunitiesCommunityIdGet(communityId, options)
         .then((request) => request(axios, basePath));
@@ -678,7 +935,7 @@ export const CommunitiesApiFactory = function (
     v1CommunitiesCommunityIdJoinPost(
       communityId: string,
       options?: any,
-    ): AxiosPromise<HandlerCommunityResponse> {
+    ): AxiosPromise<HttpCommunityResponse> {
       return localVarFp
         .v1CommunitiesCommunityIdJoinPost(communityId, options)
         .then((request) => request(axios, basePath));
@@ -693,7 +950,7 @@ export const CommunitiesApiFactory = function (
     v1CommunitiesCommunityIdMembersGet(
       communityId: string,
       options?: any,
-    ): AxiosPromise<HandlerCommunitiesResponse> {
+    ): AxiosPromise<HttpCommunitiesResponse> {
       return localVarFp
         .v1CommunitiesCommunityIdMembersGet(communityId, options)
         .then((request) => request(axios, basePath));
@@ -704,7 +961,7 @@ export const CommunitiesApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1CommunitiesGet(options?: any): AxiosPromise<HandlerCommunitiesResponse> {
+    v1CommunitiesGet(options?: any): AxiosPromise<HttpCommunitiesResponse> {
       return localVarFp
         .v1CommunitiesGet(options)
         .then((request) => request(axios, basePath));
@@ -712,14 +969,14 @@ export const CommunitiesApiFactory = function (
     /**
      *
      * @summary Create a new community
-     * @param {HandlerCommunityCreateRequest} data Create Community
+     * @param {HttpCommunityCreateRequest} data Create Community
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     v1CommunitiesPost(
-      data: HandlerCommunityCreateRequest,
+      data: HttpCommunityCreateRequest,
       options?: any,
-    ): AxiosPromise<HandlerCommunityResponse> {
+    ): AxiosPromise<HttpCommunityResponse> {
       return localVarFp
         .v1CommunitiesPost(data, options)
         .then((request) => request(axios, basePath));
@@ -801,17 +1058,152 @@ export class CommunitiesApi extends BaseAPI {
   /**
    *
    * @summary Create a new community
-   * @param {HandlerCommunityCreateRequest} data Create Community
+   * @param {HttpCommunityCreateRequest} data Create Community
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof CommunitiesApi
    */
   public v1CommunitiesPost(
-    data: HandlerCommunityCreateRequest,
+    data: HttpCommunityCreateRequest,
     options?: RawAxiosRequestConfig,
   ) {
     return CommunitiesApiFp(this.configuration)
       .v1CommunitiesPost(data, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
+ * MatchesApi - axios parameter creator
+ * @export
+ */
+export const MatchesApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Retrieve all matches
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1MatchesGet: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/matches`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * MatchesApi - functional programming interface
+ * @export
+ */
+export const MatchesApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = MatchesApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary Retrieve all matches
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1MatchesGet(
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HttpMatchesResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1MatchesGet(options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["MatchesApi.v1MatchesGet"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * MatchesApi - factory interface
+ * @export
+ */
+export const MatchesApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = MatchesApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary Retrieve all matches
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1MatchesGet(options?: any): AxiosPromise<HttpMatchesResponse> {
+      return localVarFp
+        .v1MatchesGet(options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * MatchesApi - object-oriented interface
+ * @export
+ * @class MatchesApi
+ * @extends {BaseAPI}
+ */
+export class MatchesApi extends BaseAPI {
+  /**
+   *
+   * @summary Retrieve all matches
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof MatchesApi
+   */
+  public v1MatchesGet(options?: RawAxiosRequestConfig) {
+    return MatchesApiFp(this.configuration)
+      .v1MatchesGet(options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
@@ -885,7 +1277,7 @@ export const RootApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<HandlerRootResponse>
+      ) => AxiosPromise<HttpRootResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.rootGet(options);
@@ -921,7 +1313,7 @@ export const RootApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    rootGet(options?: any): AxiosPromise<HandlerRootResponse> {
+    rootGet(options?: any): AxiosPromise<HttpRootResponse> {
       return localVarFp
         .rootGet(options)
         .then((request) => request(axios, basePath));
@@ -1028,7 +1420,7 @@ export const UsersApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<HandlerUserResponse>
+      ) => AxiosPromise<HttpUserResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.v1UsersMeGet(options);
@@ -1065,7 +1457,7 @@ export const UsersApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1UsersMeGet(options?: any): AxiosPromise<HandlerUserResponse> {
+    v1UsersMeGet(options?: any): AxiosPromise<HttpUserResponse> {
       return localVarFp
         .v1UsersMeGet(options)
         .then((request) => request(axios, basePath));

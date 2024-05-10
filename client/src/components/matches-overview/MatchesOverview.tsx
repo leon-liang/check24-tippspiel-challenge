@@ -17,17 +17,19 @@ interface Team {
   result?: number;
 }
 
+export type Round =
+  | "Match day 1"
+  | "Match day 2"
+  | "Match day 3"
+  | "Round of 16"
+  | "Quarter-finals"
+  | "Semi-finals"
+  | "Finals";
+
 interface Match {
-  teamA: Team;
-  teamB: Team;
-  round:
-    | "Match day 1"
-    | "Match day 2"
-    | "Match day 3"
-    | "Round of 16"
-    | "Quarter-finals"
-    | "Semi-finals"
-    | "Finals";
+  homeTeam: Team;
+  awayTeam: Team;
+  round: Round;
   date: DateTime;
 }
 
@@ -68,8 +70,8 @@ const MatchesOverview = ({ matches }: MatchOverviewProps) => {
               .map((match, index) => (
                 <SubmitBet
                   key={index}
-                  teamA={match.teamA}
-                  teamB={match.teamB}
+                  homeTeam={match.homeTeam}
+                  awayTeam={match.awayTeam}
                   date={match.date}
                 />
               ))}

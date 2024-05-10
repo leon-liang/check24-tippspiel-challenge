@@ -104,7 +104,7 @@ type matchResponse struct {
 		HomeTeam Team      `json:"homeTeam"`
 		AwayTeam Team      `json:"awayTeam"`
 		GameTime time.Time `json:"gameTime"`
-	}
+	} `json:"match"`
 }
 
 func newMatchResponse(match model.Match) *matchResponse {
@@ -160,8 +160,6 @@ func newBetResponse(bet model.Bet) *betResponse {
 
 	if bet.HomeTeam != nil {
 		r.HomeTeam = bet.HomeTeam
-	} else {
-		r.HomeTeam = nil
 	}
 
 	if bet.AwayTeam != nil {
