@@ -11,6 +11,9 @@ import (
 // @Tags Bets
 // @Summary Retrieve all bets from the current user
 // @Produce json
+// @Success 200 {object} http.betsResponse
+// @Router /v1/bets [GET]
+// @Security OAuth2Implicit
 func (h *Handler) GetBets(ctx echo.Context) error {
 	currentUser := ctx.Get("current_user").(*model.User)
 

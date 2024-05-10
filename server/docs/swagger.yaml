@@ -6,6 +6,22 @@ definitions:
       result:
         type: integer
     type: object
+  http.betResponse:
+    properties:
+      awayTeam:
+        type: integer
+      homeTeam:
+        type: integer
+      match:
+        $ref: '#/definitions/http.matchResponse'
+    type: object
+  http.betsResponse:
+    properties:
+      bets:
+        items:
+          $ref: '#/definitions/http.betResponse'
+        type: array
+    type: object
   http.communitiesResponse:
     properties:
       communities:
@@ -90,6 +106,20 @@ paths:
       summary: Example
       tags:
       - Root
+  /v1/bets:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.betsResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Retrieve all bets from the current user
+      tags:
+      - Bets
   /v1/communities:
     get:
       produces:

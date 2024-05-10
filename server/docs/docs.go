@@ -34,6 +34,30 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/bets": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bets"
+                ],
+                "summary": "Retrieve all bets from the current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.betsResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/communities": {
             "get": {
                 "security": [
@@ -246,6 +270,31 @@ const docTemplate = `{
                 },
                 "result": {
                     "type": "integer"
+                }
+            }
+        },
+        "http.betResponse": {
+            "type": "object",
+            "properties": {
+                "awayTeam": {
+                    "type": "integer"
+                },
+                "homeTeam": {
+                    "type": "integer"
+                },
+                "match": {
+                    "$ref": "#/definitions/http.matchResponse"
+                }
+            }
+        },
+        "http.betsResponse": {
+            "type": "object",
+            "properties": {
+                "bets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.betResponse"
+                    }
                 }
             }
         },
