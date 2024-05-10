@@ -48,6 +48,7 @@ func main() {
 
 	seedsHandler := seeds.NewHandler(*ms, *ts)
 	seedsHandler.SeedTeams()
+	seedsHandler.SeedMatches()
 
 	httpHandler := http.NewHandler(*us, *cs, *ms, *ts)
 

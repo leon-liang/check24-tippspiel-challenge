@@ -27,7 +27,18 @@ func (ts *TeamStore) GetTeams() ([]model.Team, error) {
 		return nil, err
 	}
 
-	return teams, err
+	return teams, nil
+}
+
+func (ts *TeamStore) GetTeamByName(name string) (*model.Team, error) {
+	var t model.Team
+	if err := ts.db.Where(&model.Team{Name: name}).First(&t).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &t, nil
 }
 
 func (ts *TeamStore) Create(name string) (err error) {
