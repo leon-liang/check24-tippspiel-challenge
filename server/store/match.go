@@ -21,6 +21,7 @@ func (ms *MatchStore) GetMatches() ([]model.Match, error) {
 	var matches []model.Match
 
 	err := ms.db.Find(&matches).Error
+
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -29,6 +30,20 @@ func (ms *MatchStore) GetMatches() ([]model.Match, error) {
 	}
 
 	return matches, err
+}
+
+func (ms *MatchStore) GetMatchById(id string) (*model.Match, error) {
+	var match model.Match
+
+	err := ms.db.Preload("HomeTeam").Preload("AwayTeam").Where(&model.Match{ID: id}).Find(&match).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &match, err
 }
 
 func (ms *MatchStore) Create(homeTeam *model.Team, awayTeam *model.Team, gameTime time.Time) (err error) {

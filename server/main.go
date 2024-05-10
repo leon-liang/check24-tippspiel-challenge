@@ -45,12 +45,13 @@ func main() {
 	cs := store.NewCommunityStore(d)
 	ms := store.NewMatchStore(d)
 	ts := store.NewTeamStore(d)
+	bs := store.NewBetStore(d)
 
 	seedsHandler := seeds.NewHandler(*ms, *ts)
 	seedsHandler.SeedTeams()
 	seedsHandler.SeedMatches()
 
-	httpHandler := http.NewHandler(*us, *cs, *ms, *ts)
+	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs)
 
 	r.GET("", httpHandler.GetRoot)
 

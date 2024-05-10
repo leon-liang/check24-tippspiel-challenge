@@ -7,13 +7,15 @@ type Handler struct {
 	CommunityStore store.CommunityStore
 	MatchStore     store.MatchStore
 	TeamStore      store.TeamStore
+	BetStore       store.BetStore
 }
 
-func NewHandler(us store.UserStore, cs store.CommunityStore, ms store.MatchStore, ts store.TeamStore) *Handler {
+func NewHandler(us store.UserStore, cs store.CommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore) *Handler {
 	return &Handler{
 		UserStore:      us,
 		CommunityStore: cs,
 		MatchStore:     ms,
 		TeamStore:      ts,
+		BetStore:       bs,
 	}
 }

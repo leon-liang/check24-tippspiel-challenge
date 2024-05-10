@@ -1,12 +1,19 @@
 definitions:
-  handler.communitiesResponse:
+  http.Team:
+    properties:
+      name:
+        type: string
+      result:
+        type: integer
+    type: object
+  http.communitiesResponse:
     properties:
       communities:
         items:
-          $ref: '#/definitions/handler.communityResponse'
+          $ref: '#/definitions/http.communityResponse'
         type: array
     type: object
-  handler.communityCreateRequest:
+  http.communityCreateRequest:
     properties:
       community:
         properties:
@@ -14,7 +21,7 @@ definitions:
             type: string
         type: object
     type: object
-  handler.communityResponse:
+  http.communityResponse:
     properties:
       community:
         properties:
@@ -24,12 +31,33 @@ definitions:
             type: string
         type: object
     type: object
-  handler.rootResponse:
+  http.matchResponse:
+    properties:
+      match:
+        properties:
+          awayTeam:
+            $ref: '#/definitions/http.Team'
+          gameTime:
+            type: string
+          homeTeam:
+            $ref: '#/definitions/http.Team'
+          id:
+            type: string
+        type: object
+    type: object
+  http.matchesResponse:
+    properties:
+      matches:
+        items:
+          $ref: '#/definitions/http.matchResponse'
+        type: array
+    type: object
+  http.rootResponse:
     properties:
       message:
         type: string
     type: object
-  handler.userResponse:
+  http.userResponse:
     properties:
       user:
         properties:
@@ -58,7 +86,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.rootResponse'
+            $ref: '#/definitions/http.rootResponse'
       summary: Example
       tags:
       - Root
@@ -70,7 +98,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.communitiesResponse'
+            $ref: '#/definitions/http.communitiesResponse'
       security:
       - OAuth2Implicit: []
       summary: Retrieve all communities the current user is part of
@@ -85,14 +113,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/handler.communityCreateRequest'
+          $ref: '#/definitions/http.communityCreateRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.communityResponse'
+            $ref: '#/definitions/http.communityResponse'
       security:
       - OAuth2Implicit: []
       summary: Create a new community
@@ -112,7 +140,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.communityResponse'
+            $ref: '#/definitions/http.communityResponse'
       security:
       - OAuth2Implicit: []
       summary: Retrieve a community with the given id
@@ -132,7 +160,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.communityResponse'
+            $ref: '#/definitions/http.communityResponse'
       security:
       - OAuth2Implicit: []
       summary: Join the specified community
@@ -152,12 +180,24 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.communitiesResponse'
+            $ref: '#/definitions/http.communitiesResponse'
       security:
       - OAuth2Implicit: []
       summary: Retrieve all users that are part of a community
       tags:
       - Communities
+  /v1/matches:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.matchesResponse'
+      summary: Retrieve all matches
+      tags:
+      - Matches
   /v1/users/me:
     get:
       produces:
@@ -166,7 +206,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.userResponse'
+            $ref: '#/definitions/http.userResponse'
       security:
       - OAuth2Implicit: []
       summary: Get current user
