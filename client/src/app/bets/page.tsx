@@ -15,8 +15,8 @@ const Bets = () => {
 
   useEffect(() => {
     const currentDate = DateTime.now();
-    const currentRound = rounds.find(
-      (round) => round.dates.contains(currentDate) ?? "Match day 1",
+    const currentRound = rounds.find((round) =>
+      round.dates.contains(currentDate),
     );
     setSelectedRound(currentRound ? currentRound.name : "Match day 1");
   }, [rounds]);
