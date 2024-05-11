@@ -1,4 +1,4 @@
-package handler
+package http
 
 import (
 	"errors"
@@ -13,9 +13,9 @@ import (
 // @Summary Create a new community
 // @Accept json
 // @Produce json
-// @Success 200 {object} handler.communityResponse
+// @Success 200 {object} http.communityResponse
 // @Router /v1/communities [POST]
-// @Param data body handler.communityCreateRequest true "Create Community"
+// @Param data body http.communityCreateRequest true "Create Community"
 // @Security OAuth2Implicit
 func (h *Handler) CreateCommunity(ctx echo.Context) error {
 	// User can be part of at most 5 communities
@@ -51,7 +51,7 @@ func (h *Handler) CreateCommunity(ctx echo.Context) error {
 // @Tags Communities
 // @Summary Retrieve a community with the given id
 // @Produce json
-// @Success 200 {object} handler.communityResponse
+// @Success 200 {object} http.communityResponse
 // @Param community_id path string true "Community ID"
 // @Router /v1/communities/{community_id} [GET]
 // @Security OAuth2Implicit
@@ -71,7 +71,7 @@ func (h *Handler) GetCommunity(ctx echo.Context) error {
 // @Tags Communities
 // @Summary Retrieve all communities the current user is part of
 // @Produce json
-// @Success 200 {object} handler.communitiesResponse
+// @Success 200 {object} http.communitiesResponse
 // @Router /v1/communities [GET]
 // @Security OAuth2Implicit
 func (h *Handler) GetUserCommunities(ctx echo.Context) error {
@@ -91,7 +91,7 @@ func (h *Handler) GetUserCommunities(ctx echo.Context) error {
 // @Tags Communities
 // @Summary Join the specified community
 // @Produce json
-// @Success 200 {object} handler.communityResponse
+// @Success 200 {object} http.communityResponse
 // @Param community_id path string true "Community ID"
 // @Router /v1/communities/{community_id}/join [POST]
 // @Security OAuth2Implicit
@@ -150,7 +150,7 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 // @Tags Communities
 // @Summary Retrieve all users that are part of a community
 // @Produce json
-// @Success 200 {object} handler.communitiesResponse
+// @Success 200 {object} http.communitiesResponse
 // @Param community_id path string true "Community ID"
 // @Router /v1/communities/{community_id}/members [GET]
 // @Security OAuth2Implicit

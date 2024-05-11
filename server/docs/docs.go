@@ -28,7 +28,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.rootResponse"
+                            "$ref": "#/definitions/http.rootResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/bets": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bets"
+                ],
+                "summary": "Retrieve all bets from the current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.betsResponse"
                         }
                     }
                 }
@@ -52,7 +76,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.communitiesResponse"
+                            "$ref": "#/definitions/http.communitiesResponse"
                         }
                     }
                 }
@@ -80,7 +104,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handler.communityCreateRequest"
+                            "$ref": "#/definitions/http.communityCreateRequest"
                         }
                     }
                 ],
@@ -88,7 +112,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.communityResponse"
+                            "$ref": "#/definitions/http.communityResponse"
                         }
                     }
                 }
@@ -121,7 +145,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.communityResponse"
+                            "$ref": "#/definitions/http.communityResponse"
                         }
                     }
                 }
@@ -154,7 +178,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.communityResponse"
+                            "$ref": "#/definitions/http.communityResponse"
                         }
                     }
                 }
@@ -187,7 +211,26 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.communitiesResponse"
+                            "$ref": "#/definitions/http.communitiesResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/matches": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Retrieve all matches",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.matchesResponse"
                         }
                     }
                 }
@@ -211,7 +254,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handler.userResponse"
+                            "$ref": "#/definitions/http.userResponse"
                         }
                     }
                 }
@@ -219,18 +262,57 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handler.communitiesResponse": {
+        "http.Team": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "integer"
+                }
+            }
+        },
+        "http.betResponse": {
+            "type": "object",
+            "properties": {
+                "awayTeam": {
+                    "type": "integer"
+                },
+                "homeTeam": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "match": {
+                    "$ref": "#/definitions/http.matchResponse"
+                }
+            }
+        },
+        "http.betsResponse": {
+            "type": "object",
+            "properties": {
+                "bets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.betResponse"
+                    }
+                }
+            }
+        },
+        "http.communitiesResponse": {
             "type": "object",
             "properties": {
                 "communities": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/handler.communityResponse"
+                        "$ref": "#/definitions/http.communityResponse"
                     }
                 }
             }
         },
-        "handler.communityCreateRequest": {
+        "http.communityCreateRequest": {
             "type": "object",
             "properties": {
                 "community": {
@@ -243,7 +325,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handler.communityResponse": {
+        "http.communityResponse": {
             "type": "object",
             "properties": {
                 "community": {
@@ -259,7 +341,40 @@ const docTemplate = `{
                 }
             }
         },
-        "handler.rootResponse": {
+        "http.matchResponse": {
+            "type": "object",
+            "properties": {
+                "match": {
+                    "type": "object",
+                    "properties": {
+                        "awayTeam": {
+                            "$ref": "#/definitions/http.Team"
+                        },
+                        "gameTime": {
+                            "type": "string"
+                        },
+                        "homeTeam": {
+                            "$ref": "#/definitions/http.Team"
+                        },
+                        "id": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "http.matchesResponse": {
+            "type": "object",
+            "properties": {
+                "matches": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.matchResponse"
+                    }
+                }
+            }
+        },
+        "http.rootResponse": {
             "type": "object",
             "properties": {
                 "message": {
@@ -267,7 +382,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handler.userResponse": {
+        "http.userResponse": {
             "type": "object",
             "properties": {
                 "user": {

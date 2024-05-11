@@ -15,12 +15,13 @@ type User struct {
 	CreatedAt          time.Time
 	CreatedCommunities []Community `gorm:"foreignKey:Owner"`
 	JoinedCommunities  []Community `gorm:"many2many:user_community;"`
+	Bets               []Bet       `gorm:"foreignKey:Bettor"`
+	Score              int         `gorm:"default:0"`
 }
 
 type UserCommunity struct {
 	gorm.Model
-	UserID      int `gorm:"primaryKey"`
-	CommunityID int `gorm:"primaryKey"`
-	Score       int
+	UserID      int    `gorm:"primaryKey"`
+	CommunityID int    `gorm:"primaryKey"`
 	PinnedUsers []User `gorm:"many2many:user_community_pinned_users;"`
 }

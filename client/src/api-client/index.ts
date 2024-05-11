@@ -3,6 +3,7 @@ import {
   RootApiFactory,
   UsersApiFactory,
   CommunitiesApiFactory,
+  BetsApiFactory,
 } from "@/api-client/generated";
 
 import globalAxios from "axios";
@@ -36,3 +37,4 @@ const configuration: Configuration = {
 export const defaultApiFactory = RootApiFactory(configuration);
 export const usersApiFactory = UsersApiFactory(configuration);
 export const communitiesApiFactory = CommunitiesApiFactory(configuration);
+export const betsApiFactory = BetsApiFactory(configuration);

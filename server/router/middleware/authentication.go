@@ -6,7 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/auth"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/handler"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/http"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"strings"
 )
@@ -54,7 +54,7 @@ func ValidatePermissions(requiredPermissions []string) echo.MiddlewareFunc {
 	}
 }
 
-func GetCurrentUser(h *handler.Handler) echo.MiddlewareFunc {
+func GetCurrentUser(h *http.Handler) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			token := ctx.Request().Header.Get("Authorization")

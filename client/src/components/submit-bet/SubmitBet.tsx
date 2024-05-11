@@ -20,23 +20,23 @@ interface Team {
 }
 
 interface SubmitBetProps {
-  teamA: Team;
-  teamB: Team;
+  homeTeam: Team;
+  awayTeam: Team;
   date: DateTime;
 }
 
-const SubmitBet = ({ teamA, teamB, date }: SubmitBetProps) => {
+const SubmitBet = ({ homeTeam, awayTeam, date }: SubmitBetProps) => {
   const [open, setOpen] = React.useState(false);
 
   const FormSchema = z.object({
-    teamAScore: z.number().int(),
-    teamBScore: z.number().int(),
+    homeTeamScore: z.number().int(),
+    awayTeamScore: z.number().int(),
   });
   type FormData = z.infer<typeof FormSchema>;
 
   const defaultValues = {
-    teamAScore: teamA.bet,
-    teamBScore: teamB.bet,
+    homeTeamScore: homeTeam.bet,
+    awayTeamScore: awayTeam.bet,
   };
 
   const onSubmit = async (data: FormData) => {
@@ -48,8 +48,8 @@ const SubmitBet = ({ teamA, teamB, date }: SubmitBetProps) => {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
           <GameView
-            teamA={teamA}
-            teamB={teamB}
+            homeTeam={homeTeam}
+            awayTeam={awayTeam}
             gameTime={date
               .setLocale("en")
               .toLocaleString(DateTime.TIME_24_SIMPLE)}
@@ -77,13 +77,13 @@ const SubmitBet = ({ teamA, teamB, date }: SubmitBetProps) => {
             >
               <div className="flex flex-col gap-4">
                 <Input
-                  name="teamAScore"
-                  displayName={`${teamA.name}'s final score:`}
+                  name="homeTeamScore"
+                  displayName={`${homeTeam.name}'s final score:`}
                   type="number"
                 />
                 <Input
-                  name="teamBScore"
-                  displayName={`${teamB.name}'s final score:`}
+                  name="awayTeamScore"
+                  displayName={`${awayTeam.name}'s final score:`}
                   type="number"
                 />
               </div>

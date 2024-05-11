@@ -34,7 +34,7 @@ func (cs *CommunityStore) Join(user *model.User, community *model.Community) (er
 func (cs *CommunityStore) GetCommunityById(id string) (*model.Community, error) {
 	var community model.Community
 
-	err := cs.db.Where(&model.Community{ID: id}).Find(&community).Error
+	err := cs.db.Where(&model.Community{ID: id}).First(&community).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil

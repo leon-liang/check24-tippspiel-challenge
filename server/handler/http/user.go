@@ -1,4 +1,4 @@
-package handler
+package http
 
 import (
 	"github.com/labstack/echo/v4"
@@ -10,7 +10,7 @@ import (
 // @Tags Users
 // @Summary Get current user
 // @Produce json
-// @Success 200 {object} handler.userResponse
+// @Success 200 {object} http.userResponse
 // @Router /v1/users/me [GET]
 //
 // @Security OAuth2Implicit

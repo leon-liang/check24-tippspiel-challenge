@@ -5,12 +5,12 @@ interface Team {
 }
 
 interface GameViewProps {
-  teamA: Team;
-  teamB: Team;
+  homeTeam: Team;
+  awayTeam: Team;
   gameTime: string;
 }
 
-const GameView = ({ teamA, teamB, gameTime }: GameViewProps) => {
+const GameView = ({ homeTeam, awayTeam, gameTime }: GameViewProps) => {
   return (
     <div className="w-full rounded-md border border-gray-6 transition duration-200 hover:shadow-lg ">
       <div className="flex flex-row items-center justify-between rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
@@ -31,24 +31,24 @@ const GameView = ({ teamA, teamB, gameTime }: GameViewProps) => {
         <tbody>
           <tr>
             <th scope="row" className="px-4 pb-1 pt-2 text-start font-normal">
-              {teamA.name}
+              {homeTeam.name}
             </th>
             <td className="px-6 pb-1 pt-2 text-center text-lg">
-              {teamA.bet ?? "-"}
+              {homeTeam.bet ?? "-"}
             </td>
             <td className="px-6 pb-1 pt-2 text-center text-lg">
-              {teamA.result ?? "-"}
+              {homeTeam.result ?? "-"}
             </td>
           </tr>
           <tr>
             <th scope="row" className="px-4 pb-2 pt-1 text-start font-normal">
-              {teamB.name}
+              {awayTeam.name}
             </th>
             <td className="px-6 pb-2 pt-1 text-center text-lg">
-              {teamB.bet ?? "-"}
+              {awayTeam.bet ?? "-"}
             </td>
             <td className="px-6 pb-2 pt-1 text-center text-lg">
-              {teamB.result ?? "-"}
+              {awayTeam.result ?? "-"}
             </td>
           </tr>
         </tbody>

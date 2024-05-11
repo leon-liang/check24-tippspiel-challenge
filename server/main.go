@@ -5,7 +5,8 @@ import (
 	keycloak "github.com/leon-liang/check24-tippspiel-challenge/server/auth"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/db"
 	_ "github.com/leon-liang/check24-tippspiel-challenge/server/docs"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/handler"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/http"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/seeds"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
 	authMiddleware "github.com/leon-liang/check24-tippspiel-challenge/server/router/middleware"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
@@ -42,14 +43,22 @@ func main() {
 
 	us := store.NewUserStore(d)
 	cs := store.NewCommunityStore(d)
-	h := handler.NewHandler(*us, *cs)
+	ms := store.NewMatchStore(d)
+	ts := store.NewTeamStore(d)
+	bs := store.NewBetStore(d)
 
-	r.GET("", h.GetRoot)
+	seedsHandler := seeds.NewHandler(*ms, *ts)
+	seedsHandler.SeedTeams()
+	seedsHandler.SeedMatches()
+
+	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs)
+
+	r.GET("", httpHandler.GetRoot)
 
 	v1 := r.Group("/v1", authMiddleware.ValidateToken(keycloakClient))
-	v1.Use(authMiddleware.GetCurrentUser(h))
+	v1.Use(authMiddleware.GetCurrentUser(httpHandler))
 
-	h.Register(v1)
+	httpHandler.Register(v1)
 
 	r.Logger.Fatal(r.Start(":8000"))
 }
