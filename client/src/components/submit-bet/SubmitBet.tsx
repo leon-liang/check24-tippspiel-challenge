@@ -12,6 +12,8 @@ import React from "react";
 import { z } from "zod";
 import Form, { Input } from "@/components/form/Form";
 import { DateTime } from "luxon";
+import { useUpdateBet } from "@/hooks/bets.api";
+import { toast } from "@/hooks/use-toast";
 
 interface Team {
   name: string;
@@ -20,12 +22,15 @@ interface Team {
 }
 
 interface SubmitBetProps {
+  betId: string;
   homeTeam: Team;
   awayTeam: Team;
   date: DateTime;
 }
 
-const SubmitBet = ({ homeTeam, awayTeam, date }: SubmitBetProps) => {
+const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
+  const mutation = useUpdateBet();
+
   const [open, setOpen] = React.useState(false);
 
   const FormSchema = z.object({
@@ -40,6 +45,27 @@ const SubmitBet = ({ homeTeam, awayTeam, date }: SubmitBetProps) => {
   };
 
   const onSubmit = async (data: FormData) => {
+    try {
+      await mutation.mutateAsync({
+        betId: betId,
+        homeTeam: data.homeTeamScore,
+        awayTeam: data.awayTeamScore,
+      });
+
+      toast({
+        variant: "success",
+        title: "Successfully updated",
+        description: "Your bet has been registered",
+      });
+    } catch (e) {
+      console.log(e);
+
+      toast({
+        variant: "error",
+        title: "Failed to update your bet",
+        description: "Please try again later!",
+      });
+    }
     setOpen(false);
   };
 

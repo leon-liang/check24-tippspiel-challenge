@@ -9,13 +9,14 @@ const useMatches = () => {
   const rounds = useRounds();
 
   return useMemo(() => {
-    return data?.data.bets?.map((bet) => {
+    const bets = data?.data.bets?.map((bet) => {
       const date = DateTime.fromISO(
         bet.match?.match?.gameTime?.slice(0, -1) ?? "",
       );
       const currentRound = rounds.find((round) => round.dates.contains(date));
 
       return {
+        betId: bet.id ?? "",
         homeTeam: {
           name: bet.match?.match?.homeTeam?.name ?? "",
           bet: bet.homeTeam,
@@ -29,6 +30,10 @@ const useMatches = () => {
         round: currentRound?.name as Round,
         date: date,
       };
+    });
+
+    return bets?.sort((a, b) => {
+      return a.date.toMillis() - b.date.toMillis();
     });
   }, [data?.data.bets, rounds]);
 };

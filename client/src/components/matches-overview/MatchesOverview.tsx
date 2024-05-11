@@ -27,6 +27,7 @@ export type Round =
   | "Finals";
 
 interface Match {
+  betId: string;
   homeTeam: Team;
   awayTeam: Team;
   round: Round;
@@ -70,6 +71,7 @@ const MatchesOverview = ({ matches }: MatchOverviewProps) => {
               .map((match, index) => (
                 <SubmitBet
                   key={index}
+                  betId={match.betId}
                   homeTeam={match.homeTeam}
                   awayTeam={match.awayTeam}
                   date={match.date}
