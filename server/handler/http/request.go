@@ -31,3 +31,29 @@ func (r *communityCreateRequest) bind(ctx echo.Context, c *model.Community) erro
 
 	return nil
 }
+
+type betUpdateRequest struct {
+	Bet struct {
+		HomeTeam *int `json:"homeTeam" validate:"required"`
+		AwayTeam *int `json:"awayTeam" validate:"required"`
+	} `json:"bet"`
+}
+
+func newBetUpdateRequest() *betUpdateRequest {
+	return new(betUpdateRequest)
+}
+
+func (r *betUpdateRequest) bind(ctx echo.Context, b *model.Bet) error {
+	if err := ctx.Bind(r); err != nil {
+		return err
+	}
+
+	if err := ctx.Validate(r); err != nil {
+		return err
+	}
+
+	b.HomeTeam = r.Bet.HomeTeam
+	b.AwayTeam = r.Bet.AwayTeam
+
+	return nil
+}

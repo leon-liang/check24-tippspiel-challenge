@@ -20,4 +20,5 @@ func (h *Handler) Register(v1 *echo.Group) {
 
 	bets := v1.Group("/bets")
 	bets.GET("", h.GetBets)
+	bets.PUT("/:bet_id", h.UpdateBet)
 }

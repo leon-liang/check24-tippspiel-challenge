@@ -55,3 +55,39 @@ func (h *Handler) GetBets(ctx echo.Context) error {
 	response := newBetsResponse(populatedBets)
 	return ctx.JSON(http.StatusOK, &response)
 }
+
+// UpdateBet godoc
+// @Tags Bets
+// @Summary Update bet with the given id
+// @Accept json
+// @Produce json
+// @Success 200 {object} http.betResponse
+// @Param bet_id path string true "Bet ID"
+// @Param data body http.betUpdateRequest true "Update Bet"
+// @Router /v1/bets/{bet_id} [PUT]
+// @Security OAuth2Implicit
+func (h *Handler) UpdateBet(ctx echo.Context) error {
+	currentUser := ctx.Get("current_user").(*model.User)
+	betId := ctx.Param("bet_id")
+	b, err := h.BetStore.GetBetById(currentUser.ID, betId)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if b == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	req := newBetUpdateRequest()
+
+	if err := req.bind(ctx, b); err != nil {
+		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
+	}
+
+	if err := h.BetStore.UpdateBet(b, req.Bet.HomeTeam, req.Bet.AwayTeam); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	return ctx.JSON(http.StatusOK, newBetResponse(*b))
+}

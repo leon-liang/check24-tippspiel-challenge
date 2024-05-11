@@ -58,6 +58,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/bets/{bet_id}": {
+            "put": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bets"
+                ],
+                "summary": "Update bet with the given id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bet ID",
+                        "name": "bet_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Bet",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/http.betUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.betResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/communities": {
             "get": {
                 "security": [
@@ -287,6 +332,26 @@ const docTemplate = `{
                 },
                 "match": {
                     "$ref": "#/definitions/http.matchResponse"
+                }
+            }
+        },
+        "http.betUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "bet": {
+                    "type": "object",
+                    "required": [
+                        "awayTeam",
+                        "homeTeam"
+                    ],
+                    "properties": {
+                        "awayTeam": {
+                            "type": "integer"
+                        },
+                        "homeTeam": {
+                            "type": "integer"
+                        }
+                    }
                 }
             }
         },

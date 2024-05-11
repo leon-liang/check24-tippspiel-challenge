@@ -17,6 +17,19 @@ definitions:
       match:
         $ref: '#/definitions/http.matchResponse'
     type: object
+  http.betUpdateRequest:
+    properties:
+      bet:
+        properties:
+          awayTeam:
+            type: integer
+          homeTeam:
+            type: integer
+        required:
+        - awayTeam
+        - homeTeam
+        type: object
+    type: object
   http.betsResponse:
     properties:
       bets:
@@ -120,6 +133,34 @@ paths:
       security:
       - OAuth2Implicit: []
       summary: Retrieve all bets from the current user
+      tags:
+      - Bets
+  /v1/bets/{bet_id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bet ID
+        in: path
+        name: bet_id
+        required: true
+        type: string
+      - description: Update Bet
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/http.betUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.betResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Update bet with the given id
       tags:
       - Bets
   /v1/communities:
