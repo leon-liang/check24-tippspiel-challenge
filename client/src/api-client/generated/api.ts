@@ -73,6 +73,38 @@ export interface HttpBetResponse {
 /**
  *
  * @export
+ * @interface HttpBetUpdateRequest
+ */
+export interface HttpBetUpdateRequest {
+  /**
+   *
+   * @type {HttpBetUpdateRequestBet}
+   * @memberof HttpBetUpdateRequest
+   */
+  bet?: HttpBetUpdateRequestBet;
+}
+/**
+ *
+ * @export
+ * @interface HttpBetUpdateRequestBet
+ */
+export interface HttpBetUpdateRequestBet {
+  /**
+   *
+   * @type {number}
+   * @memberof HttpBetUpdateRequestBet
+   */
+  awayTeam: number;
+  /**
+   *
+   * @type {number}
+   * @memberof HttpBetUpdateRequestBet
+   */
+  homeTeam: number;
+}
+/**
+ *
+ * @export
  * @interface HttpBetsResponse
  */
 export interface HttpBetsResponse {
@@ -304,6 +336,72 @@ export const BetsApiAxiosParamCreator = function (
   return {
     /**
      *
+     * @summary Update bet with the given id
+     * @param {string} betId Bet ID
+     * @param {HttpBetUpdateRequest} data Update Bet
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1BetsBetIdPut: async (
+      betId: string,
+      data: HttpBetUpdateRequest,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'betId' is not null or undefined
+      assertParamExists("v1BetsBetIdPut", "betId", betId);
+      // verify required parameter 'data' is not null or undefined
+      assertParamExists("v1BetsBetIdPut", "data", data);
+      const localVarPath = `/v1/bets/{bet_id}`.replace(
+        `{${"bet_id"}}`,
+        encodeURIComponent(String(betId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PUT",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        data,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @summary Retrieve all bets from the current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -362,6 +460,42 @@ export const BetsApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
+     * @summary Update bet with the given id
+     * @param {string} betId Bet ID
+     * @param {HttpBetUpdateRequest} data Update Bet
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1BetsBetIdPut(
+      betId: string,
+      data: HttpBetUpdateRequest,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HttpBetResponse>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.v1BetsBetIdPut(
+        betId,
+        data,
+        options,
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["BetsApi.v1BetsBetIdPut"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
      * @summary Retrieve all bets from the current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -404,6 +538,23 @@ export const BetsApiFactory = function (
   return {
     /**
      *
+     * @summary Update bet with the given id
+     * @param {string} betId Bet ID
+     * @param {HttpBetUpdateRequest} data Update Bet
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1BetsBetIdPut(
+      betId: string,
+      data: HttpBetUpdateRequest,
+      options?: any,
+    ): AxiosPromise<HttpBetResponse> {
+      return localVarFp
+        .v1BetsBetIdPut(betId, data, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @summary Retrieve all bets from the current user
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -423,6 +574,25 @@ export const BetsApiFactory = function (
  * @extends {BaseAPI}
  */
 export class BetsApi extends BaseAPI {
+  /**
+   *
+   * @summary Update bet with the given id
+   * @param {string} betId Bet ID
+   * @param {HttpBetUpdateRequest} data Update Bet
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof BetsApi
+   */
+  public v1BetsBetIdPut(
+    betId: string,
+    data: HttpBetUpdateRequest,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return BetsApiFp(this.configuration)
+      .v1BetsBetIdPut(betId, data, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @summary Retrieve all bets from the current user

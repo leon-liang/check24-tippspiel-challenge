@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
+	"sort"
 	"time"
 )
 
@@ -186,6 +187,14 @@ func newBetsResponse(bets []model.Bet) *betsResponse {
 		br = *newBetResponse(bet)
 		r.Bets = append(r.Bets, br)
 	}
+
+	sortByGameTime := func(i, j int) bool {
+		timeI := r.Bets[i].Match.Match.GameTime
+		timeJ := r.Bets[j].Match.Match.GameTime
+		return timeI.Before(timeJ)
+	}
+
+	sort.Slice(r.Bets, sortByGameTime)
 
 	return r
 }
