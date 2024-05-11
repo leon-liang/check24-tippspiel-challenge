@@ -34,6 +34,7 @@ func AutoMigrate(db *gorm.DB) {
 		&model.Community{},
 		&model.UserCommunity{},
 		&model.Match{},
+		&model.Team{},
 		&model.Bet{},
 	)
 
