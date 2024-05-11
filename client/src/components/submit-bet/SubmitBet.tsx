@@ -58,8 +58,6 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
         description: "Your bet has been registered",
       });
     } catch (e) {
-      console.log(e);
-
       toast({
         variant: "error",
         title: "Failed to update your bet",
