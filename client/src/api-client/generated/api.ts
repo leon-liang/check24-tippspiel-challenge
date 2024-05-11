@@ -59,6 +59,12 @@ export interface HttpBetResponse {
   homeTeam?: number;
   /**
    *
+   * @type {string}
+   * @memberof HttpBetResponse
+   */
+  id?: string;
+  /**
+   *
    * @type {HttpMatchResponse}
    * @memberof HttpBetResponse
    */

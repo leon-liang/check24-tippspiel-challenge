@@ -148,6 +148,7 @@ func newMatchesResponse(matches []model.Match) *matchesResponse {
 }
 
 type betResponse struct {
+	ID       string        `json:"id"`
 	HomeTeam *int          `json:"homeTeam"`
 	AwayTeam *int          `json:"awayTeam"`
 	Match    matchResponse `json:"match"`
@@ -166,6 +167,7 @@ func newBetResponse(bet model.Bet) *betResponse {
 		r.AwayTeam = bet.AwayTeam
 	}
 
+	r.ID = bet.ID
 	r.Match = mr
 	return r
 }

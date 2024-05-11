@@ -282,6 +282,9 @@ const docTemplate = `{
                 "homeTeam": {
                     "type": "integer"
                 },
+                "id": {
+                    "type": "string"
+                },
                 "match": {
                     "$ref": "#/definitions/http.matchResponse"
                 }
