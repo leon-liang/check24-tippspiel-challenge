@@ -1,5 +1,5 @@
 interface Team {
-  name: string;
+  name?: string;
   bet?: number;
   result?: number;
 }
@@ -31,7 +31,7 @@ const GameView = ({ homeTeam, awayTeam, gameTime }: GameViewProps) => {
         <tbody>
           <tr>
             <th scope="row" className="px-4 pb-1 pt-2 text-start font-normal">
-              {homeTeam.name}
+              {homeTeam.name ?? "N/A"}
             </th>
             <td className="px-6 pb-1 pt-2 text-center text-lg">
               {homeTeam.bet ?? "-"}
@@ -42,7 +42,7 @@ const GameView = ({ homeTeam, awayTeam, gameTime }: GameViewProps) => {
           </tr>
           <tr>
             <th scope="row" className="px-4 pb-2 pt-1 text-start font-normal">
-              {awayTeam.name}
+              {awayTeam.name ?? "N/A"}
             </th>
             <td className="px-6 pb-2 pt-1 text-center text-lg">
               {awayTeam.bet ?? "-"}

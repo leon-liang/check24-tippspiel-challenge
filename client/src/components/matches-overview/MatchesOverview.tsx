@@ -12,7 +12,7 @@ import { DateTime } from "luxon";
 import { getClosestDate } from "@/utils/date";
 
 interface Team {
-  name: string;
+  name?: string;
   bet?: number;
   result?: number;
 }

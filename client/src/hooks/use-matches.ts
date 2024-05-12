@@ -18,12 +18,12 @@ const useMatches = () => {
       return {
         betId: bet.id ?? "",
         homeTeam: {
-          name: bet.match?.match?.homeTeam?.name ?? "",
+          name: bet.match?.match?.homeTeam?.name,
           bet: bet.homeTeam,
           result: bet.match?.match?.homeTeam?.result,
         },
         awayTeam: {
-          name: bet.match?.match?.awayTeam?.name ?? "",
+          name: bet.match?.match?.awayTeam?.name,
           bet: bet.awayTeam,
           result: bet.match?.match?.awayTeam?.result,
         },
