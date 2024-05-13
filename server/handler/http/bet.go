@@ -58,7 +58,7 @@ func (h *Handler) GetBets(ctx echo.Context) error {
 func (h *Handler) UpdateBet(ctx echo.Context) error {
 	currentUser := ctx.Get("current_user").(*model.User)
 	betId := ctx.Param("bet_id")
-	b, err := h.BetStore.GetBetById(currentUser.ID, betId)
+	b, err := h.BetStore.GetBetById(currentUser, betId)
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
@@ -68,7 +68,7 @@ func (h *Handler) UpdateBet(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNotFound, utils.NotFound())
 	}
 
-	// Make sure HomeTeam and AwayTeam are defined
+	// Bet can't be placed if HomeTeam or AwayTeam are undefined
 	if b.Match.HomeTeam == nil || b.Match.AwayTeam == nil {
 		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
 	}
