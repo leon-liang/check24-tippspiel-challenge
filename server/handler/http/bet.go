@@ -41,18 +41,7 @@ func (h *Handler) GetBets(ctx echo.Context) error {
 		}
 	}
 
-	var populatedBets []model.Bet
-
-	for _, bet := range bets {
-		populatedMatch, err := h.MatchStore.GetMatchById(bet.MatchID)
-		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-		}
-		bet.Match = *populatedMatch
-		populatedBets = append(populatedBets, bet)
-	}
-
-	response := newBetsResponse(populatedBets)
+	response := newBetsResponse(bets)
 	return ctx.JSON(http.StatusOK, &response)
 }
 
@@ -69,7 +58,7 @@ func (h *Handler) GetBets(ctx echo.Context) error {
 func (h *Handler) UpdateBet(ctx echo.Context) error {
 	currentUser := ctx.Get("current_user").(*model.User)
 	betId := ctx.Param("bet_id")
-	b, err := h.BetStore.GetBetById(currentUser.ID, betId)
+	b, err := h.BetStore.GetBetById(currentUser, betId)
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
@@ -77,6 +66,11 @@ func (h *Handler) UpdateBet(ctx echo.Context) error {
 
 	if b == nil {
 		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// Bet can't be placed if HomeTeam or AwayTeam are undefined
+	if b.Match.HomeTeam == nil || b.Match.AwayTeam == nil {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
 	}
 
 	req := newBetUpdateRequest()
