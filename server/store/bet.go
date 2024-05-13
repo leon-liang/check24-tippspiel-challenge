@@ -23,7 +23,7 @@ func (bs *BetStore) Create(bet *model.Bet) (err error) {
 func (bs *BetStore) GetBets(user *model.User) ([]model.Bet, error) {
 	var bets []model.Bet
 
-	if err := bs.db.Preload("Match").Where(&model.Bet{Bettor: user.ID}).Find(&bets).Error; err != nil {
+	if err := bs.db.Preload("Match.HomeTeam").Preload("Match.AwayTeam").Where(&model.Bet{Bettor: user.ID}).Find(&bets).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}

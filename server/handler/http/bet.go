@@ -41,18 +41,7 @@ func (h *Handler) GetBets(ctx echo.Context) error {
 		}
 	}
 
-	var populatedBets []model.Bet
-
-	for _, bet := range bets {
-		populatedMatch, err := h.MatchStore.GetMatchById(bet.MatchID)
-		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-		}
-		bet.Match = *populatedMatch
-		populatedBets = append(populatedBets, bet)
-	}
-
-	response := newBetsResponse(populatedBets)
+	response := newBetsResponse(bets)
 	return ctx.JSON(http.StatusOK, &response)
 }
 
