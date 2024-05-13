@@ -9,10 +9,13 @@ import SettingsIcon from "@/components/icons/SettingsIcon";
 import DocumentIcon from "@/components/icons/DocumentIcon";
 import { useGetUserCommunities } from "@/hooks/communities.api";
 import BoltIcon from "@/components/icons/BoltIcon";
+import TicketIcon from "@/components/icons/TicketIcon";
+import { useSession } from "next-auth/react";
 
 const Navigation = ({ children }: PropsWithChildren) => {
   const { data, isLoading, error } = useGetUserCommunities();
   const communities = data?.data.communities;
+  const session = useSession();
 
   const sidebarItems = [
     {
@@ -47,6 +50,18 @@ const Navigation = ({ children }: PropsWithChildren) => {
       link: "/docs",
     },
   ];
+
+  if (
+    session.status !== "loading" &&
+    // @ts-ignore
+    session.data?.roles.includes("admin:full")
+  ) {
+    sidebarItems.splice(2, 0, {
+      icon: <TicketIcon width={22} height={22} />,
+      label: "Matches",
+      link: "/matches",
+    });
+  }
 
   return (
     <>
