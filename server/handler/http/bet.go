@@ -79,6 +79,11 @@ func (h *Handler) UpdateBet(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNotFound, utils.NotFound())
 	}
 
+	// Make sure HomeTeam and AwayTeam are defined
+	if b.Match.HomeTeam == nil || b.Match.AwayTeam == nil {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
 	req := newBetUpdateRequest()
 
 	if err := req.bind(ctx, b); err != nil {
