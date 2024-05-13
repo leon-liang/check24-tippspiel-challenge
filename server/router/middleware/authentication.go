@@ -6,8 +6,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/auth"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/http"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
+	"slices"
 	"strings"
 )
 
@@ -48,13 +49,42 @@ func ValidateToken(keycloak *auth.Keycloak) echo.MiddlewareFunc {
 func ValidatePermissions(requiredPermissions []string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
-			// TODO
+			token := ctx.Request().Header.Get("Authorization")
+			token = extractBearerToken(token)
+
+			if token == "" {
+				fmt.Println("Access Token missing")
+				return echo.ErrUnauthorized
+			}
+
+			parser := jwt.NewParser()
+			parsedToken, _, err := parser.ParseUnverified(token, jwt.MapClaims{})
+
+			if err != nil {
+				fmt.Println(err)
+				return echo.ErrUnauthorized
+			}
+
+			claims := parsedToken.Claims.(jwt.MapClaims)
+
+			clientRoles := claims["resource_access"].(map[string]interface{})["account"].(map[string]interface{})["roles"].([]interface{})
+			roles := make([]string, len(clientRoles))
+			for i, role := range clientRoles {
+				roles[i] = role.(string)
+			}
+
+			for _, permission := range requiredPermissions {
+				if !slices.Contains(roles, permission) {
+					return echo.ErrUnauthorized
+				}
+			}
+
 			return next(ctx)
 		}
 	}
 }
 
-func GetCurrentUser(h *http.Handler) echo.MiddlewareFunc {
+func GetCurrentUser(us *store.UserStore) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			token := ctx.Request().Header.Get("Authorization")
@@ -81,7 +111,7 @@ func GetCurrentUser(h *http.Handler) echo.MiddlewareFunc {
 			firstName := claims["given_name"].(string)
 			lastName := claims["family_name"].(string)
 
-			user, err := h.UserStore.GetByUsername(username)
+			user, err := us.GetByUsername(username)
 
 			if err != nil {
 				fmt.Println(err)
@@ -101,7 +131,7 @@ func GetCurrentUser(h *http.Handler) echo.MiddlewareFunc {
 				LastName:  lastName,
 			}
 
-			if err := h.UserStore.Create(&newUser); err != nil {
+			if err := us.Create(&newUser); err != nil {
 				fmt.Println(err)
 				return echo.ErrInternalServerError
 			}

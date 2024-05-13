@@ -56,7 +56,8 @@ func main() {
 	r.GET("", httpHandler.GetRoot)
 
 	v1 := r.Group("/v1", authMiddleware.ValidateToken(keycloakClient))
-	v1.Use(authMiddleware.GetCurrentUser(httpHandler))
+	v1.Use(authMiddleware.GetCurrentUser(us))
+	v1.Use(authMiddleware.ValidatePermissions([]string{}))
 
 	httpHandler.Register(v1)
 

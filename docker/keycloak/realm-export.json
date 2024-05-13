@@ -2228,5 +2228,25 @@
   },
   "clientPolicies": {
     "policies": []
-  }
+  },
+  "users": [
+    {
+      "username": "admin",
+      "firstName": "Admin",
+      "lastName": "",
+      "email": "admin@check24.de",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123"
+        }
+      ],
+      "clientRoles": {
+        "account": [
+          "admin:full"
+        ]
+      }
+    }
+  ]
 }

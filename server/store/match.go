@@ -20,7 +20,7 @@ func NewMatchStore(db *gorm.DB) *MatchStore {
 func (ms *MatchStore) GetMatches() ([]model.Match, error) {
 	var matches []model.Match
 
-	err := ms.db.Find(&matches).Error
+	err := ms.db.Preload("HomeTeam").Preload("AwayTeam").Find(&matches).Error
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
