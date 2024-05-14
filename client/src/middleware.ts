@@ -15,6 +15,6 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if (!session && !path.includes("/api/auth/")) {
-    return NextResponse.redirect("http://localhost:3000/api/auth/signin");
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/api/auth/signin`);
   }
 }
