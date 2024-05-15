@@ -10,12 +10,12 @@ import DocumentIcon from "@/components/icons/DocumentIcon";
 import { useGetUserCommunities } from "@/hooks/communities.api";
 import BoltIcon from "@/components/icons/BoltIcon";
 import TicketIcon from "@/components/icons/TicketIcon";
-import { useSession } from "next-auth/react";
+import useValidatePermissions from "@/hooks/use-validate-permissions";
 
 const Navigation = ({ children }: PropsWithChildren) => {
-  const { data, isLoading, error } = useGetUserCommunities();
+  const { data } = useGetUserCommunities();
   const communities = data?.data.communities;
-  const session = useSession();
+  const [isLoading, isPermitted] = useValidatePermissions(["admin:full"]);
 
   const sidebarItems = [
     {
@@ -51,11 +51,7 @@ const Navigation = ({ children }: PropsWithChildren) => {
     },
   ];
 
-  if (
-    session.status !== "loading" &&
-    // @ts-ignore
-    session.data?.roles.includes("admin:full")
-  ) {
+  if (!isLoading && isPermitted) {
     sidebarItems.splice(2, 0, {
       icon: <TicketIcon width={22} height={22} />,
       label: "Matches",
