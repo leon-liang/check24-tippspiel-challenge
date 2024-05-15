@@ -1,7 +1,7 @@
 import { useGetBets } from "@/hooks/bets.api";
 import { useMemo } from "react";
 import { DateTime } from "luxon";
-import { Round } from "@/components/matches-overview/MatchesOverview";
+import { Round } from "@/components/bets-overview/BetsOverview";
 import useRounds from "@/hooks/use-rounds";
 
 const useMatches = () => {

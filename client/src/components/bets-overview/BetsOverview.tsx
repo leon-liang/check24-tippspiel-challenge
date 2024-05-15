@@ -26,7 +26,7 @@ export type Round =
   | "Semi-finals"
   | "Finals";
 
-interface Match {
+interface Bet {
   betId: string;
   homeTeam: Team;
   awayTeam: Team;
@@ -34,14 +34,12 @@ interface Match {
   date: DateTime;
 }
 
-interface MatchOverviewProps {
-  matches: Match[];
+interface BetOverviewProps {
+  bets: Bet[];
 }
 
-const MatchesOverview = ({ matches }: MatchOverviewProps) => {
-  const dates = [
-    ...new Set(matches.map((match) => match.date.toISODate() ?? "")),
-  ];
+const BetsOverview = ({ bets }: BetOverviewProps) => {
+  const dates = [...new Set(bets.map((bet) => bet.date.toISODate() ?? ""))];
 
   const [selectedTab, setSelectedTab] = useState(dates[0]);
 
@@ -66,15 +64,15 @@ const MatchesOverview = ({ matches }: MatchOverviewProps) => {
       {dates.map((date, index) => (
         <TabsContent key={index} value={date}>
           <div className="grid grid-cols-3 gap-4">
-            {matches
-              .filter((match) => match.date.toISODate() === date)
-              .map((match, index) => (
+            {bets
+              .filter((bet) => bet.date.toISODate() === date)
+              .map((bet, index) => (
                 <SubmitBet
                   key={index}
-                  betId={match.betId}
-                  homeTeam={match.homeTeam}
-                  awayTeam={match.awayTeam}
-                  date={match.date}
+                  betId={bet.betId}
+                  homeTeam={bet.homeTeam}
+                  awayTeam={bet.awayTeam}
+                  date={bet.date}
                 />
               ))}
           </div>
@@ -84,4 +82,4 @@ const MatchesOverview = ({ matches }: MatchOverviewProps) => {
   );
 };
 
-export default MatchesOverview;
+export default BetsOverview;
