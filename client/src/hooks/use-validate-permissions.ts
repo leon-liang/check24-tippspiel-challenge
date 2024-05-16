@@ -6,10 +6,11 @@ const useValidatePermissions = (requiredPermissions: string[]) => {
   const { status, data } = useSession();
 
   const permitted = useMemo(() => {
-    return requiredPermissions.every((permission) =>
+    return requiredPermissions.every((permission) => {
       // @ts-ignore
-      data?.roles.includes(permission),
-    );
+      const roles = data?.roles ?? [];
+      return roles.includes(permission);
+    });
   }, [requiredPermissions]);
 
   return [status === "loading", permitted];

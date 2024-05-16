@@ -3,13 +3,15 @@
 import { notFound } from "next/navigation";
 import Banner, { BannerTitle } from "@/components/banner/Banner";
 import { DateTime } from "luxon";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 import useValidatePermissions from "@/hooks/use-validate-permissions";
+import Table, { Column } from "@/components/table/Table";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/sheet/Sheet";
 import { useState } from "react";
 
 type Match = {
@@ -22,71 +24,77 @@ type Match = {
     name?: string;
     score?: number;
   };
-  lastUpdated: string;
 };
 
 const defaultData: Match[] = [
   {
-    gameTime: DateTime.local(2024, 6, 14, 21).toISOTime() ?? "",
+    gameTime: DateTime.local(2024, 6, 14, 21)
+      .setLocale("en")
+      .toLocaleString(DateTime.DATETIME_SHORT),
     homeTeam: {
       name: "Germany",
     },
     awayTeam: {
       name: "Scotland",
     },
-    lastUpdated: DateTime.now().toISOTime(),
+  },
+  {
+    gameTime: DateTime.local(2024, 6, 14, 15)
+      .setLocale("en")
+      .toLocaleString(DateTime.DATETIME_SHORT),
+    homeTeam: {
+      name: "Hungary",
+    },
+    awayTeam: {
+      name: "Switzerland",
+    },
   },
 ];
 
-const columnHelper = createColumnHelper<Match>();
-
-const columns = [
-  columnHelper.accessor("gameTime", {
+const columns: Column<Match>[] = [
+  {
+    accessorKey: "gameTime",
     header: "Game Time",
-  }),
-  columnHelper.group({
+  },
+  {
+    id: "homeTeam",
     header: "Home Team",
     columns: [
-      columnHelper.accessor("homeTeam.name", {
+      {
+        accessorKey: "homeTeam.name",
         header: "Name",
-      }),
-      columnHelper.accessor("homeTeam.score", {
+      },
+      {
+        accessorKey: "homeTeam.score",
         header: "Score",
-      }),
+      },
     ],
-  }),
-  columnHelper.group({
+  },
+  {
+    id: "awayTeam",
     header: "Away Team",
     columns: [
-      columnHelper.accessor("awayTeam.name", {
+      {
+        accessorKey: "awayTeam.name",
         header: "Name",
-      }),
-      columnHelper.accessor("awayTeam.score", {
+      },
+      {
+        accessorKey: "awayTeam.score",
         header: "Score",
-      }),
+      },
     ],
-  }),
-  columnHelper.accessor("lastUpdated", {
-    header: "Last Updated",
-  }),
+  },
 ];
 
 const Matches = () => {
   const [isLoading, isPermitted] = useValidatePermissions(["admin:full"]);
+  const [selectedRow, setSelectedRow] = useState<number>();
+  const [open, setOpen] = useState<boolean>(false);
 
-  const [data, setData] = useState(() => [...defaultData]);
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  if (!isLoading && !isPermitted) return notFound();
 
-  if (isLoading) {
-    return null;
-  }
-
-  if (!isPermitted) {
-    return notFound();
+  function onRowClick(selectedIndex?: number) {
+    setSelectedRow(selectedIndex);
   }
 
   return (
@@ -95,45 +103,20 @@ const Matches = () => {
         <BannerTitle>Matches</BannerTitle>
       </Banner>
       <div className="flex flex-row items-center gap-6 py-6 md:px-32">
-        <table className="border">
-          <thead className="border">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border">
-                {headerGroup.headers.map((header) => (
-                  <th
-                    className="border"
-                    key={header.id}
-                    colSpan={header.colSpan}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                className="border"
-                key={row.id}
-                onClick={() => {
-                  console.log(row.id);
-                }}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td className="border" key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Sheet open={open && selectedRow !== undefined} onOpenChange={setOpen}>
+          <SheetTrigger className="w-full">
+            <Table
+              data={defaultData}
+              columns={columns}
+              onRowClick={onRowClick}
+            />
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Update Match</SheetTitle>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
       </div>
     </>
   );

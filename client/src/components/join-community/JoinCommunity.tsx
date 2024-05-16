@@ -62,29 +62,29 @@ const JoinCommunity = () => {
                 Alternatively, you can join a community using their invite link.
               </p>
             </div>
-            <Form schema={FormSchema} onSubmit={onSubmit}>
-              <div className="flex flex-col gap-2">
-                <Input
-                  displayName="Community Tag"
-                  name="communityTag"
-                  type="text"
-                />
-              </div>
-              <div className="flex justify-end gap-3">
-                <Button onClick={() => setOpen(false)} variant="mute">
-                  Cancel
-                </Button>
-                <Button
-                  variant="action"
-                  className="flex flex-row items-center gap-2"
-                  type="submit"
-                >
-                  Join
-                  <ArrowRight className="stroke-2" width={16} height={16} />
-                </Button>
-              </div>
-            </Form>
           </SheetHeader>
+          <Form schema={FormSchema} onSubmit={onSubmit}>
+            <div className="flex flex-col gap-2">
+              <Input
+                displayName="Community Tag"
+                name="communityTag"
+                type="text"
+              />
+            </div>
+            <div className="flex justify-end gap-3">
+              <Button onClick={() => setOpen(false)} variant="mute">
+                Cancel
+              </Button>
+              <Button
+                variant="action"
+                className="flex flex-row items-center gap-2"
+                type="submit"
+              >
+                Join
+                <ArrowRight className="stroke-2" width={16} height={16} />
+              </Button>
+            </div>
+          </Form>
         </SheetContent>
       </Sheet>
     </>

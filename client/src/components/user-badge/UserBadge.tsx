@@ -1,10 +1,12 @@
 "use client";
 import * as Popover from "@radix-ui/react-popover";
-import { signOut as nextAuthSignOut } from "next-auth/react";
+import { signOut as nextAuthSignOut, useSession } from "next-auth/react";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import { useGetMe } from "@/hooks/users.api";
+import SSOSignOut from "@/components/user-badge/SSOSignOut";
 
 const UserBadge = () => {
+  const session = useSession();
   const { data, isLoading, error } = useGetMe();
 
   const fullName = `${data?.data.user?.firstName ?? ""} ${data?.data.user?.lastName ?? ""}`;
@@ -27,6 +29,8 @@ const UserBadge = () => {
   }
 
   async function signOut() {
+    // @ts-ignore
+    await SSOSignOut(session.data?.refreshToken);
     await nextAuthSignOut();
   }
 
@@ -57,7 +61,9 @@ const UserBadge = () => {
             <hr className="my-2 border-gray-6" />
             <button
               className="flex flex-row items-center gap-2 rounded-md p-2 text-start text-sm hover:bg-colors-gray-3"
-              onClick={signOut}
+              onClick={async () => {
+                await signOut();
+              }}
             >
               <LogoutIcon width={24} height={24} />
               <p>Logout</p>

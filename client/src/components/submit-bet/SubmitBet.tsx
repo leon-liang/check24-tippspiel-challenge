@@ -101,46 +101,45 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
                 <li>0 points for everything else</li>
               </ul>
             </div>
-
-            {homeTeam.name && awayTeam.name ? (
-              <Form
-                schema={FormSchema}
-                onSubmit={onSubmit}
-                defaultValues={defaultValues}
-              >
-                <div className="flex flex-col gap-4">
-                  <Input
-                    name="homeTeamScore"
-                    displayName={`${homeTeam.name}'s final score:`}
-                    type="number"
-                  />
-                  <Input
-                    name="awayTeamScore"
-                    displayName={`${awayTeam.name}'s final score:`}
-                    type="number"
-                  />
-                </div>
-                <div className="flex justify-end gap-3">
-                  <Button
-                    onClick={() => {
-                      setOpen(false);
-                    }}
-                    variant="mute"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="action"
-                    className="flex flex-row items-center gap-2"
-                    type="submit"
-                  >
-                    Save
-                    <ArrowRight className="stroke-2" width={16} height={16} />
-                  </Button>
-                </div>
-              </Form>
-            ) : null}
           </SheetHeader>
+          {homeTeam.name && awayTeam.name ? (
+            <Form
+              schema={FormSchema}
+              onSubmit={onSubmit}
+              defaultValues={defaultValues}
+            >
+              <div className="flex flex-col gap-4">
+                <Input
+                  name="homeTeamScore"
+                  displayName={`${homeTeam.name}'s final score:`}
+                  type="number"
+                />
+                <Input
+                  name="awayTeamScore"
+                  displayName={`${awayTeam.name}'s final score:`}
+                  type="number"
+                />
+              </div>
+              <div className="flex justify-end gap-3">
+                <Button
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                  variant="mute"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="action"
+                  className="flex flex-row items-center gap-2"
+                  type="submit"
+                >
+                  Save
+                  <ArrowRight className="stroke-2" width={16} height={16} />
+                </Button>
+              </div>
+            </Form>
+          ) : null}
         </SheetContent>
       </Sheet>
     </>
