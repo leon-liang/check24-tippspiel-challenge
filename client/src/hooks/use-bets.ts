@@ -4,8 +4,8 @@ import { DateTime } from "luxon";
 import { Round } from "@/components/bets-overview/BetsOverview";
 import useRounds from "@/hooks/use-rounds";
 
-const useMatches = () => {
-  const { data, isLoading, error } = useGetBets();
+const useBets = () => {
+  const { data } = useGetBets();
   const rounds = useRounds();
 
   return useMemo(() => {
@@ -38,4 +38,4 @@ const useMatches = () => {
   }, [data?.data.bets, rounds]);
 };
 
-export default useMatches;
+export default useBets;

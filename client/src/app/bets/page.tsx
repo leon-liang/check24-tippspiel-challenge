@@ -6,12 +6,12 @@ import React, { useEffect, useState } from "react";
 import BetsOverview from "@/components/bets-overview/BetsOverview";
 import { DateTime } from "luxon";
 import useRounds from "@/hooks/use-rounds";
-import useMatches from "@/hooks/use-matches";
+import useBets from "@/hooks/use-bets";
 
 const Bets = () => {
   const [selectedRound, setSelectedRound] = useState("");
   const rounds = useRounds();
-  const matches = useMatches();
+  const matches = useBets();
 
   useEffect(() => {
     const currentDate = DateTime.now();
