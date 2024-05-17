@@ -111,16 +111,16 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
               <div className="flex flex-col gap-4">
                 <Input
                   name="homeTeamScore"
-                  displayName={`${homeTeam.name}'s final score:`}
+                  displayName={`${homeTeam.name}'s final score`}
                   type="number"
                 />
                 <Input
                   name="awayTeamScore"
-                  displayName={`${awayTeam.name}'s final score:`}
+                  displayName={`${awayTeam.name}'s final score`}
                   type="number"
                 />
               </div>
-              <div className="flex justify-end gap-3">
+              <div className="flex justify-end gap-4">
                 <Button
                   onClick={() => {
                     setOpen(false);

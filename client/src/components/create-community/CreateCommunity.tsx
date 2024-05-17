@@ -75,7 +75,7 @@ const CreateCommunity = () => {
                 type="text"
               />
             </div>
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-4">
               <Button onClick={() => setOpen(false)} variant="mute">
                 Cancel
               </Button>

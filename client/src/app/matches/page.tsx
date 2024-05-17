@@ -12,7 +12,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/sheet/Sheet";
-import { useState } from "react";
+import React, { useState } from "react";
+import Form, { Input } from "@/components/form/Form";
+import Button from "@/components/button/Button";
+import ArrowRight from "@/components/icons/ArrowRight";
+import { z } from "zod";
 
 type Match = {
   gameTime: string;
@@ -91,6 +95,25 @@ const Matches = () => {
   const [selectedRow, setSelectedRow] = useState<number>();
   const [open, setOpen] = useState<boolean>(false);
 
+  const FormSchema = z.object({
+    homeTeamName: z.string().optional(),
+    homeTeamScore: z.number().int(),
+    awayTeamName: z.string().optional(),
+    awayTeamScore: z.number().int(),
+  });
+
+  type FormData = z.infer<typeof FormSchema>;
+
+  const selectedMatch = defaultData[selectedRow ?? 0];
+  const defaultValues = {
+    homeTeamName: selectedMatch.homeTeam.name,
+    homeTeamScore: selectedMatch.homeTeam.score,
+    awayTeamName: selectedMatch.awayTeam.name,
+    awayTeamScore: selectedMatch.awayTeam.score,
+  };
+
+  const onSubmit = async (data: FormData) => {};
+
   if (!isLoading && !isPermitted) return notFound();
 
   function onRowClick(selectedIndex?: number) {
@@ -112,9 +135,61 @@ const Matches = () => {
             />
           </SheetTrigger>
           <SheetContent>
-            <SheetHeader>
+            <SheetHeader className="flex flex-col gap-8">
               <SheetTitle>Update Match</SheetTitle>
+              <div className="flex flex-col gap-6 text-sm text-gray-11">
+                <p>Update Match details below. Click save when you are done.</p>
+              </div>
             </SheetHeader>
+            <Form
+              schema={FormSchema}
+              onSubmit={onSubmit}
+              defaultValues={defaultValues}
+            >
+              <div className="flex flex-col gap-4">
+                <Input
+                  name="homeTeamName"
+                  displayName="Home Team Name"
+                  type="text"
+                />
+                <Input
+                  name="homeTeamScore"
+                  displayName="Home Team Score"
+                  type="text"
+                />
+              </div>
+              <hr className="border-gray-6" />
+              <div className="flex flex-col gap-4">
+                <Input
+                  name="awayTeamName"
+                  displayName="Away Team Name"
+                  type="text"
+                />
+                <Input
+                  name="awayTeamScore"
+                  displayName="Away Team Score"
+                  type="text"
+                />
+              </div>
+              <div className="flex justify-end gap-4">
+                <Button
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                  variant="mute"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="action"
+                  className="flex flex-row items-center gap-2"
+                  type="submit"
+                >
+                  Save
+                  <ArrowRight className="stroke-2" width={16} height={16} />
+                </Button>
+              </div>
+            </Form>
           </SheetContent>
         </Sheet>
       </div>

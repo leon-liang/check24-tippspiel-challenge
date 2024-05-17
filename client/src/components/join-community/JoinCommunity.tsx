@@ -53,7 +53,7 @@ const JoinCommunity = () => {
         <SheetContent>
           <SheetHeader className="flex flex-col gap-8">
             <SheetTitle>Join Community</SheetTitle>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 text-sm text-gray-11">
               <p>
                 Enter the community tag below to join the community. Click join
                 when you are done.
@@ -71,7 +71,7 @@ const JoinCommunity = () => {
                 type="text"
               />
             </div>
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-4">
               <Button onClick={() => setOpen(false)} variant="mute">
                 Cancel
               </Button>
