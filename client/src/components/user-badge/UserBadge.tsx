@@ -3,7 +3,6 @@ import * as Popover from "@radix-ui/react-popover";
 import { signOut as nextAuthSignOut, useSession } from "next-auth/react";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import { useGetMe } from "@/hooks/users.api";
-import SSOSignOut from "@/components/user-badge/SSOSignOut";
 
 const UserBadge = () => {
   const session = useSession();
@@ -29,8 +28,16 @@ const UserBadge = () => {
   }
 
   async function signOut() {
-    // @ts-ignore
-    await SSOSignOut(session.data?.refreshToken);
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/sso-sign-out`, {
+        headers: {
+          // @ts-ignore
+          refresh_token: session.data?.refreshToken,
+        },
+      });
+    } catch (error) {
+      console.error("Error occurred during sign out:", error);
+    }
     await nextAuthSignOut();
   }
 
