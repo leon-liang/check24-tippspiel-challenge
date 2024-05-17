@@ -52,10 +52,15 @@ const Navigation = ({ children }: PropsWithChildren) => {
   ];
 
   if (!isLoading && isPermitted) {
-    sidebarItems.splice(2, 0, {
+    sidebarItems.splice(3, 0, {
       icon: <TicketIcon width={22} height={22} />,
-      label: "Matches",
-      link: "/matches",
+      label: "Admin",
+      nestedItems: [
+        {
+          label: "Matches",
+          link: `/matches`,
+        },
+      ],
     });
   }
 
