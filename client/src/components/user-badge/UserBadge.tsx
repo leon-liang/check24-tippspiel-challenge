@@ -2,7 +2,7 @@
 import * as Popover from "@radix-ui/react-popover";
 import { signOut as nextAuthSignOut, useSession } from "next-auth/react";
 import LogoutIcon from "@/components/icons/LogoutIcon";
-import { useGetMe } from "@/hooks/users.api";
+import { useGetMe } from "@/hooks/api/users.api";
 
 const UserBadge = () => {
   const session = useSession();

@@ -1,4 +1,4 @@
-import { useGetBets } from "@/hooks/bets.api";
+import { useGetBets } from "@/hooks/api/bets.api";
 import { useMemo } from "react";
 import { DateTime } from "luxon";
 import { Round } from "@/components/bets-overview/BetsOverview";

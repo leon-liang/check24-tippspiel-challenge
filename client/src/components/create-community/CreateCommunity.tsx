@@ -8,7 +8,7 @@ import {
 import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
-import { useCreateCommunity } from "@/hooks/communities.api";
+import { useCreateCommunity } from "@/hooks/api/communities.api";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";

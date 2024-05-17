@@ -2,7 +2,7 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { useParams } from "next/navigation";
-import { useGetUserCommunities } from "@/hooks/communities.api";
+import { useGetUserCommunities } from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 
 const Community = () => {

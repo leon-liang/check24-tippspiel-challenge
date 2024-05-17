@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useJoinCommunity } from "@/hooks/communities.api";
+import { useJoinCommunity } from "@/hooks/api/communities.api";
 import { useToast } from "@/hooks/use-toast";
 
 const JoinCommunity = () => {

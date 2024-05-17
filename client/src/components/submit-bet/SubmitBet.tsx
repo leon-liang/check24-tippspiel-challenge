@@ -12,7 +12,7 @@ import React from "react";
 import { z } from "zod";
 import Form, { Input } from "@/components/form/Form";
 import { DateTime } from "luxon";
-import { useUpdateBet } from "@/hooks/bets.api";
+import { useUpdateBet } from "@/hooks/api/bets.api";
 import { toast } from "@/hooks/use-toast";
 import Alert from "@/components/alert/Alert";
 

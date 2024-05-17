@@ -7,7 +7,7 @@ import HomeIcon from "@/components/icons/HomeIcon";
 import UserGroupIcon from "@/components/icons/UserGroupIcon";
 import SettingsIcon from "@/components/icons/SettingsIcon";
 import DocumentIcon from "@/components/icons/DocumentIcon";
-import { useGetUserCommunities } from "@/hooks/communities.api";
+import { useGetUserCommunities } from "@/hooks/api/communities.api";
 import BoltIcon from "@/components/icons/BoltIcon";
 import TicketIcon from "@/components/icons/TicketIcon";
 import useValidatePermissions from "@/hooks/use-validate-permissions";
