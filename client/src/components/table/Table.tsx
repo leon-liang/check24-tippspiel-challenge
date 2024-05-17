@@ -67,7 +67,13 @@ const Table = <TData, TValue>({
             <tr
               className="cursor-pointer border-b border-gray-6 text-center last:border-b-0 hover:bg-colors-gray-2"
               key={row.id}
-              onClick={() => onRowClick(index)}
+              onClick={() =>
+                onRowClick(
+                  index +
+                    table.getState().pagination.pageIndex *
+                      table.getState().pagination.pageSize,
+                )
+              }
             >
               {row.getVisibleCells().map((cell) => (
                 <td
