@@ -7,8 +7,10 @@ import Table, { Column } from "@/components/table/Table";
 import React, { useState } from "react";
 import useMatches from "@/hooks/use-matches";
 import UpdateMatch from "@/components/update-match/UpdateMatch";
+import useMatchColumns from "@/hooks/use-match-columns";
 
 type Match = {
+  id: string;
   gameTime: string;
   homeTeam: {
     name?: string;
@@ -20,48 +22,14 @@ type Match = {
   };
 };
 
-const columns: Column<Match>[] = [
-  {
-    accessorKey: "gameTime",
-    header: "Game Time",
-  },
-  {
-    id: "homeTeam",
-    header: "Home Team",
-    columns: [
-      {
-        accessorKey: "homeTeam.name",
-        header: "Name",
-      },
-      {
-        accessorKey: "homeTeam.result",
-        header: "Score",
-      },
-    ],
-  },
-  {
-    id: "awayTeam",
-    header: "Away Team",
-    columns: [
-      {
-        accessorKey: "awayTeam.name",
-        header: "Name",
-      },
-      {
-        accessorKey: "awayTeam.result",
-        header: "Score",
-      },
-    ],
-  },
-];
-
 const Matches = () => {
   const [isLoading, isPermitted] = useValidatePermissions(["admin:full"]);
   const [selectedRow, setSelectedRow] = useState<number>();
 
   const [open, setOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const matches = useMatches();
+  const matches: Match[] = useMatches();
+  const matchColumns: Column<Match>[] = useMatchColumns();
 
   const selectedMatch = matches[selectedRow ?? 0];
 
@@ -88,7 +56,7 @@ const Matches = () => {
       <div className="py-6 md:px-32">
         <Table
           data={matches}
-          columns={columns}
+          columns={matchColumns}
           rowsPerPage={10}
           onRowClick={onRowClick}
           currentPage={currentPage}
