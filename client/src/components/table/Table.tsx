@@ -39,7 +39,7 @@ const Table = <TData, TValue>({
     initialState: {
       pagination: {
         pageSize: rowsPerPage,
-        pageIndex: currentPage,
+        pageIndex: currentPage ?? 0,
       },
     },
     autoResetPageIndex: false,
