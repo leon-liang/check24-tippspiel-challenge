@@ -31,8 +31,6 @@ const Table = <TData, TValue>({
   currentPage,
   setCurrentPage,
 }: TableProps<TData, TValue>) => {
-  console.log("Current page is " + currentPage);
-
   const table = useReactTable({
     data,
     columns,
