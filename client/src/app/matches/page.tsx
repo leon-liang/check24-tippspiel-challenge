@@ -12,11 +12,11 @@ type Match = {
   gameTime: string;
   homeTeam: {
     name?: string;
-    score?: number;
+    result?: number;
   };
   awayTeam: {
     name?: string;
-    score?: number;
+    result?: number;
   };
 };
 
@@ -34,7 +34,7 @@ const columns: Column<Match>[] = [
         header: "Name",
       },
       {
-        accessorKey: "homeTeam.score",
+        accessorKey: "homeTeam.result",
         header: "Score",
       },
     ],
@@ -48,7 +48,7 @@ const columns: Column<Match>[] = [
         header: "Name",
       },
       {
-        accessorKey: "awayTeam.score",
+        accessorKey: "awayTeam.result",
         header: "Score",
       },
     ],

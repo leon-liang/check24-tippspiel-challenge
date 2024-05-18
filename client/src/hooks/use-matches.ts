@@ -16,11 +16,11 @@ const useMatches = () => {
           gameTime: date,
           homeTeam: {
             name: match.match?.homeTeam?.name ?? "",
-            score: match.match?.homeTeam?.result,
+            result: match.match?.homeTeam?.result,
           },
           awayTeam: {
             name: match.match?.awayTeam?.name ?? "",
-            score: match.match?.awayTeam?.result,
+            result: match.match?.awayTeam?.result,
           },
         };
       }) ?? []
