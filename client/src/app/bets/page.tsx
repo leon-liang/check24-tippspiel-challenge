@@ -11,7 +11,7 @@ import useBets from "@/hooks/use-bets";
 const Bets = () => {
   const [selectedRound, setSelectedRound] = useState("");
   const rounds = useRounds();
-  const matches = useBets();
+  const bets = useBets();
 
   useEffect(() => {
     const currentDate = DateTime.now();
@@ -43,12 +43,10 @@ const Bets = () => {
         </BannerContent>
       </Banner>
       <div className="flex flex-row items-center gap-6 py-6 md:px-32">
-        {matches ? (
+        {bets ? (
           <BetsOverview
             key={selectedRound}
-            bets={
-              matches?.filter((match) => match.round === selectedRound) ?? []
-            }
+            bets={bets?.filter((bet) => bet.round === selectedRound) ?? []}
           />
         ) : null}
       </div>
