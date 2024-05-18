@@ -2,7 +2,6 @@ package http
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/utils"
 	"net/http"
 )
@@ -53,26 +52,28 @@ func (h *Handler) UpdateMatch(ctx echo.Context) error {
 		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
 
-	var homeTeam *model.Team
-	if *req.Match.HomeTeam.Name != "" {
-		homeTeam, err = h.TeamStore.GetTeamByName(*req.Match.HomeTeam.Name)
-		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-		}
-		if homeTeam == nil {
-			return ctx.JSON(http.StatusNotFound, utils.NotFound())
-		}
+	if *req.Match.HomeTeam.Name == "" {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
 	}
 
-	var awayTeam *model.Team
-	if *req.Match.AwayTeam.Name != "" {
-		awayTeam, err = h.TeamStore.GetTeamByName(*req.Match.AwayTeam.Name)
-		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-		}
-		if awayTeam == nil {
-			return ctx.JSON(http.StatusNotFound, utils.NotFound())
-		}
+	homeTeam, err := h.TeamStore.GetTeamByName(*req.Match.HomeTeam.Name)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+	if homeTeam == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	if *req.Match.AwayTeam.Name == "" {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	awayTeam, err := h.TeamStore.GetTeamByName(*req.Match.AwayTeam.Name)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+	if awayTeam == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
 	}
 
 	if err := h.MatchStore.UpdateMatchTeams(m, homeTeam, awayTeam); err != nil {

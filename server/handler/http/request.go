@@ -61,11 +61,11 @@ func (r *betUpdateRequest) bind(ctx echo.Context, b *model.Bet) error {
 type matchUpdateRequest struct {
 	Match struct {
 		HomeTeam struct {
-			Name   *string `json:"name"`
+			Name   *string `json:"name" validate:"required"`
 			Result *int    `json:"result"`
 		} `json:"homeTeam"`
 		AwayTeam struct {
-			Name   *string `json:"name"`
+			Name   *string `json:"name" validate:"required"`
 			Result *int    `json:"result"`
 		} `json:"awayTeam"`
 	} `json:"match"`
