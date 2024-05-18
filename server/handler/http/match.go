@@ -2,7 +2,6 @@ package http
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/utils"
 	"net/http"
 )
@@ -13,6 +12,7 @@ import (
 // @Produce json
 // @Success 200 {object} http.matchesResponse
 // @Router /v1/matches [GET]
+// @Security OAuth2Implicit
 func (h *Handler) GetMatches(ctx echo.Context) error {
 	matches, err := h.MatchStore.GetMatches()
 
@@ -24,13 +24,53 @@ func (h *Handler) GetMatches(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, &response)
 }
 
-func (h *Handler) UpdateMatchTeams(ctx echo.Context) error {
-	var match model.Match
+// UpdateMatch godoc
+// @Tags Matches
+// @Summary Update match
+// @Accept json
+// @Produce json
+// @Success 200 {object} http.matchResponse
+// @Param match_id path string true "Match ID"
+// @Router /v1/match/{match_id} [PUT]
+// @Param data body http.matchUpdateRequest true "Update Match"
+// @Security OAuth2Implicit
+func (h *Handler) UpdateMatch(ctx echo.Context) error {
+	matchId := ctx.Param("match_id")
+	m, err := h.MatchStore.GetMatchById(matchId)
 
-	response := newMatchResponse(match)
-	return ctx.JSON(http.StatusOK, &response)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if m == nil {
+		return ctx.JSON(http.StatusNotFound, utils.AccessForbidden())
+	}
+
+	req := newMatchUpdateRequest()
+
+	if err := req.bind(ctx, m); err != nil {
+		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
+	}
+
+	homeTeam, err := h.TeamStore.GetTeamByName(*req.Match.HomeTeam.Name)
+
+	if err != nil {
+		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+	}
+
+	awayTeam, err := h.TeamStore.GetTeamByName(*req.Match.AwayTeam.Name)
+
+	if err != nil {
+		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+	}
+
+	if err := h.MatchStore.UpdateMatchTeams(m, homeTeam, awayTeam); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if err := h.MatchStore.UpdateMatchResults(m, req.Match.HomeTeam.Result, req.Match.AwayTeam.Result); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	return ctx.JSON(http.StatusOK, newMatchResponse(*m))
 }
-
-//func (h *Handler) UpdateMatchResults(ctx echo.Context) error {
-//	return ctx.JSON(http.StatusOK, &response)
-//}

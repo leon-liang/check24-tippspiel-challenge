@@ -57,3 +57,38 @@ func (r *betUpdateRequest) bind(ctx echo.Context, b *model.Bet) error {
 
 	return nil
 }
+
+type matchUpdateRequest struct {
+	Match struct {
+		HomeTeam struct {
+			Name   *string `json:"name"`
+			Result *int    `json:"score"`
+		} `json:"homeTeam"`
+		AwayTeam struct {
+			Name   *string `json:"name"`
+			Result *int    `json:"score"`
+		} `json:"awayTeam"`
+	} `json:"match"`
+}
+
+func newMatchUpdateRequest() *matchUpdateRequest {
+	return new(matchUpdateRequest)
+}
+
+func (r *matchUpdateRequest) bind(ctx echo.Context, m *model.Match) error {
+	if err := ctx.Bind(r); err != nil {
+		return err
+	}
+
+	if err := ctx.Validate(r); err != nil {
+		return err
+	}
+
+	m.HomeTeam.Name = *r.Match.HomeTeam.Name
+	m.HomeTeamResult = r.Match.HomeTeam.Result
+
+	m.AwayTeam.Name = *r.Match.AwayTeam.Name
+	m.AwayTeamResult = r.Match.AwayTeam.Result
+
+	return nil
+}

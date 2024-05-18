@@ -20,7 +20,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	matches.GET("", h.GetMatches)
 
 	matches.Use(authMiddleware.ValidatePermissions([]string{"admin:full"}))
-	matches.POST("/teams", h.UpdateMatchTeams)
+	matches.PUT("/:match_id", h.UpdateMatch)
 
 	bets := v1.Group("/bets")
 	bets.GET("", h.GetBets)
