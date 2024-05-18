@@ -31,7 +31,7 @@ func (h *Handler) GetMatches(ctx echo.Context) error {
 // @Produce json
 // @Success 200 {object} http.matchResponse
 // @Param match_id path string true "Match ID"
-// @Router /v1/match/{match_id} [PUT]
+// @Router /v1/matches/{match_id} [PUT]
 // @Param data body http.matchUpdateRequest true "Update Match"
 // @Security OAuth2Implicit
 func (h *Handler) UpdateMatch(ctx echo.Context) error {
@@ -52,13 +52,13 @@ func (h *Handler) UpdateMatch(ctx echo.Context) error {
 		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
 
-	homeTeam, err := h.TeamStore.GetTeamByName(*req.Match.HomeTeam.Name)
+	homeTeam, err := h.TeamStore.GetTeamByName(req.Match.HomeTeam.Name)
 
 	if err != nil {
 		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
 	}
 
-	awayTeam, err := h.TeamStore.GetTeamByName(*req.Match.AwayTeam.Name)
+	awayTeam, err := h.TeamStore.GetTeamByName(req.Match.AwayTeam.Name)
 
 	if err != nil {
 		return ctx.JSON(http.StatusNotFound, utils.NewError(err))

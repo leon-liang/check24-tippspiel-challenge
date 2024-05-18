@@ -262,7 +262,31 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/match/{match_id}": {
+        "/v1/matches": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Retrieve all matches",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.matchesResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/matches/{match_id}": {
             "put": {
                 "security": [
                     {
@@ -302,30 +326,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/http.matchResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/matches": {
-            "get": {
-                "security": [
-                    {
-                        "OAuth2Implicit": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Matches"
-                ],
-                "summary": "Retrieve all matches",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/http.matchesResponse"
                         }
                     }
                 }
@@ -490,7 +490,7 @@ const docTemplate = `{
                                 "name": {
                                     "type": "string"
                                 },
-                                "score": {
+                                "result": {
                                     "type": "integer"
                                 }
                             }
@@ -501,7 +501,7 @@ const docTemplate = `{
                                 "name": {
                                     "type": "string"
                                 },
-                                "score": {
+                                "result": {
                                     "type": "integer"
                                 }
                             }

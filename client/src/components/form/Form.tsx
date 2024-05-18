@@ -35,6 +35,8 @@ const Form = ({
     await onSubmit(data);
   };
 
+  console.log(methods.formState.errors);
+
   return (
     <FormProvider {...methods}>
       <form
@@ -53,9 +55,15 @@ interface FormInputProps {
   name: string;
   displayName: string;
   type: "text" | "number";
+  required?: boolean;
 }
 
-export const Input = ({ name, displayName, type }: FormInputProps) => {
+export const Input = ({
+  name,
+  displayName,
+  type,
+  required = true,
+}: FormInputProps) => {
   const {
     register,
     formState: { isSubmitting, errors },
@@ -70,7 +78,10 @@ export const Input = ({ name, displayName, type }: FormInputProps) => {
         className="inline-flex h-[25px] w-full items-center justify-center rounded-[4px] border-none bg-colors-gray-2 text-[15px] leading-none text-gray-12 outline-none"
         id={name}
         type={type}
-        {...register(name, { valueAsNumber: type === "number" })}
+        {...register(name, {
+          valueAsNumber: type === "number",
+          required: required,
+        })}
         disabled={isSubmitting}
       />
     </fieldset>

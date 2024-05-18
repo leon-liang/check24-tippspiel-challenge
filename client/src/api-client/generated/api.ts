@@ -279,7 +279,7 @@ export interface HttpMatchUpdateRequestMatchAwayTeam {
    * @type {number}
    * @memberof HttpMatchUpdateRequestMatchAwayTeam
    */
-  score?: number;
+  result?: number;
 }
 /**
  *
@@ -1310,22 +1310,70 @@ export const MatchesApiAxiosParamCreator = function (
   return {
     /**
      *
+     * @summary Retrieve all matches
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1MatchesGet: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/matches`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @summary Update match
      * @param {string} matchId Match ID
      * @param {HttpMatchUpdateRequest} data Update Match
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    v1MatchMatchIdPut: async (
+    v1MatchesMatchIdPut: async (
       matchId: string,
       data: HttpMatchUpdateRequest,
       options: RawAxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'matchId' is not null or undefined
-      assertParamExists("v1MatchMatchIdPut", "matchId", matchId);
+      assertParamExists("v1MatchesMatchIdPut", "matchId", matchId);
       // verify required parameter 'data' is not null or undefined
-      assertParamExists("v1MatchMatchIdPut", "data", data);
-      const localVarPath = `/v1/match/{match_id}`.replace(
+      assertParamExists("v1MatchesMatchIdPut", "data", data);
+      const localVarPath = `/v1/matches/{match_id}`.replace(
         `{${"match_id"}}`,
         encodeURIComponent(String(matchId)),
       );
@@ -1374,54 +1422,6 @@ export const MatchesApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
-    /**
-     *
-     * @summary Retrieve all matches
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1MatchesGet: async (
-      options: RawAxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/v1/matches`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      // authentication OAuth2Implicit required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        "OAuth2Implicit",
-        [],
-        configuration,
-      );
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
   };
 };
 
@@ -1432,43 +1432,6 @@ export const MatchesApiAxiosParamCreator = function (
 export const MatchesApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = MatchesApiAxiosParamCreator(configuration);
   return {
-    /**
-     *
-     * @summary Update match
-     * @param {string} matchId Match ID
-     * @param {HttpMatchUpdateRequest} data Update Match
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async v1MatchMatchIdPut(
-      matchId: string,
-      data: HttpMatchUpdateRequest,
-      options?: RawAxiosRequestConfig,
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string,
-      ) => AxiosPromise<HttpMatchResponse>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.v1MatchMatchIdPut(
-          matchId,
-          data,
-          options,
-        );
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-      const localVarOperationServerBasePath =
-        operationServerMap["MatchesApi.v1MatchMatchIdPut"]?.[
-          localVarOperationServerIndex
-        ]?.url;
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration,
-        )(axios, localVarOperationServerBasePath || basePath);
-    },
     /**
      *
      * @summary Retrieve all matches
@@ -1498,6 +1461,43 @@ export const MatchesApiFp = function (configuration?: Configuration) {
           configuration,
         )(axios, localVarOperationServerBasePath || basePath);
     },
+    /**
+     *
+     * @summary Update match
+     * @param {string} matchId Match ID
+     * @param {HttpMatchUpdateRequest} data Update Match
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1MatchesMatchIdPut(
+      matchId: string,
+      data: HttpMatchUpdateRequest,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HttpMatchResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1MatchesMatchIdPut(
+          matchId,
+          data,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["MatchesApi.v1MatchesMatchIdPut"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
   };
 };
 
@@ -1514,23 +1514,6 @@ export const MatchesApiFactory = function (
   return {
     /**
      *
-     * @summary Update match
-     * @param {string} matchId Match ID
-     * @param {HttpMatchUpdateRequest} data Update Match
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    v1MatchMatchIdPut(
-      matchId: string,
-      data: HttpMatchUpdateRequest,
-      options?: any,
-    ): AxiosPromise<HttpMatchResponse> {
-      return localVarFp
-        .v1MatchMatchIdPut(matchId, data, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
      * @summary Retrieve all matches
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1538,6 +1521,23 @@ export const MatchesApiFactory = function (
     v1MatchesGet(options?: any): AxiosPromise<HttpMatchesResponse> {
       return localVarFp
         .v1MatchesGet(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary Update match
+     * @param {string} matchId Match ID
+     * @param {HttpMatchUpdateRequest} data Update Match
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1MatchesMatchIdPut(
+      matchId: string,
+      data: HttpMatchUpdateRequest,
+      options?: any,
+    ): AxiosPromise<HttpMatchResponse> {
+      return localVarFp
+        .v1MatchesMatchIdPut(matchId, data, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -1552,25 +1552,6 @@ export const MatchesApiFactory = function (
 export class MatchesApi extends BaseAPI {
   /**
    *
-   * @summary Update match
-   * @param {string} matchId Match ID
-   * @param {HttpMatchUpdateRequest} data Update Match
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof MatchesApi
-   */
-  public v1MatchMatchIdPut(
-    matchId: string,
-    data: HttpMatchUpdateRequest,
-    options?: RawAxiosRequestConfig,
-  ) {
-    return MatchesApiFp(this.configuration)
-      .v1MatchMatchIdPut(matchId, data, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
    * @summary Retrieve all matches
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -1579,6 +1560,25 @@ export class MatchesApi extends BaseAPI {
   public v1MatchesGet(options?: RawAxiosRequestConfig) {
     return MatchesApiFp(this.configuration)
       .v1MatchesGet(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Update match
+   * @param {string} matchId Match ID
+   * @param {HttpMatchUpdateRequest} data Update Match
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof MatchesApi
+   */
+  public v1MatchesMatchIdPut(
+    matchId: string,
+    data: HttpMatchUpdateRequest,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return MatchesApiFp(this.configuration)
+      .v1MatchesMatchIdPut(matchId, data, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

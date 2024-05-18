@@ -12,6 +12,7 @@ const useMatches = () => {
           match.match?.gameTime?.slice(0, -1) ?? "",
         ).toLocaleString(DateTime.DATETIME_MED);
         return {
+          id: match.match?.id ?? "",
           gameTime: date,
           homeTeam: {
             name: match.match?.homeTeam?.name ?? "",

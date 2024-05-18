@@ -84,14 +84,14 @@ definitions:
             properties:
               name:
                 type: string
-              score:
+              result:
                 type: integer
             type: object
           homeTeam:
             properties:
               name:
                 type: string
-              score:
+              result:
                 type: integer
             type: object
         type: object
@@ -279,7 +279,21 @@ paths:
       summary: Retrieve all users that are part of a community
       tags:
       - Communities
-  /v1/match/{match_id}:
+  /v1/matches:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.matchesResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Retrieve all matches
+      tags:
+      - Matches
+  /v1/matches/{match_id}:
     put:
       consumes:
       - application/json
@@ -305,20 +319,6 @@ paths:
       security:
       - OAuth2Implicit: []
       summary: Update match
-      tags:
-      - Matches
-  /v1/matches:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/http.matchesResponse'
-      security:
-      - OAuth2Implicit: []
-      summary: Retrieve all matches
       tags:
       - Matches
   /v1/users/me:

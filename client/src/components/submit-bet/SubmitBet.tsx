@@ -121,12 +121,7 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
                 />
               </div>
               <div className="flex justify-end gap-4">
-                <Button
-                  onClick={() => {
-                    setOpen(false);
-                  }}
-                  variant="mute"
-                >
+                <Button onClick={() => setOpen(false)} variant="mute">
                   Cancel
                 </Button>
                 <Button

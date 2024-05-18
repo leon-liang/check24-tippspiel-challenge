@@ -1,6 +1,5 @@
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -10,16 +9,19 @@ import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React, { Dispatch, SetStateAction } from "react";
 import { z } from "zod";
+import { useUpdateMatch } from "@/hooks/api/matches.api";
+import { toast } from "@/hooks/use-toast";
 
 export type Match = {
+  id: string;
   gameTime: string;
   homeTeam: {
     name?: string;
-    score?: number;
+    result?: number;
   };
   awayTeam: {
     name?: string;
-    score?: number;
+    result?: number;
   };
 };
 
@@ -30,23 +32,60 @@ interface UpdateMatchProps {
 }
 
 const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
+  const mutation = useUpdateMatch();
+
   const defaultValues = {
     homeTeamName: match?.homeTeam.name,
-    homeTeamScore: match?.homeTeam.score,
+    homeTeamResult: match?.homeTeam.result,
     awayTeamName: match?.awayTeam.name,
-    awayTeamScore: match?.awayTeam.score,
+    awayTeamResult: match?.awayTeam.result,
   };
 
   const FormSchema = z.object({
-    homeTeamName: z.string().optional(),
-    homeTeamScore: z.number().int(),
-    awayTeamName: z.string().optional(),
-    awayTeamScore: z.number().int(),
+    homeTeamName: z.string(),
+    homeTeamResult: z
+      .union([z.number().int().positive().min(1), z.nan()])
+      .optional(),
+    awayTeamName: z.string(),
+    awayTeamResult: z
+      .union([z.number().int().positive().min(1), z.nan()])
+      .optional(),
   });
 
   type FormData = z.infer<typeof FormSchema>;
 
-  const onSubmit = async (data: FormData) => {};
+  const onSubmit = async (data: FormData) => {
+    try {
+      await mutation.mutateAsync({
+        matchId: match?.id ?? "",
+        data: {
+          match: {
+            homeTeam: {
+              name: data.homeTeamName,
+              result: data.homeTeamResult,
+            },
+            awayTeam: {
+              name: data.awayTeamName,
+              result: data.awayTeamResult,
+            },
+          },
+        },
+      });
+
+      toast({
+        variant: "success",
+        title: "Successfully updated",
+        description: "Your changed have been registered",
+      });
+    } catch (e) {
+      toast({
+        variant: "error",
+        title: "Failed to update match",
+        description: "Please try again later!",
+      });
+    }
+    setOpen(false);
+  };
 
   return (
     <>
@@ -70,9 +109,10 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
                 type="text"
               />
               <Input
-                name="homeTeamScore"
+                name="homeTeamResult"
                 displayName="Home Team Score"
-                type="text"
+                type="number"
+                required={false}
               />
             </div>
             <hr className="border-gray-6" />
@@ -83,15 +123,16 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
                 type="text"
               />
               <Input
-                name="awayTeamScore"
+                name="awayTeamResult"
                 displayName="Away Team Score"
-                type="text"
+                type="number"
+                required={false}
               />
             </div>
             <div className="flex justify-end gap-4">
-              <SheetClose>
-                <Button variant="mute">Cancel</Button>
-              </SheetClose>
+              <Button onClick={() => setOpen(false)} variant="mute">
+                Cancel
+              </Button>
               <Button
                 variant="action"
                 className="flex flex-row items-center gap-2"
