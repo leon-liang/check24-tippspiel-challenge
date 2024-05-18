@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/utils"
 	"net/http"
 )
@@ -52,16 +53,20 @@ func (h *Handler) UpdateMatch(ctx echo.Context) error {
 		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
 
-	homeTeam, err := h.TeamStore.GetTeamByName(req.Match.HomeTeam.Name)
-
-	if err != nil {
-		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+	var homeTeam *model.Team
+	if *req.Match.HomeTeam.Name != "" {
+		homeTeam, err = h.TeamStore.GetTeamByName(*req.Match.HomeTeam.Name)
+		if err != nil {
+			return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+		}
 	}
 
-	awayTeam, err := h.TeamStore.GetTeamByName(req.Match.AwayTeam.Name)
-
-	if err != nil {
-		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+	var awayTeam *model.Team
+	if *req.Match.AwayTeam.Name != "" {
+		awayTeam, err = h.TeamStore.GetTeamByName(*req.Match.AwayTeam.Name)
+		if err != nil {
+			return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+		}
 	}
 
 	if err := h.MatchStore.UpdateMatchTeams(m, homeTeam, awayTeam); err != nil {

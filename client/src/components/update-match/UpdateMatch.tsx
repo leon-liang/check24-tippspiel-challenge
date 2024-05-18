@@ -42,9 +42,9 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
   };
 
   const FormSchema = z.object({
-    homeTeamName: z.string().min(1),
+    homeTeamName: z.string().optional(),
     homeTeamResult: z.union([z.number().int(), z.nan()]).optional(),
-    awayTeamName: z.string().min(1),
+    awayTeamName: z.string().optional(),
     awayTeamResult: z.union([z.number().int(), z.nan()]).optional(),
   });
 
