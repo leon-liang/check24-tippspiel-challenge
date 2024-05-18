@@ -60,6 +60,7 @@ const Matches = () => {
   const [selectedRow, setSelectedRow] = useState<number>();
 
   const [open, setOpen] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const matches = useMatches();
 
   const selectedMatch = matches[selectedRow ?? 0];
@@ -69,6 +70,11 @@ const Matches = () => {
   function onRowClick(selectedIndex: number) {
     setOpen(true);
     setSelectedRow(selectedIndex);
+  }
+
+  function handleCurrentPageChange(currentPage: number) {
+    console.log("Setting to " + currentPage);
+    setCurrentPage(currentPage);
   }
 
   return (
@@ -84,8 +90,10 @@ const Matches = () => {
         <Table
           data={matches}
           columns={columns}
-          rowsPerPage={12}
+          rowsPerPage={10}
           onRowClick={onRowClick}
+          currentPage={currentPage}
+          setCurrentPage={handleCurrentPageChange}
         />
       </div>
       <UpdateMatch open={open} setOpen={setOpen} match={selectedMatch} />

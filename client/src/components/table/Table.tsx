@@ -7,7 +7,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { useEffect } from "react";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import { colors } from "../../../tailwind.config";
@@ -19,6 +19,8 @@ interface TableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   rowsPerPage: number;
   onRowClick: (selectedIndex: number) => void;
+  currentPage?: number;
+  setCurrentPage?: (page: number) => void;
 }
 
 const Table = <TData, TValue>({
@@ -26,7 +28,11 @@ const Table = <TData, TValue>({
   data,
   rowsPerPage,
   onRowClick,
+  currentPage,
+  setCurrentPage,
 }: TableProps<TData, TValue>) => {
+  console.log("Current page is " + currentPage);
+
   const table = useReactTable({
     data,
     columns,
@@ -35,9 +41,19 @@ const Table = <TData, TValue>({
     initialState: {
       pagination: {
         pageSize: rowsPerPage,
+        pageIndex: currentPage,
       },
     },
+    autoResetPageIndex: false,
   });
+
+  const currentPageIndex = table.getState().pagination.pageIndex;
+
+  useEffect(() => {
+    if (setCurrentPage) {
+      setCurrentPage(currentPageIndex);
+    }
+  }, [currentPageIndex]);
 
   return (
     <div className="w-full rounded-md border border-gray-6">

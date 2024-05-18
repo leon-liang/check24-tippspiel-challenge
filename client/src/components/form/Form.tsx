@@ -35,8 +35,6 @@ const Form = ({
     await onSubmit(data);
   };
 
-  console.log(methods.formState.errors);
-
   return (
     <FormProvider {...methods}>
       <form
