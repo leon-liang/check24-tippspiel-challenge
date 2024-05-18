@@ -15,12 +15,31 @@ export const useUpdateMatch = () => {
   return useMutation({
     mutationFn: ({
       matchId,
-      data,
+      homeTeamName,
+      homeTeamResult,
+      awayTeamName,
+      awayTeamResult,
     }: {
       matchId: string;
-      data: HttpMatchUpdateRequest;
+      homeTeamName?: string;
+      homeTeamResult?: number;
+      awayTeamName?: string;
+      awayTeamResult?: number;
     }) => {
-      return matchesApiFactory.v1MatchesMatchIdPut(matchId, data);
+      const updatedMatch: HttpMatchUpdateRequest = {
+        match: {
+          homeTeam: {
+            name: homeTeamName,
+            result: homeTeamResult,
+          },
+          awayTeam: {
+            name: awayTeamName,
+            result: awayTeamResult,
+          },
+        },
+      };
+
+      return matchesApiFactory.v1MatchesMatchIdPut(matchId, updatedMatch);
     },
     onSuccess: async () => [
       await queryClient.invalidateQueries({ queryKey: ["matches"] }),

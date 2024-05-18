@@ -54,18 +54,10 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
     try {
       await mutation.mutateAsync({
         matchId: match?.id ?? "",
-        data: {
-          match: {
-            homeTeam: {
-              name: data.homeTeamName,
-              result: data.homeTeamResult,
-            },
-            awayTeam: {
-              name: data.awayTeamName,
-              result: data.awayTeamResult,
-            },
-          },
-        },
+        homeTeamName: data.homeTeamName,
+        homeTeamResult: data.homeTeamResult,
+        awayTeamName: data.awayTeamName,
+        awayTeamResult: data.awayTeamResult,
       });
 
       toast({
