@@ -42,14 +42,10 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
   };
 
   const FormSchema = z.object({
-    homeTeamName: z.string(),
-    homeTeamResult: z
-      .union([z.number().int().positive().min(1), z.nan()])
-      .optional(),
-    awayTeamName: z.string(),
-    awayTeamResult: z
-      .union([z.number().int().positive().min(1), z.nan()])
-      .optional(),
+    homeTeamName: z.string().min(1),
+    homeTeamResult: z.union([z.number().int(), z.nan()]).optional(),
+    awayTeamName: z.string().min(1),
+    awayTeamResult: z.union([z.number().int(), z.nan()]).optional(),
   });
 
   type FormData = z.infer<typeof FormSchema>;

@@ -73,7 +73,6 @@ const Matches = () => {
   }
 
   function handleCurrentPageChange(currentPage: number) {
-    console.log("Setting to " + currentPage);
     setCurrentPage(currentPage);
   }
 

@@ -77,7 +77,8 @@ export const Input = ({
         id={name}
         type={type}
         {...register(name, {
-          valueAsNumber: type === "number",
+          setValueAs: (v) =>
+            type === "number" ? (v === "" ? undefined : parseInt(v, 10)) : v,
           required: required,
         })}
         disabled={isSubmitting}
