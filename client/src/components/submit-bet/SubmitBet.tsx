@@ -12,7 +12,7 @@ import React from "react";
 import { z } from "zod";
 import Form, { Input } from "@/components/form/Form";
 import { DateTime } from "luxon";
-import { useUpdateBet } from "@/hooks/bets.api";
+import { useUpdateBet } from "@/hooks/api/bets.api";
 import { toast } from "@/hooks/use-toast";
 import Alert from "@/components/alert/Alert";
 
@@ -100,47 +100,48 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
                 <li>4 points for the correct tendency</li>
                 <li>0 points for everything else</li>
               </ul>
+              <p>Fields marked with * are required.</p>
             </div>
-
-            {homeTeam.name && awayTeam.name ? (
-              <Form
-                schema={FormSchema}
-                onSubmit={onSubmit}
-                defaultValues={defaultValues}
-              >
-                <div className="flex flex-col gap-4">
-                  <Input
-                    name="homeTeamScore"
-                    displayName={`${homeTeam.name}'s final score:`}
-                    type="number"
-                  />
-                  <Input
-                    name="awayTeamScore"
-                    displayName={`${awayTeam.name}'s final score:`}
-                    type="number"
-                  />
-                </div>
-                <div className="flex justify-end gap-3">
-                  <Button
-                    onClick={() => {
-                      setOpen(false);
-                    }}
-                    variant="mute"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="action"
-                    className="flex flex-row items-center gap-2"
-                    type="submit"
-                  >
-                    Save
-                    <ArrowRight className="stroke-2" width={16} height={16} />
-                  </Button>
-                </div>
-              </Form>
-            ) : null}
           </SheetHeader>
+          {homeTeam.name && awayTeam.name ? (
+            <Form
+              schema={FormSchema}
+              onSubmit={onSubmit}
+              defaultValues={defaultValues}
+            >
+              <div className="flex flex-col gap-4">
+                <Input
+                  required
+                  name="homeTeamScore"
+                  displayName={`${homeTeam.name}'s final score *`}
+                  type="number"
+                />
+                <Input
+                  required
+                  name="awayTeamScore"
+                  displayName={`${awayTeam.name}'s final score *`}
+                  type="number"
+                />
+              </div>
+              <div className="flex justify-end gap-4">
+                <Button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  variant="mute"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="action"
+                  className="flex flex-row items-center gap-2"
+                  type="submit"
+                >
+                  Save
+                  <ArrowRight className="stroke-2" width={16} height={16} />
+                </Button>
+              </div>
+            </Form>
+          ) : null}
         </SheetContent>
       </Sheet>
     </>

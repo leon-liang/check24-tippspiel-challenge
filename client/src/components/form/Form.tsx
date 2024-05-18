@@ -53,24 +53,34 @@ interface FormInputProps {
   name: string;
   displayName: string;
   type: "text" | "number";
+  required?: boolean;
 }
 
-export const Input = ({ name, displayName, type }: FormInputProps) => {
+export const Input = ({
+  name,
+  displayName,
+  type,
+  required = false,
+}: FormInputProps) => {
   const {
     register,
     formState: { isSubmitting, errors },
   } = useFormContext();
 
   return (
-    <fieldset className="flex flex-col items-start gap-2">
-      <label className="text-right text-[15px] text-indigo-11" htmlFor={name}>
+    <fieldset className="flex flex-col items-start gap-1 rounded-[4px] border border-gray-6 bg-colors-gray-2 px-[10px] py-[8px] text-gray-11">
+      <label className="text-right text-xs text-gray-11" htmlFor={name}>
         {displayName}
       </label>
       <input
-        className="inline-flex h-[35px] w-full items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none text-indigo-11 shadow-[0_0_0_1px] shadow-indigo-7 outline-none focus:shadow-[0_0_0_2px] focus:shadow-indigo-8"
+        className="inline-flex h-[25px] w-full items-center justify-center rounded-[4px] border-none bg-colors-gray-2 text-[15px] leading-none text-gray-12 outline-none"
         id={name}
         type={type}
-        {...register(name, { valueAsNumber: type === "number" })}
+        {...register(name, {
+          setValueAs: (v) =>
+            type === "number" ? (v === "" ? undefined : parseInt(v, 10)) : v,
+          required: required,
+        })}
         disabled={isSubmitting}
       />
     </fieldset>

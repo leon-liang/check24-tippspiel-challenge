@@ -3,15 +3,15 @@
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { Select } from "@/components/select/Select";
 import React, { useEffect, useState } from "react";
-import MatchesOverview from "@/components/matches-overview/MatchesOverview";
+import BetsOverview from "@/components/bets-overview/BetsOverview";
 import { DateTime } from "luxon";
 import useRounds from "@/hooks/use-rounds";
-import useMatches from "@/hooks/use-matches";
+import useBets from "@/hooks/use-bets";
 
 const Bets = () => {
   const [selectedRound, setSelectedRound] = useState("");
   const rounds = useRounds();
-  const matches = useMatches();
+  const bets = useBets();
 
   useEffect(() => {
     const currentDate = DateTime.now();
@@ -43,12 +43,10 @@ const Bets = () => {
         </BannerContent>
       </Banner>
       <div className="flex flex-row items-center gap-6 py-6 md:px-32">
-        {matches ? (
-          <MatchesOverview
+        {bets ? (
+          <BetsOverview
             key={selectedRound}
-            matches={
-              matches?.filter((match) => match.round === selectedRound) ?? []
-            }
+            bets={bets?.filter((bet) => bet.round === selectedRound) ?? []}
           />
         ) : null}
       </div>

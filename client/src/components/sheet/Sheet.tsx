@@ -69,7 +69,7 @@ const SheetContent = React.forwardRef<
           <CrossIcon width={24} height={24} />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
-        <div className="p-12">{children}</div>
+        <div className="flex flex-col gap-8 p-12">{children}</div>
       </div>
     </SheetPrimitive.Content>
   </SheetPortal>

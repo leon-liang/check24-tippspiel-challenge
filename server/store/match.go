@@ -20,7 +20,7 @@ func NewMatchStore(db *gorm.DB) *MatchStore {
 func (ms *MatchStore) GetMatches() ([]model.Match, error) {
 	var matches []model.Match
 
-	err := ms.db.Find(&matches).Error
+	err := ms.db.Preload("HomeTeam").Preload("AwayTeam").Find(&matches).Error
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -54,4 +54,26 @@ func (ms *MatchStore) Create(homeTeam *model.Team, awayTeam *model.Team, gameTim
 	match.GameTime = gameTime
 
 	return ms.db.Create(&match).Error
+}
+
+func (ms *MatchStore) UpdateMatchTeams(m *model.Match, homeTeam *model.Team, awayTeam *model.Team) (err error) {
+	tx := ms.db.Begin()
+
+	if err := tx.Model(m).Update("HomeTeam", homeTeam).Update("AwayTeam", awayTeam).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+func (ms *MatchStore) UpdateMatchResults(m *model.Match, homeTeamResult *int, awayTeamResult *int) (err error) {
+	tx := ms.db.Begin()
+
+	if err := tx.Model(m).Update("HomeTeamResult", homeTeamResult).Update("AwayTeamResult", awayTeamResult).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }

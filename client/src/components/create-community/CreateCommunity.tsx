@@ -8,7 +8,7 @@ import {
 import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
-import { useCreateCommunity } from "@/hooks/communities.api";
+import { useCreateCommunity } from "@/hooks/api/communities.api";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -64,31 +64,38 @@ const CreateCommunity = () => {
                 Bring your friends together in communities and compete against
                 them for the top spot!
               </p>
-              <p>Give your community a name. Click save when you are done.</p>
+              <p>
+                Give your community a name. Fields marked with * are required.
+              </p>
             </div>
-            <Form schema={FormSchema} onSubmit={onSubmit}>
-              <div className="flex flex-col gap-2">
-                <Input
-                  name="communityName"
-                  displayName="Community Name"
-                  type="text"
-                />
-              </div>
-              <div className="flex justify-end gap-3">
-                <Button onClick={() => setOpen(false)} variant="mute">
-                  Cancel
-                </Button>
-                <Button
-                  variant="action"
-                  className="flex flex-row items-center gap-2"
-                  type="submit"
-                >
-                  Save
-                  <ArrowRight className="stroke-2" width={16} height={16} />
-                </Button>
-              </div>
-            </Form>
           </SheetHeader>
+          <Form schema={FormSchema} onSubmit={onSubmit}>
+            <div className="flex flex-col gap-2">
+              <Input
+                required={true}
+                name="communityName"
+                displayName="Community Name *"
+                type="text"
+              />
+            </div>
+            <div className="flex justify-end gap-4">
+              <Button
+                type="button"
+                onClick={() => setOpen(false)}
+                variant="mute"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="action"
+                className="flex flex-row items-center gap-2"
+                type="submit"
+              >
+                Save
+                <ArrowRight className="stroke-2" width={16} height={16} />
+              </Button>
+            </div>
+          </Form>
         </SheetContent>
       </Sheet>
     </>

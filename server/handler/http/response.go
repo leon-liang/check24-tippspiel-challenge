@@ -115,12 +115,12 @@ func newMatchResponse(match model.Match) *matchResponse {
 
 	if match.HomeTeam != nil {
 		ht.Name = &match.HomeTeam.Name
-		ht.Result = match.HomeTeam.Result
+		ht.Result = match.HomeTeamResult
 	}
 
 	if match.AwayTeam != nil {
 		at.Name = &match.AwayTeam.Name
-		at.Result = match.AwayTeam.Result
+		at.Result = match.AwayTeamResult
 	}
 
 	r.Match.ID = match.ID
@@ -144,6 +144,14 @@ func newMatchesResponse(matches []model.Match) *matchesResponse {
 		mr = *newMatchResponse(m)
 		r.Matches = append(r.Matches, mr)
 	}
+
+	sortByGameTime := func(i, j int) bool {
+		timeI := r.Matches[i].Match.GameTime
+		timeJ := r.Matches[j].Match.GameTime
+		return timeI.Before(timeJ)
+	}
+
+	sort.Slice(r.Matches, sortByGameTime)
 
 	return r
 }

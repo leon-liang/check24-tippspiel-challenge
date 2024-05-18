@@ -76,6 +76,26 @@ definitions:
             type: string
         type: object
     type: object
+  http.matchUpdateRequest:
+    properties:
+      match:
+        properties:
+          awayTeam:
+            properties:
+              name:
+                type: string
+              result:
+                type: integer
+            type: object
+          homeTeam:
+            properties:
+              name:
+                type: string
+              result:
+                type: integer
+            type: object
+        type: object
+    type: object
   http.matchesResponse:
     properties:
       matches:
@@ -268,7 +288,37 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/http.matchesResponse'
+      security:
+      - OAuth2Implicit: []
       summary: Retrieve all matches
+      tags:
+      - Matches
+  /v1/matches/{match_id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Match ID
+        in: path
+        name: match_id
+        required: true
+        type: string
+      - description: Update Match
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/http.matchUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.matchResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Update match
       tags:
       - Matches
   /v1/users/me:

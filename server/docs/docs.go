@@ -264,6 +264,11 @@ const docTemplate = `{
         },
         "/v1/matches": {
             "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -276,6 +281,51 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/http.matchesResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/matches/{match_id}": {
+            "put": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Matches"
+                ],
+                "summary": "Update match",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Match ID",
+                        "name": "match_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Match",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/http.matchUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.matchResponse"
                         }
                     }
                 }
@@ -423,6 +473,38 @@ const docTemplate = `{
                         },
                         "id": {
                             "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "http.matchUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "match": {
+                    "type": "object",
+                    "properties": {
+                        "awayTeam": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "result": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "homeTeam": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "result": {
+                                    "type": "integer"
+                                }
+                            }
                         }
                     }
                 }

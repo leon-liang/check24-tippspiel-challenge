@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/labstack/echo/v4"
+	authMiddleware "github.com/leon-liang/check24-tippspiel-challenge/server/router/middleware"
 )
 
 func (h *Handler) Register(v1 *echo.Group) {
@@ -17,6 +18,9 @@ func (h *Handler) Register(v1 *echo.Group) {
 
 	matches := v1.Group("/matches")
 	matches.GET("", h.GetMatches)
+
+	matches.Use(authMiddleware.ValidatePermissions([]string{"admin:full"}))
+	matches.PUT("/:match_id", h.UpdateMatch)
 
 	bets := v1.Group("/bets")
 	bets.GET("", h.GetBets)

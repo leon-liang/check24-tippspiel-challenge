@@ -7,8 +7,8 @@ import (
 
 func (h *Handler) SeedTeams() {
 	teams, err := h.TeamStore.GetTeams()
-	if len(teams) == 0 && err == nil {
 
+	if len(teams) == 0 && err == nil {
 		data := utils.ReadCsvFile("data/game_schedule.csv", ';')
 
 		// Extract teams from matches in the group stage (first 36 matches)

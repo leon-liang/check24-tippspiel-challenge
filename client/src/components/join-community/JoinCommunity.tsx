@@ -8,7 +8,7 @@ import {
 import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
-import { useJoinCommunity } from "@/hooks/communities.api";
+import { useJoinCommunity } from "@/hooks/api/communities.api";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
@@ -53,38 +53,43 @@ const JoinCommunity = () => {
         <SheetContent>
           <SheetHeader className="flex flex-col gap-8">
             <SheetTitle>Join Community</SheetTitle>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 text-sm text-gray-11">
               <p>
-                Enter the community tag below to join the community. Click join
-                when you are done.
+                Enter the community tag below to join the community. Fields
+                marked with * are required.
               </p>
               <p>
                 Alternatively, you can join a community using their invite link.
               </p>
             </div>
-            <Form schema={FormSchema} onSubmit={onSubmit}>
-              <div className="flex flex-col gap-2">
-                <Input
-                  displayName="Community Tag"
-                  name="communityTag"
-                  type="text"
-                />
-              </div>
-              <div className="flex justify-end gap-3">
-                <Button onClick={() => setOpen(false)} variant="mute">
-                  Cancel
-                </Button>
-                <Button
-                  variant="action"
-                  className="flex flex-row items-center gap-2"
-                  type="submit"
-                >
-                  Join
-                  <ArrowRight className="stroke-2" width={16} height={16} />
-                </Button>
-              </div>
-            </Form>
           </SheetHeader>
+          <Form schema={FormSchema} onSubmit={onSubmit}>
+            <div className="flex flex-col gap-2">
+              <Input
+                required
+                displayName="Community Tag *"
+                name="communityTag"
+                type="text"
+              />
+            </div>
+            <div className="flex justify-end gap-4">
+              <Button
+                type="button"
+                onClick={() => setOpen(false)}
+                variant="mute"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="action"
+                className="flex flex-row items-center gap-2"
+                type="submit"
+              >
+                Join
+                <ArrowRight className="stroke-2" width={16} height={16} />
+              </Button>
+            </div>
+          </Form>
         </SheetContent>
       </Sheet>
     </>

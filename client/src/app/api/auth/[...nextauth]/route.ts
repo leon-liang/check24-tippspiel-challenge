@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions, TokenSet } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { JWT } from "next-auth/jwt";
+import jwt from "jsonwebtoken";
 
 function requestRefreshAccessToken(token: JWT) {
   return fetch(`${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token`, {
@@ -38,6 +39,12 @@ const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
         token.expiresAt = account.expires_at;
+
+        if (account.access_token) {
+          const decodedToken = jwt.decode(account.access_token);
+          // @ts-ignore
+          token.roles = decodedToken.resource_access.account.roles;
+        }
         return token;
       }
       // @ts-ignore
@@ -70,6 +77,10 @@ const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       // @ts-ignore
       session.accessToken = token.accessToken;
+      // @ts-ignore
+      session.refreshToken = token.refreshToken;
+      // @ts-ignore
+      session.roles = token.roles;
       return session;
     },
   },
