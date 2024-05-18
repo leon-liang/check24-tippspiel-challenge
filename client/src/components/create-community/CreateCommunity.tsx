@@ -64,14 +64,17 @@ const CreateCommunity = () => {
                 Bring your friends together in communities and compete against
                 them for the top spot!
               </p>
-              <p>Give your community a name. Click save when you are done.</p>
+              <p>
+                Give your community a name. Fields marked with * are required.
+              </p>
             </div>
           </SheetHeader>
           <Form schema={FormSchema} onSubmit={onSubmit}>
             <div className="flex flex-col gap-2">
               <Input
+                required={true}
                 name="communityName"
-                displayName="Community Name"
+                displayName="Community Name *"
                 type="text"
               />
             </div>

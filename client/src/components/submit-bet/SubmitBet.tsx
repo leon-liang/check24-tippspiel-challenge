@@ -100,6 +100,7 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
                 <li>4 points for the correct tendency</li>
                 <li>0 points for everything else</li>
               </ul>
+              <p>Fields marked with * are required.</p>
             </div>
           </SheetHeader>
           {homeTeam.name && awayTeam.name ? (
@@ -110,13 +111,15 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
             >
               <div className="flex flex-col gap-4">
                 <Input
+                  required
                   name="homeTeamScore"
-                  displayName={`${homeTeam.name}'s final score`}
+                  displayName={`${homeTeam.name}'s final score *`}
                   type="number"
                 />
                 <Input
+                  required
                   name="awayTeamScore"
-                  displayName={`${awayTeam.name}'s final score`}
+                  displayName={`${awayTeam.name}'s final score *`}
                   type="number"
                 />
               </div>

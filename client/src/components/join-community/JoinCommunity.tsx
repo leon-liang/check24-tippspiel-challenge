@@ -55,8 +55,8 @@ const JoinCommunity = () => {
             <SheetTitle>Join Community</SheetTitle>
             <div className="flex flex-col gap-6 text-sm text-gray-11">
               <p>
-                Enter the community tag below to join the community. Click join
-                when you are done.
+                Enter the community tag below to join the community. Fields
+                marked with * are required.
               </p>
               <p>
                 Alternatively, you can join a community using their invite link.
@@ -66,7 +66,8 @@ const JoinCommunity = () => {
           <Form schema={FormSchema} onSubmit={onSubmit}>
             <div className="flex flex-col gap-2">
               <Input
-                displayName="Community Tag"
+                required
+                displayName="Community Tag *"
                 name="communityTag"
                 type="text"
               />

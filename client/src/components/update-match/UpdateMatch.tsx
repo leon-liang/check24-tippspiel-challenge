@@ -82,7 +82,9 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
           <SheetHeader className="flex flex-col gap-8">
             <SheetTitle>Update Match</SheetTitle>
             <div className="flex flex-col gap-6 text-sm text-gray-11">
-              <p>Update Match details below. Click save when you are done.</p>
+              <p>
+                Update Match details below. Fields marked with * are required.
+              </p>
             </div>
           </SheetHeader>
           <Form
@@ -92,8 +94,9 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
           >
             <div className="flex flex-col gap-4">
               <Input
+                required
                 name="homeTeamName"
-                displayName="Home Team Name"
+                displayName="Home Team Name *"
                 type="text"
               />
               <Input
@@ -106,8 +109,9 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
             <hr className="border-gray-6" />
             <div className="flex flex-col gap-4">
               <Input
+                required
                 name="awayTeamName"
-                displayName="Away Team Name"
+                displayName="Away Team Name *"
                 type="text"
               />
               <Input

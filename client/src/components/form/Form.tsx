@@ -60,7 +60,7 @@ export const Input = ({
   name,
   displayName,
   type,
-  required = true,
+  required = false,
 }: FormInputProps) => {
   const {
     register,
