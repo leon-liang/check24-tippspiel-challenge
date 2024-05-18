@@ -57,7 +57,10 @@ func (h *Handler) UpdateMatch(ctx echo.Context) error {
 	if *req.Match.HomeTeam.Name != "" {
 		homeTeam, err = h.TeamStore.GetTeamByName(*req.Match.HomeTeam.Name)
 		if err != nil {
-			return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+		if homeTeam == nil {
+			return ctx.JSON(http.StatusNotFound, utils.NotFound())
 		}
 	}
 
@@ -65,7 +68,10 @@ func (h *Handler) UpdateMatch(ctx echo.Context) error {
 	if *req.Match.AwayTeam.Name != "" {
 		awayTeam, err = h.TeamStore.GetTeamByName(*req.Match.AwayTeam.Name)
 		if err != nil {
-			return ctx.JSON(http.StatusNotFound, utils.NewError(err))
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+		if awayTeam == nil {
+			return ctx.JSON(http.StatusNotFound, utils.NotFound())
 		}
 	}
 
