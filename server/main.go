@@ -7,6 +7,7 @@ import (
 	_ "github.com/leon-liang/check24-tippspiel-challenge/server/docs"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/http"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/seeds"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/mq"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
 	authMiddleware "github.com/leon-liang/check24-tippspiel-challenge/server/router/middleware"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
@@ -46,12 +47,13 @@ func main() {
 	ms := store.NewMatchStore(d)
 	ts := store.NewTeamStore(d)
 	bs := store.NewBetStore(d)
+	bw := mq.NewBetWriter()
 
 	seedsHandler := seeds.NewHandler(*ms, *ts)
 	seedsHandler.SeedTeams()
 	seedsHandler.SeedMatches()
 
-	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs)
+	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *bw)
 
 	r.GET("", httpHandler.GetRoot)
 
