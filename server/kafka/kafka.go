@@ -30,11 +30,22 @@ func CreateTopic(c *kafka.Conn, topic string) {
 
 func NewWriter(topic string) *kafka.Writer {
 	writer := kafka.Writer{
-		Addr:                   kafka.TCP("kafka:9092", "kafka:9094"),
+		Addr:                   kafka.TCP("kafka:9092", "kafka:9093", "kafka:9094"),
 		Topic:                  topic,
 		Balancer:               &kafka.LeastBytes{},
 		AllowAutoTopicCreation: true,
 	}
 
 	return &writer
+}
+
+func NewReader(topic string) *kafka.Reader {
+	reader := kafka.NewReader(kafka.ReaderConfig{
+		Brokers:   []string{"kafka:9092", "kafka:9093", "kafka:9094"},
+		Topic:     topic,
+		Partition: 0,
+		MaxBytes:  10e6,
+	})
+
+	return reader
 }

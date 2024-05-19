@@ -83,7 +83,5 @@ func (h *Handler) UpdateBet(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	h.BetWriter.WriteBets()
-
 	return ctx.JSON(http.StatusOK, newBetResponse(*b))
 }
