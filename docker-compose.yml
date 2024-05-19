@@ -148,8 +148,8 @@ services:
       DYNAMIC_CONFIG_ENABLED: true
     networks:
       - server
-#    volumes:
-#      - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+    volumes:
+      - ~/kafka-ui/config.yml:/etc/kafkaui/dynamic_config.yaml
 
 networks:
   client:

@@ -7,6 +7,7 @@ import (
 	_ "github.com/leon-liang/check24-tippspiel-challenge/server/docs"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/http"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/seeds"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/kafka"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/mq"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
 	authMiddleware "github.com/leon-liang/check24-tippspiel-challenge/server/router/middleware"
@@ -38,6 +39,9 @@ func main() {
 	}
 
 	keycloakClient := keycloak.New()
+
+	conn := kafka.NewConn()
+	kafka.CreateTopic(conn, "bets")
 
 	d := db.New()
 	db.AutoMigrate(d)
