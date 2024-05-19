@@ -7,11 +7,14 @@ import BetsOverview from "@/components/bets-overview/BetsOverview";
 import { DateTime } from "luxon";
 import useRounds from "@/hooks/use-rounds";
 import useBets from "@/hooks/use-bets";
+import { useSubscribeMatchesUpdate } from "@/hooks/api/matches.api";
 
 const Bets = () => {
   const [selectedRound, setSelectedRound] = useState("");
   const rounds = useRounds();
   const bets = useBets();
+
+  const data = useSubscribeMatchesUpdate();
 
   useEffect(() => {
     const currentDate = DateTime.now();

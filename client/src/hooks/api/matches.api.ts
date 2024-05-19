@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { matchesApiFactory } from "@/api-client";
 import { HttpMatchUpdateRequest } from "@/api-client/generated";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export const useGetMatches = () => {
   return useQuery({
@@ -45,4 +47,25 @@ export const useUpdateMatch = () => {
       await queryClient.invalidateQueries({ queryKey: ["matches"] }),
     ],
   });
+};
+
+export const useSubscribeMatchesUpdate = () => {
+  const [matches, setMatches] = useState<string>("");
+  const { status, data } = useSession();
+
+  useEffect(() => {
+    if (status !== "loading") {
+      const websocket = new WebSocket(`ws://localhost:8000/v1/ws/matches/`);
+      websocket.onmessage = (event) => {
+        console.log(event.data);
+        setMatches(event.data);
+      };
+
+      return () => {
+        websocket.close();
+      };
+    }
+  }, [status]);
+
+  return matches;
 };

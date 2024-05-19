@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"errors"
+	gorillaWs "github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
 	keycloak "github.com/leon-liang/check24-tippspiel-challenge/server/auth"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/db"
 	_ "github.com/leon-liang/check24-tippspiel-challenge/server/docs"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/http"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/seeds"
+	websocket "github.com/leon-liang/check24-tippspiel-challenge/server/handler/ws"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/kafka"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/mq"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
@@ -28,20 +30,13 @@ import (
 // @in header
 // @name Authorization
 // @authorizationurl http://localhost:8080/realms/development/protocol/openid-connect/auth
-
 func main() {
 	if err := godotenv.Load(".env"); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
 	r := router.New()
-
-	// Only render swagger docs in development environment
-	if os.Getenv("ENVIRONMENT") == "development" {
-		r.GET("/swagger/*", echoSwagger.WrapHandler)
-	}
-
-	keycloakClient := keycloak.New()
+	r.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	topic := "matches"
 	conn := kafka.NewConn()
@@ -69,17 +64,31 @@ func main() {
 	seedsHandler.SeedTeams()
 	seedsHandler.SeedMatches()
 
+	var (
+		upgrader = gorillaWs.Upgrader{
+			CheckOrigin: func(r *netHttp.Request) bool {
+				return true
+			},
+		}
+	)
+
 	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *mmq)
+	wsHandler := websocket.NewHandler(upgrader, *ms, *mmq)
 
 	r.GET("", httpHandler.GetRoot)
 
-	v1 := r.Group("/v1", authMiddleware.ValidateToken(keycloakClient))
+	v1 := r.Group("/v1")
+
+	ws := v1.Group("/ws")
+	wsHandler.Register(ws)
+
+	keycloakClient := keycloak.New()
+	v1.Use(authMiddleware.ValidateToken(keycloakClient))
 	v1.Use(authMiddleware.GetCurrentUser(us))
 	v1.Use(authMiddleware.ValidatePermissions([]string{}))
 
 	httpHandler.Register(v1)
 
-	// Graceful shutdown
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
