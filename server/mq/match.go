@@ -2,7 +2,6 @@ package mq
 
 import (
 	"context"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/kafka"
 	kafkaGo "github.com/segmentio/kafka-go"
 	"log"
 )
@@ -12,15 +11,10 @@ type MatchMQ struct {
 	reader *kafkaGo.Reader
 }
 
-func NewMatchMQ() *MatchMQ {
-	topic := "matches"
-
-	writer := kafka.NewWriter(topic)
-	reader := kafka.NewReader(topic)
-
+func NewMatchMQ(mw *kafkaGo.Writer, mr *kafkaGo.Reader) *MatchMQ {
 	return &MatchMQ{
-		writer: writer,
-		reader: reader,
+		writer: mw,
+		reader: mr,
 	}
 }
 
