@@ -4,7 +4,6 @@ import { DateTime } from "luxon";
 import { Round } from "@/components/bets-overview/BetsOverview";
 import useRounds from "@/hooks/use-rounds";
 import { useSubscribeMatchUpdate } from "@/hooks/api/matches.api";
-import { retry } from "next/dist/compiled/@next/font/dist/google/retry";
 
 const useBets = () => {
   const { data } = useGetBets();
