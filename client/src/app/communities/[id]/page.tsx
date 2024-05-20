@@ -12,7 +12,7 @@ import {
 } from "@/components/dropdown-menu/DropdownMenu";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,33 +20,42 @@ import {
   DialogTitle,
 } from "@/components/dialog/Dialog";
 import Button from "@/components/button/Button";
+import { useGetMe } from "@/hooks/api/users.api";
+import BackspaceIcon from "@/components/icons/BackspaceIcon";
 
 const Community = () => {
   const params = useParams<{ id: string }>();
-  const { data } = useGetUserCommunities();
+  const { data: meData } = useGetMe();
+  const { data: communitiesData } = useGetUserCommunities();
   const [open, setOpen] = useState<boolean>(false);
+
+  const currentCommunity = useMemo(() => {
+    return communitiesData?.data.communities?.find(
+      (entry) => entry.community?.id === params.id,
+    );
+  }, [communitiesData?.data.communities, params.id]);
+  const isCommunityOwner =
+    meData?.data.user?.id === currentCommunity?.community?.owner;
 
   return (
     <div className="relative">
+      <div className="absolute right-5 top-5">
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="rounded p-1.5 hover:bg-colors-gray-4">
+              <EllipsisHorizontalIcon height={22} width={22} />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <LogoutIcon width={22} height={22} className="mr-2" />
+              {isCommunityOwner ? "Delete Community" : "Leave Community"}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <Banner>
-        <BannerTitle>
-          {data?.data.communities?.find(
-            (entry) => entry.community?.id === params.id,
-          )?.community?.name ?? ""}
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <div className="rounded p-1.5 hover:bg-colors-gray-4">
-                <EllipsisHorizontalIcon height={22} width={22} />
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setOpen(true)}>
-                <LogoutIcon width={22} height={22} className="mr-2" /> Leave
-                Community
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </BannerTitle>
+        <BannerTitle>{currentCommunity?.community?.name ?? ""}</BannerTitle>
         <BannerContent>
           <div className="flex flex-row gap-1">
             <p className="font-medium">Community Tag:</p>
@@ -64,13 +73,17 @@ const Community = () => {
         <DialogContent>
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
-            Click on leave to confirm that you want to leave the community.
+            {isCommunityOwner
+              ? "This action cannot be undone. Click on delete to confirm that you want to delete the community."
+              : "Click on leave to confirm that you want to leave the community."}
           </DialogDescription>
           <div className="flex justify-end gap-3">
             <Button onClick={() => setOpen(false)} variant="mute">
               Cancel
             </Button>
-            <Button variant="action">Leave</Button>
+            <Button variant="action">
+              {isCommunityOwner ? "Delete" : "Leave"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

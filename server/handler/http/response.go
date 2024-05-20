@@ -62,14 +62,16 @@ func newUsersResponse(users []model.User) *usersResponse {
 
 type communityResponse struct {
 	Community struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
+		ID    string `json:"id"`
+		Owner string `json:"owner"`
+		Name  string `json:"name"`
 	} `json:"community"`
 }
 
 func newCommunityResponse(c *model.Community) *communityResponse {
 	r := new(communityResponse)
 	r.Community.ID = c.ID
+	r.Community.Owner = c.Owner
 	r.Community.Name = c.Name
 
 	return r
@@ -86,6 +88,7 @@ func newCommunitiesResponse(communities []model.Community) *communitiesResponse 
 	r.Communities = make([]communityResponse, 0)
 	for _, c := range communities {
 		cr.Community.ID = c.ID
+		cr.Community.Owner = c.Owner
 		cr.Community.Name = c.Name
 
 		r.Communities = append(r.Communities, cr)

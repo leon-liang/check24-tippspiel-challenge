@@ -185,6 +185,12 @@ export interface HttpCommunityResponseCommunity {
    * @memberof HttpCommunityResponseCommunity
    */
   name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HttpCommunityResponseCommunity
+   */
+  owner?: string;
 }
 /**
  *
