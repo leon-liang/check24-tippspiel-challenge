@@ -69,7 +69,7 @@ export const Input = ({
 
   return (
     <fieldset className="flex flex-col items-start gap-1 rounded-[4px] border border-gray-6 bg-colors-gray-2 px-[10px] py-[8px] text-gray-11">
-      <label className="text-right text-xs text-gray-11" htmlFor={name}>
+      <label className="w-full text-left text-xs text-gray-11" htmlFor={name}>
         {displayName}
       </label>
       <input
