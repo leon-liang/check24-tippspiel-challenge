@@ -42,8 +42,8 @@ func main() {
 	conn := kafka.NewConn(topic)
 	defer conn.Close()
 
-	mw := kafka.NewWriter(topic)
-	defer mw.Close()
+	w := kafka.NewWriter(topic)
+	defer w.Close()
 
 	d := db.New()
 	db.AutoMigrate(d)
@@ -53,7 +53,7 @@ func main() {
 	ms := store.NewMatchStore(d)
 	ts := store.NewTeamStore(d)
 	bs := store.NewBetStore(d)
-	mmq := mq.NewMatchWriter(mw)
+	mw := mq.NewMatchWriter(w)
 
 	seedsHandler := seeds.NewHandler(*ms, *ts)
 	seedsHandler.SeedTeams()
@@ -67,8 +67,8 @@ func main() {
 		}
 	)
 
-	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *mmq)
-	wsHandler := websocket.NewHandler(upgrader, *ms, *mmq)
+	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *mw)
+	wsHandler := websocket.NewHandler(upgrader, *ms, *mw)
 
 	r.GET("", httpHandler.GetRoot)
 
