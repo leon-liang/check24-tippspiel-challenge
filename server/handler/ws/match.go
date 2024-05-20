@@ -45,7 +45,11 @@ func (h *Handler) wsMatches(ctx echo.Context) error {
 		}
 
 		r := newMatchResponse(m)
-		b, _ := json.Marshal(r)
+		b, err := json.Marshal(r)
+
+		if err != nil {
+			fmt.Println("Error encoding JSON", err)
+		}
 
 		if err := ws.WriteMessage(websocket.TextMessage, b); err != nil {
 			fmt.Println(err)
