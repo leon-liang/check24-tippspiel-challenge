@@ -7,15 +7,15 @@ import (
 )
 
 type Handler struct {
-	Upgrader   websocket.Upgrader
-	MatchStore store.MatchStore
-	MatchMQ    mq.MatchWriter
+	Upgrader    websocket.Upgrader
+	MatchStore  store.MatchStore
+	MatchWriter mq.MatchWriter
 }
 
-func NewHandler(upgrader websocket.Upgrader, ms store.MatchStore, mmq mq.MatchWriter) *Handler {
+func NewHandler(upgrader websocket.Upgrader, ms store.MatchStore, mw mq.MatchWriter) *Handler {
 	return &Handler{
-		Upgrader:   upgrader,
-		MatchStore: ms,
-		MatchMQ:    mmq,
+		Upgrader:    upgrader,
+		MatchStore:  ms,
+		MatchWriter: mw,
 	}
 }
