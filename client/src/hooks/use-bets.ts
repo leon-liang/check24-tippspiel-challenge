@@ -12,8 +12,6 @@ const useBets = () => {
   const rounds = useRounds();
 
   return useMemo(() => {
-    console.log(updatedMatch);
-
     const betIndex = data?.data.bets?.findIndex((bet) => {
       return bet.match?.match?.id === updatedMatch?.match.id;
     });
