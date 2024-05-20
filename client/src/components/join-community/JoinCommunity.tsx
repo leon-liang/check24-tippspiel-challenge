@@ -8,13 +8,18 @@ import {
 import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
-import { useJoinCommunity } from "@/hooks/api/communities.api";
+import {
+  useGetUserCommunities,
+  useJoinCommunity,
+} from "@/hooks/api/communities.api";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import Form, { Input } from "@/components/form/Form";
+import Alert from "@/components/alert/Alert";
 
 const JoinCommunity = () => {
+  const { data } = useGetUserCommunities();
   const mutation = useJoinCommunity();
   const [open, setOpen] = React.useState<boolean>(false);
   const router = useRouter();
@@ -44,6 +49,8 @@ const JoinCommunity = () => {
     setOpen(false);
   };
 
+  const communitiesAmount = data?.data.communities?.length;
+
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -63,33 +70,40 @@ const JoinCommunity = () => {
               </p>
             </div>
           </SheetHeader>
-          <Form schema={FormSchema} onSubmit={onSubmit}>
-            <div className="flex flex-col gap-2">
-              <Input
-                required
-                displayName="Community Tag *"
-                name="communityTag"
-                type="text"
-              />
-            </div>
-            <div className="flex justify-end gap-4">
-              <Button
-                type="button"
-                onClick={() => setOpen(false)}
-                variant="mute"
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="action"
-                className="flex flex-row items-center gap-2"
-                type="submit"
-              >
-                Join
-                <ArrowRight className="stroke-2" width={16} height={16} />
-              </Button>
-            </div>
-          </Form>
+          {communitiesAmount && communitiesAmount >= 5 ? (
+            <Alert
+              variant="warning"
+              message="You can be part of at most 5 communities. Leave a community first before joining a new one."
+            />
+          ) : (
+            <Form schema={FormSchema} onSubmit={onSubmit}>
+              <div className="flex flex-col gap-2">
+                <Input
+                  required
+                  displayName="Community Tag *"
+                  name="communityTag"
+                  type="text"
+                />
+              </div>
+              <div className="flex justify-end gap-4">
+                <Button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  variant="mute"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="action"
+                  className="flex flex-row items-center gap-2"
+                  type="submit"
+                >
+                  Join
+                  <ArrowRight className="stroke-2" width={16} height={16} />
+                </Button>
+              </div>
+            </Form>
+          )}
         </SheetContent>
       </Sheet>
     </>

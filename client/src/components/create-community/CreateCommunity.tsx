@@ -8,13 +8,18 @@ import {
 import Button from "@/components/button/Button";
 import ArrowRight from "@/components/icons/ArrowRight";
 import React from "react";
-import { useCreateCommunity } from "@/hooks/api/communities.api";
+import {
+  useCreateCommunity,
+  useGetUserCommunities,
+} from "@/hooks/api/communities.api";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import Form, { Input } from "@/components/form/Form";
+import Alert from "@/components/alert/Alert";
 
 const CreateCommunity = () => {
+  const { data } = useGetUserCommunities();
   const mutation = useCreateCommunity();
   const { toast } = useToast();
   const [open, setOpen] = React.useState(false);
@@ -50,6 +55,8 @@ const CreateCommunity = () => {
     setOpen(false);
   };
 
+  const communitiesAmount = data?.data.communities?.length;
+
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -69,33 +76,40 @@ const CreateCommunity = () => {
               </p>
             </div>
           </SheetHeader>
-          <Form schema={FormSchema} onSubmit={onSubmit}>
-            <div className="flex flex-col gap-2">
-              <Input
-                required={true}
-                name="communityName"
-                displayName="Community Name *"
-                type="text"
-              />
-            </div>
-            <div className="flex justify-end gap-4">
-              <Button
-                type="button"
-                onClick={() => setOpen(false)}
-                variant="mute"
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="action"
-                className="flex flex-row items-center gap-2"
-                type="submit"
-              >
-                Save
-                <ArrowRight className="stroke-2" width={16} height={16} />
-              </Button>
-            </div>
-          </Form>
+          {communitiesAmount && communitiesAmount >= 5 ? (
+            <Alert
+              variant="warning"
+              message="You can be part of at most 5 communities. Leave a community first before creating a new one."
+            />
+          ) : (
+            <Form schema={FormSchema} onSubmit={onSubmit}>
+              <div className="flex flex-col gap-2">
+                <Input
+                  required={true}
+                  name="communityName"
+                  displayName="Community Name *"
+                  type="text"
+                />
+              </div>
+              <div className="flex justify-end gap-4">
+                <Button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  variant="mute"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="action"
+                  className="flex flex-row items-center gap-2"
+                  type="submit"
+                >
+                  Save
+                  <ArrowRight className="stroke-2" width={16} height={16} />
+                </Button>
+              </div>
+            </Form>
+          )}
         </SheetContent>
       </Sheet>
     </>
