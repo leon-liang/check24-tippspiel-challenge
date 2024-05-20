@@ -49,21 +49,30 @@ export const useUpdateMatch = () => {
   });
 };
 
-export const useSubscribeMatchesUpdate = () => {
-  const [matches, setMatches] = useState<string>("");
+interface UpdatedMatch {
+  match: {
+    id: string;
+    homeTeam: {
+      name: string;
+      result: number;
+    };
+    awayTeam: {
+      name: string;
+      result: number;
+    };
+  };
+}
+
+export const useSubscribeMatchUpdate = () => {
+  const [match, setMatch] = useState<UpdatedMatch>();
   const { status, data } = useSession();
 
   useEffect(() => {
     if (status !== "loading") {
       const websocket = new WebSocket(`ws://localhost:8000/v1/ws/matches`);
 
-      websocket.onopen = (event) => {
-        console.log("Connection established");
-      };
-
       websocket.onmessage = (event) => {
-        console.log(event.data);
-        setMatches(event.data);
+        setMatch(JSON.parse(event.data));
       };
 
       return () => {
@@ -72,5 +81,5 @@ export const useSubscribeMatchesUpdate = () => {
     }
   }, [status]);
 
-  return matches;
+  return match;
 };
