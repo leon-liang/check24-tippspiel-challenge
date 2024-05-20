@@ -39,10 +39,8 @@ func main() {
 	r.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	topic := "matches"
-	conn := kafka.NewConn()
+	conn := kafka.NewConn(topic)
 	defer conn.Close()
-
-	kafka.CreateTopic(conn, topic)
 
 	mw := kafka.NewWriter(topic)
 	defer mw.Close()

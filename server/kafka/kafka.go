@@ -5,16 +5,12 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func NewConn() *kafka.Conn {
+func NewConn(topic string) *kafka.Conn {
 	conn, err := kafka.Dial("tcp", "kafka:9092")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
-	return conn
-}
-
-func CreateTopic(c *kafka.Conn, topic string) {
 	topicConfigs := []kafka.TopicConfig{
 		{
 			Topic:             topic,
@@ -22,10 +18,11 @@ func CreateTopic(c *kafka.Conn, topic string) {
 			ReplicationFactor: 1,
 		},
 	}
-	err := c.CreateTopics(topicConfigs...)
-	if err != nil {
+	if err := conn.CreateTopics(topicConfigs...); err != nil {
 		fmt.Println(err.Error())
 	}
+
+	return conn
 }
 
 func NewWriter(topic string) *kafka.Writer {
