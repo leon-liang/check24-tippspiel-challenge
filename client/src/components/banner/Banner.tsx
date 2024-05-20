@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 
 const Banner = ({ children }: PropsWithChildren) => {
   return (
-    <div className="flex h-96 flex-col justify-center gap-8 bg-colors-purple-2 bg-topography-pattern md:px-32">
+    <div className="flex h-96 flex-col justify-center gap-8 bg-colors-purple-2 bg-topography-pattern px-[10%]">
       {children}
     </div>
   );
