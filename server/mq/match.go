@@ -19,7 +19,7 @@ func NewMatchWriter(mw *kafkaGo.Writer) *MatchWriter {
 	}
 }
 
-func (mw *MatchWriter) WriteMatches(match *model.Match) {
+func (mw *MatchWriter) WriteMatch(match *model.Match) {
 
 	// Encode match as gob
 	var buf bytes.Buffer
