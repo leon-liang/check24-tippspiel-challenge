@@ -11,16 +11,16 @@ type Handler struct {
 	MatchStore     store.MatchStore
 	TeamStore      store.TeamStore
 	BetStore       store.BetStore
-	MatchMQ        mq.MatchMQ
+	MatchWriter    mq.MatchWriter
 }
 
-func NewHandler(us store.UserStore, cs store.CommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore, mmq mq.MatchMQ) *Handler {
+func NewHandler(us store.UserStore, cs store.CommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore, mmq mq.MatchWriter) *Handler {
 	return &Handler{
 		UserStore:      us,
 		CommunityStore: cs,
 		MatchStore:     ms,
 		TeamStore:      ts,
 		BetStore:       bs,
-		MatchMQ:        mmq,
+		MatchWriter:    mmq,
 	}
 }

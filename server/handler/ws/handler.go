@@ -9,10 +9,10 @@ import (
 type Handler struct {
 	Upgrader   websocket.Upgrader
 	MatchStore store.MatchStore
-	MatchMQ    mq.MatchMQ
+	MatchMQ    mq.MatchWriter
 }
 
-func NewHandler(upgrader websocket.Upgrader, ms store.MatchStore, mmq mq.MatchMQ) *Handler {
+func NewHandler(upgrader websocket.Upgrader, ms store.MatchStore, mmq mq.MatchWriter) *Handler {
 	return &Handler{
 		Upgrader:   upgrader,
 		MatchStore: ms,

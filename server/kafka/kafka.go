@@ -44,6 +44,7 @@ func NewReader(topic string) *kafka.Reader {
 		Brokers:   []string{"kafka:9092", "kafka:9093", "kafka:9094"},
 		Topic:     topic,
 		Partition: 0,
+		MinBytes:  1,
 		MaxBytes:  10e6,
 	})
 

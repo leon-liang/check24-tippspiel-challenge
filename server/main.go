@@ -47,9 +47,6 @@ func main() {
 	mw := kafka.NewWriter(topic)
 	defer mw.Close()
 
-	mr := kafka.NewReader(topic)
-	defer mr.Close()
-
 	d := db.New()
 	db.AutoMigrate(d)
 
@@ -58,7 +55,7 @@ func main() {
 	ms := store.NewMatchStore(d)
 	ts := store.NewTeamStore(d)
 	bs := store.NewBetStore(d)
-	mmq := mq.NewMatchMQ(mw, mr)
+	mmq := mq.NewMatchWriter(mw)
 
 	seedsHandler := seeds.NewHandler(*ms, *ts)
 	seedsHandler.SeedTeams()

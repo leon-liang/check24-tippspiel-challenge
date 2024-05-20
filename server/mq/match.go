@@ -2,29 +2,27 @@ package mq
 
 import (
 	"context"
+	"fmt"
 	kafkaGo "github.com/segmentio/kafka-go"
-	"log"
 )
 
-type MatchMQ struct {
+type MatchWriter struct {
 	writer *kafkaGo.Writer
-	reader *kafkaGo.Reader
 }
 
-func NewMatchMQ(mw *kafkaGo.Writer, mr *kafkaGo.Reader) *MatchMQ {
-	return &MatchMQ{
+func NewMatchWriter(mw *kafkaGo.Writer) *MatchWriter {
+	return &MatchWriter{
 		writer: mw,
-		reader: mr,
 	}
 }
 
-func (mmq *MatchMQ) WriteMatches() {
-	err := mmq.writer.WriteMessages(context.Background(), kafkaGo.Message{
+func (mw *MatchWriter) WriteMatches() {
+	err := mw.writer.WriteMessages(context.Background(), kafkaGo.Message{
 		Key:   []byte("matches"),
 		Value: []byte("Hello World!"),
 	})
 
 	if err != nil {
-		log.Println(err)
+		fmt.Println("An Error has occurred: ", err)
 	}
 }

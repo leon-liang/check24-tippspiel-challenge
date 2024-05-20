@@ -1,10 +1,11 @@
 package ws
 
 import (
+	"context"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
-	"time"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/kafka"
 )
 
 func (h *Handler) wsMatches(ctx echo.Context) error {
@@ -12,15 +13,28 @@ func (h *Handler) wsMatches(ctx echo.Context) error {
 	if err != nil {
 		fmt.Println(err)
 	}
+	defer ws.Close()
 
-	for i := 0; i < 3; i++ {
-		err := ws.WriteMessage(websocket.TextMessage, []byte("Hello, Client!"))
+	reader := kafka.NewReader("matches")
+	reader.SetOffset(-1)
+	defer reader.Close()
+
+	//ws.SetCloseHandler(func(code int, text string) error {
+	//	reader.Close()
+	//	fmt.Println("Received connection close request. Closing connection...")
+	//	return nil
+	//})
+
+	for {
+		message, err := reader.ReadMessage(context.Background())
 		if err != nil {
+			fmt.Println("Error: ", err)
+		}
+		fmt.Println("Reading", string(message.Value))
+
+		if err := ws.WriteMessage(websocket.TextMessage, []byte("Hello, Client!")); err != nil {
 			fmt.Println(err)
 		}
-
-		time.Sleep(5 * time.Second)
 	}
 
-	return ws.Close()
 }
