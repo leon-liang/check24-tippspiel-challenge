@@ -48,7 +48,7 @@ const Matches = () => {
           <p>Changed made are synced in real time to all users.</p>
         </BannerContent>
       </Banner>
-      <div className="py-6 md:px-32">
+      <div className="px-[10%] py-6">
         <Table
           data={matches}
           columns={matchColumns}

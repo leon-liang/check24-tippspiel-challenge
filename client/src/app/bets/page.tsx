@@ -7,6 +7,7 @@ import BetsOverview from "@/components/bets-overview/BetsOverview";
 import { DateTime } from "luxon";
 import useRounds from "@/hooks/use-rounds";
 import useBets from "@/hooks/use-bets";
+import { useSubscribeMatchUpdate } from "@/hooks/api/matches.api";
 
 const Bets = () => {
   const [selectedRound, setSelectedRound] = useState("");
@@ -42,7 +43,7 @@ const Bets = () => {
           </p>
         </BannerContent>
       </Banner>
-      <div className="flex flex-row items-center gap-6 py-6 md:px-32">
+      <div className="flex flex-row items-center gap-6 px-[10%] py-6">
         {bets ? (
           <BetsOverview
             key={selectedRound}

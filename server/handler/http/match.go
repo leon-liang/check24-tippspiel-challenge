@@ -84,5 +84,7 @@ func (h *Handler) UpdateMatch(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
+	h.MatchWriter.WriteMatch(m)
+
 	return ctx.JSON(http.StatusOK, newMatchResponse(*m))
 }
