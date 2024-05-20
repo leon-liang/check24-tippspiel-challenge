@@ -14,7 +14,7 @@ export default Banner;
 
 export const BannerTitle = ({ children }: PropsWithChildren) => {
   return (
-    <div className="flex flex-row items-center gap-8 text-4xl font-medium">
+    <div className="flex flex-row flex-wrap items-center gap-8 text-4xl font-medium">
       {children}
     </div>
   );

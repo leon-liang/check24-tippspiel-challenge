@@ -20,10 +20,13 @@ const GameView = ({ homeTeam, awayTeam, gameTime }: GameViewProps) => {
         <thead className="text-sm text-gray-11">
           <tr>
             <th className="px-6 pt-2 text-center font-normal" scope="col"></th>
-            <th className="px-6 pt-2 text-center font-normal" scope="col">
+            <th
+              className="whitespace-nowrap px-6 pt-2 text-center font-normal"
+              scope="col"
+            >
               Your Bet
             </th>
-            <th className="px-6 pt-2 font-normal" scope="col">
+            <th className="whitespace-nowrap px-6 pt-2 font-normal" scope="col">
               Result
             </th>
           </tr>

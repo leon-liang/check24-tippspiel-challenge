@@ -52,18 +52,20 @@ const BetsOverview = ({ bets }: BetOverviewProps) => {
 
   return (
     <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(value)}>
-      <TabsList>
-        {dates.map((date, index) => (
-          <TabsTrigger key={index} value={date}>
-            {DateTime.fromISO(date)
-              .setLocale("en")
-              .toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className="overflow-auto">
+        <TabsList>
+          {dates.map((date, index) => (
+            <TabsTrigger key={index} value={date}>
+              {DateTime.fromISO(date)
+                .setLocale("en")
+                .toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
       {dates.map((date, index) => (
         <TabsContent key={index} value={date}>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
             {bets
               .filter((bet) => bet.date.toISODate() === date)
               .map((bet, index) => (

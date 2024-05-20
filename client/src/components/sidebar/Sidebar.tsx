@@ -9,7 +9,7 @@ interface SidebarProps {
 
 const Sidebar = ({ sidebarItems }: SidebarProps) => {
   return (
-    <div className="fixed left-0 top-0 h-full w-64 overflow-auto border-r border-gray-6 pt-16">
+    <div className="fixed left-0 top-0 h-full w-64 overflow-auto border-r border-gray-6 bg-colors-white-A12 pt-16">
       <div className="flex h-full flex-col justify-between px-6 py-4">
         <div>
           {sidebarItems.map((itemProps, index) => {
