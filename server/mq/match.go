@@ -1,8 +1,11 @@
 package mq
 
 import (
+	"bytes"
 	"context"
+	"encoding/gob"
 	"fmt"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	kafkaGo "github.com/segmentio/kafka-go"
 )
 
@@ -16,10 +19,18 @@ func NewMatchWriter(mw *kafkaGo.Writer) *MatchWriter {
 	}
 }
 
-func (mw *MatchWriter) WriteMatches() {
+func (mw *MatchWriter) WriteMatches(match *model.Match) {
+
+	// Encode match as gob
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	if err := encoder.Encode(match); err != nil {
+		fmt.Println("An error has occurred while encoding: ", err)
+	}
+
 	err := mw.writer.WriteMessages(context.Background(), kafkaGo.Message{
 		Key:   []byte("matches"),
-		Value: []byte("Hello World!"),
+		Value: buf.Bytes(),
 	})
 
 	if err != nil {

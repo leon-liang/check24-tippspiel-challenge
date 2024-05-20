@@ -1,11 +1,15 @@
 package ws
 
 import (
+	"bytes"
 	"context"
+	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/kafka"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 )
 
 func (h *Handler) wsMatches(ctx echo.Context) error {
@@ -31,7 +35,19 @@ func (h *Handler) wsMatches(ctx echo.Context) error {
 			fmt.Println("Error: ", err)
 		}
 
-		if err := ws.WriteMessage(websocket.TextMessage, message.Value); err != nil {
+		// decode message
+		var m model.Match
+		buf := bytes.NewBuffer(message.Value)
+		decoder := gob.NewDecoder(buf)
+
+		if err := decoder.Decode(&m); err != nil {
+			fmt.Println("Error decoding gob: ", err)
+		}
+
+		r := newMatchResponse(m)
+		b, _ := json.Marshal(r)
+
+		if err := ws.WriteMessage(websocket.TextMessage, b); err != nil {
 			fmt.Println(err)
 		}
 	}
