@@ -7,7 +7,7 @@ import {
 } from "@/components/sheet/Sheet";
 import GameView from "@/components/game-view/GameView";
 import Button from "@/components/button/Button";
-import ArrowRight from "@/components/icons/ArrowRight";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import React from "react";
 import { z } from "zod";
 import Form, { Input } from "@/components/form/Form";
@@ -137,7 +137,7 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
                   type="submit"
                 >
                   Save
-                  <ArrowRight className="stroke-2" width={16} height={16} />
+                  <ArrowRightIcon className="stroke-2" width={16} height={16} />
                 </Button>
               </div>
             </Form>

@@ -6,7 +6,7 @@ import {
   SheetTrigger,
 } from "@/components/sheet/Sheet";
 import Button from "@/components/button/Button";
-import ArrowRight from "@/components/icons/ArrowRight";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import React from "react";
 import {
   useGetUserCommunities,
@@ -99,7 +99,7 @@ const JoinCommunity = () => {
                   type="submit"
                 >
                   Join
-                  <ArrowRight className="stroke-2" width={16} height={16} />
+                  <ArrowRightIcon className="stroke-2" width={16} height={16} />
                 </Button>
               </div>
             </Form>

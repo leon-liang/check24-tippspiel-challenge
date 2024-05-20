@@ -6,7 +6,7 @@ import {
 } from "@/components/sheet/Sheet";
 import Form, { Input } from "@/components/form/Form";
 import Button from "@/components/button/Button";
-import ArrowRight from "@/components/icons/ArrowRight";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import React, { Dispatch, SetStateAction } from "react";
 import { z } from "zod";
 import { useUpdateMatch } from "@/hooks/api/matches.api";
@@ -135,7 +135,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
                 type="submit"
               >
                 Save
-                <ArrowRight className="stroke-2" width={16} height={16} />
+                <ArrowRightIcon className="stroke-2" width={16} height={16} />
               </Button>
             </div>
           </Form>
