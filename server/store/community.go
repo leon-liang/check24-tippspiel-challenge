@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+	"fmt"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"gorm.io/gorm"
 	"sort"
@@ -31,10 +32,35 @@ func (cs *CommunityStore) Join(user *model.User, community *model.Community) (er
 	return nil
 }
 
+func (cs *CommunityStore) Leave(user *model.User, community *model.Community) (err error) {
+	index := -1
+
+	for i, member := range community.Members {
+		fmt.Println(member.ID)
+		if member.ID == user.ID {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return errors.New("user is not part of the community")
+	}
+
+	community.Members[index] = community.Members[len(community.Members)-1]
+	community.Members = community.Members[:len(community.Members)-1]
+
+	if err := cs.db.Model(&community).Association("Members").Replace(community.Members); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (cs *CommunityStore) GetCommunityById(id string) (*model.Community, error) {
 	var community model.Community
 
-	err := cs.db.Where(&model.Community{ID: id}).First(&community).Error
+	err := cs.db.Preload("Members").Where(&model.Community{ID: id}).First(&community).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
