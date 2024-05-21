@@ -95,14 +95,6 @@ func (cs *CommunityStore) Delete(user *model.User, community *model.Community) (
 		return err
 	}
 
-	//var userCommunity model.UserCommunity
-	//userCommunity.CommunityID = community.ID
-	//
-	//if err := cs.db.Unscoped().Delete(&userCommunity).Error; err != nil {
-	//	tx.Rollback()
-	//	return err
-	//}
-
 	if err := cs.db.Unscoped().Delete(community).Error; err != nil {
 		tx.Rollback()
 		return err
