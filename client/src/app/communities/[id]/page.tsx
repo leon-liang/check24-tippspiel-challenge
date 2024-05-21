@@ -1,7 +1,7 @@
 "use client";
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useGetUserCommunities } from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
@@ -12,7 +12,7 @@ import {
 } from "@/components/dropdown-menu/DropdownMenu";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -21,12 +21,11 @@ import {
 } from "@/components/dialog/Dialog";
 import Button from "@/components/button/Button";
 import { useGetMe } from "@/hooks/api/users.api";
-import BackspaceIcon from "@/components/icons/BackspaceIcon";
 
 const Community = () => {
   const params = useParams<{ id: string }>();
   const { data: meData } = useGetMe();
-  const { data: communitiesData } = useGetUserCommunities();
+  const { data: communitiesData, isLoading } = useGetUserCommunities();
   const [open, setOpen] = useState<boolean>(false);
 
   const currentCommunity = useMemo(() => {
@@ -36,6 +35,16 @@ const Community = () => {
   }, [communitiesData?.data.communities, params.id]);
   const isCommunityOwner =
     meData?.data.user?.id === currentCommunity?.community?.owner;
+
+  useEffect(() => {
+    if (!isLoading && !currentCommunity) {
+      return notFound();
+    }
+  }, [currentCommunity, isLoading]);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div className="relative">
