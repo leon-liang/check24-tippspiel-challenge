@@ -222,6 +222,25 @@ paths:
       tags:
       - Communities
   /v1/communities/{community_id}:
+    delete:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.communityResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Delete the specified community
+      tags:
+      - Community
     get:
       parameters:
       - description: Community ID
