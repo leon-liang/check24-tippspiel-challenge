@@ -261,6 +261,26 @@ paths:
       summary: Join the specified community
       tags:
       - Communities
+  /v1/communities/{community_id}/leave:
+    put:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.communityResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Leave the specified community
+      tags:
+      - Communities
   /v1/communities/{community_id}/members:
     get:
       parameters:

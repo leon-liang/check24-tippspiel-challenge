@@ -792,6 +792,65 @@ export const CommunitiesApiAxiosParamCreator = function (
     },
     /**
      *
+     * @summary Leave the specified community
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1CommunitiesCommunityIdLeavePut: async (
+      communityId: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'communityId' is not null or undefined
+      assertParamExists(
+        "v1CommunitiesCommunityIdLeavePut",
+        "communityId",
+        communityId,
+      );
+      const localVarPath = `/v1/communities/{community_id}/leave`.replace(
+        `{${"community_id"}}`,
+        encodeURIComponent(String(communityId)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PUT",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @summary Retrieve all users that are part of a community
      * @param {string} communityId Community ID
      * @param {*} [options] Override http request option.
@@ -1037,6 +1096,40 @@ export const CommunitiesApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @summary Leave the specified community
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1CommunitiesCommunityIdLeavePut(
+      communityId: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HttpCommunityResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1CommunitiesCommunityIdLeavePut(
+          communityId,
+          options,
+        );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["CommunitiesApi.v1CommunitiesCommunityIdLeavePut"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+    /**
+     *
      * @summary Retrieve all users that are part of a community
      * @param {string} communityId Community ID
      * @param {*} [options] Override http request option.
@@ -1175,6 +1268,21 @@ export const CommunitiesApiFactory = function (
     },
     /**
      *
+     * @summary Leave the specified community
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1CommunitiesCommunityIdLeavePut(
+      communityId: string,
+      options?: any,
+    ): AxiosPromise<HttpCommunityResponse> {
+      return localVarFp
+        .v1CommunitiesCommunityIdLeavePut(communityId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @summary Retrieve all users that are part of a community
      * @param {string} communityId Community ID
      * @param {*} [options] Override http request option.
@@ -1255,6 +1363,23 @@ export class CommunitiesApi extends BaseAPI {
   ) {
     return CommunitiesApiFp(this.configuration)
       .v1CommunitiesCommunityIdJoinPost(communityId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary Leave the specified community
+   * @param {string} communityId Community ID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof CommunitiesApi
+   */
+  public v1CommunitiesCommunityIdLeavePut(
+    communityId: string,
+    options?: RawAxiosRequestConfig,
+  ) {
+    return CommunitiesApiFp(this.configuration)
+      .v1CommunitiesCommunityIdLeavePut(communityId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
