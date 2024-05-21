@@ -1,7 +1,7 @@
 "use client";
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
-import { notFound, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useGetUserCommunities } from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
@@ -12,14 +12,13 @@ import {
 } from "@/components/dropdown-menu/DropdownMenu";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useGetMe } from "@/hooks/api/users.api";
 import DeleteCommunity from "@/components/delete-community/DeleteCommunity";
 import LeaveCommunity from "@/components/leave-community/LeaveCommunity";
 
 const Community = () => {
   const params = useParams<{ id: string }>();
-  const router = useRouter();
   const { data: meData } = useGetMe();
   const { data: communitiesData, isLoading } = useGetUserCommunities();
   const [open, setOpen] = useState<boolean>(false);
