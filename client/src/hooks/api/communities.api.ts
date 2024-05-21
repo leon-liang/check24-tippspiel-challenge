@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { communitiesApiFactory } from "@/api-client";
 import { HttpCommunityCreateRequest } from "@/api-client/generated";
-import { awaitExpression } from "@babel/types";
 
 export const useCreateCommunity = () => {
   const queryClient = useQueryClient();
