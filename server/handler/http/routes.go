@@ -15,6 +15,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	communities.GET("/:community_id", h.GetCommunity)
 	communities.POST("/:community_id/join", h.JoinCommunity)
 	communities.PUT("/:community_id/leave", h.LeaveCommunity)
+	communities.DELETE("/:community_id", h.DeleteCommunity)
 	communities.GET("/:community_id/members", h.GetCommunityMembers)
 
 	matches := v1.Group("/matches")

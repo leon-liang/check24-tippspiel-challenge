@@ -7,7 +7,7 @@ import (
 
 type Match struct {
 	gorm.Model
-	ID             string `gorm:"type:uuid;default:gen_random_uuid()"`
+	ID             string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	HomeTeamID     *string
 	HomeTeam       *Team
 	AwayTeamID     *string
