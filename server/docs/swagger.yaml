@@ -240,7 +240,7 @@ paths:
       - OAuth2Implicit: []
       summary: Delete the specified community
       tags:
-      - Community
+      - Communities
     get:
       parameters:
       - description: Community ID

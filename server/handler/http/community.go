@@ -177,7 +177,7 @@ func (h *Handler) LeaveCommunity(ctx echo.Context) error {
 }
 
 // DeleteCommunity godoc
-// @Tags Community
+// @Tags Communities
 // @Summary Delete the specified community
 // @Produce json
 // @Success 200 {object} http.communityResponse

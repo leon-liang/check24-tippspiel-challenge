@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { communitiesApiFactory } from "@/api-client";
 import { HttpCommunityCreateRequest } from "@/api-client/generated";
+import { awaitExpression } from "@babel/types";
 
 export const useCreateCommunity = () => {
   const queryClient = useQueryClient();
@@ -31,6 +32,34 @@ export const useJoinCommunity = () => {
       return communitiesApiFactory.v1CommunitiesCommunityIdJoinPost(
         communityId,
       );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["communities"] });
+    },
+  });
+};
+
+export const useLeaveCommunity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (communityId: string) => {
+      return communitiesApiFactory.v1CommunitiesCommunityIdLeavePut(
+        communityId,
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["communities"] });
+    },
+  });
+};
+
+export const useDeleteCommunity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (communityId: string) => {
+      return communitiesApiFactory.v1CommunitiesCommunityIdDelete(communityId);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["communities"] });

@@ -205,7 +205,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Community"
+                    "Communities"
                 ],
                 "summary": "Delete the specified community",
                 "parameters": [
