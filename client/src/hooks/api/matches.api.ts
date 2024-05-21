@@ -70,7 +70,7 @@ export const useSubscribeMatchUpdate = () => {
   useEffect(() => {
     if (status !== "loading") {
       const websocket = new WebSocket(
-        `ws://${process.env.NEXT_PUBLIC_WS_URL}/v1/ws/matches`,
+        `${process.env.NEXT_PUBLIC_WS_URL}/v1/ws/matches`,
       );
 
       websocket.onmessage = (event) => {
