@@ -38,6 +38,34 @@ export const useJoinCommunity = () => {
   });
 };
 
+export const useLeaveCommunity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (communityId: string) => {
+      return communitiesApiFactory.v1CommunitiesCommunityIdLeavePut(
+        communityId,
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["communities"] });
+    },
+  });
+};
+
+export const useDeleteCommunity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (communityId: string) => {
+      return communitiesApiFactory.v1CommunitiesCommunityIdDelete(communityId);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["communities"] });
+    },
+  });
+};
+
 export const useGetUserCommunities = () => {
   return useQuery({
     queryFn: communitiesApiFactory.v1CommunitiesGet,

@@ -1,4 +1,9 @@
-const ArrowRight = ({ className, stroke, width, height }: IconProps) => {
+const EllipsisHorizontalIcon = ({
+  className,
+  stroke,
+  width,
+  height,
+}: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,17 +11,17 @@ const ArrowRight = ({ className, stroke, width, height }: IconProps) => {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke={stroke ?? "currentColor"}
+      className={className}
       width={width}
       height={height}
-      className={className}
     >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+        d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
       />
     </svg>
   );
 };
 
-export default ArrowRight;
+export default EllipsisHorizontalIcon;

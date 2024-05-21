@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	gorm.Model
-	ID                 string `gorm:"type:uuid;default:gen_random_uuid()"`
+	ID                 string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	Username           string `gorm:"unique_index;not null"`
 	Email              string `gorm:"unique_index;not null"`
 	FirstName          string
@@ -20,8 +20,7 @@ type User struct {
 }
 
 type UserCommunity struct {
-	gorm.Model
-	UserID      int    `gorm:"primaryKey"`
-	CommunityID int    `gorm:"primaryKey"`
+	UserID      string `gorm:"primaryKey"`
+	CommunityID string `gorm:"primaryKey;constraint:OnDelete:CASCADE;"`
 	PinnedUsers []User `gorm:"many2many:user_community_pinned_users;"`
 }

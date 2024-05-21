@@ -28,7 +28,7 @@ const CopyToClipboard = ({ text }: CopyToClipboardProps) => {
         <Tooltip delayDuration={300}>
           <TooltipTrigger ref={ref}>
             <ReactCopyToClipboard text={text} onCopy={() => setCopied(true)}>
-              <p className="flex cursor-default flex-row gap-1 rounded-md px-2 align-middle hover:bg-colors-gray-3">
+              <p className="flex cursor-default flex-row gap-1 rounded-md px-2 align-middle hover:bg-colors-gray-4">
                 {text}
               </p>
             </ReactCopyToClipboard>

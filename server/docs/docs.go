@@ -194,6 +194,37 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Delete the specified community",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.communityResponse"
+                        }
+                    }
+                }
             }
         },
         "/v1/communities/{community_id}/join": {
@@ -210,6 +241,39 @@ const docTemplate = `{
                     "Communities"
                 ],
                 "summary": "Join the specified community",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.communityResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/communities/{community_id}/leave": {
+            "put": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Leave the specified community",
                 "parameters": [
                     {
                         "type": "string",
@@ -450,6 +514,9 @@ const docTemplate = `{
                             "type": "string"
                         },
                         "name": {
+                            "type": "string"
+                        },
+                        "owner": {
                             "type": "string"
                         }
                     }

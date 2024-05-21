@@ -1,11 +1,12 @@
 package model
 
-import "gorm.io/gorm"
+import "time"
 
 type Community struct {
-	gorm.Model
-	ID      string `gorm:"type:uuid;default:gen_random_uuid()"`
-	Name    string
-	Owner   string
-	Members []User `gorm:"many2many:user_community;"`
+	ID        string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	Name      string
+	Owner     string
+	Members   []*User `gorm:"many2many:user_community;"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }

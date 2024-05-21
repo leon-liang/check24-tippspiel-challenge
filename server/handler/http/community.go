@@ -37,6 +37,7 @@ func (h *Handler) CreateCommunity(ctx echo.Context) error {
 		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
 
+	c.Owner = currentUser.ID
 	c.Name = req.Community.Name
 
 	if err := h.CommunityStore.Create(&c); err != nil {
@@ -146,6 +147,69 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, &response)
 }
 
+// LeaveCommunity godoc
+// @Tags Communities
+// @Summary Leave the specified community
+// @Produce json
+// @Success 200 {object} http.communityResponse
+// @Param community_id path string true "Community ID"
+// @Router /v1/communities/{community_id}/leave [PUT]
+// @Security OAuth2Implicit
+func (h *Handler) LeaveCommunity(ctx echo.Context) error {
+	communityId := ctx.Param("community_id")
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	if err := h.CommunityStore.Leave(currentUser, community); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	response := newCommunityResponse(community)
+	return ctx.JSON(http.StatusOK, &response)
+}
+
+// DeleteCommunity godoc
+// @Tags Communities
+// @Summary Delete the specified community
+// @Produce json
+// @Success 200 {object} http.communityResponse
+// @Param community_id path string true "Community ID"
+// @Router /v1/communities/{community_id} [DELETE]
+// @Security OAuth2Implicit
+func (h *Handler) DeleteCommunity(ctx echo.Context) error {
+	communityId := ctx.Param("community_id")
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// Verify that the user is the owner of the community
+	if currentUser.ID != community.Owner {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
+	if err := h.CommunityStore.Delete(currentUser, community); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	response := newCommunityResponse(community)
+	return ctx.JSON(http.StatusOK, &response)
+}
+
 // GetCommunityMembers godoc
 // @Tags Communities
 // @Summary Retrieve all users that are part of a community
@@ -160,6 +224,10 @@ func (h *Handler) GetCommunityMembers(ctx echo.Context) error {
 	community, err := h.CommunityStore.GetCommunityById(communityId)
 
 	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
 		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
 	}
 
