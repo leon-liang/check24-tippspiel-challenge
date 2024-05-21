@@ -1,7 +1,7 @@
 "use client";
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
-import { notFound, useParams } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { useGetUserCommunities } from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
@@ -13,17 +13,13 @@ import {
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
 import { useEffect, useMemo, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/dialog/Dialog";
-import Button from "@/components/button/Button";
 import { useGetMe } from "@/hooks/api/users.api";
+import DeleteCommunity from "@/components/delete-community/DeleteCommunity";
+import LeaveCommunity from "@/components/leave-community/LeaveCommunity";
 
 const Community = () => {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
   const { data: meData } = useGetMe();
   const { data: communitiesData, isLoading } = useGetUserCommunities();
   const [open, setOpen] = useState<boolean>(false);
@@ -35,12 +31,6 @@ const Community = () => {
   }, [communitiesData?.data.communities, params.id]);
   const isCommunityOwner =
     meData?.data.user?.id === currentCommunity?.community?.owner;
-
-  useEffect(() => {
-    if (!isLoading && !currentCommunity) {
-      return notFound();
-    }
-  }, [currentCommunity, isLoading]);
 
   if (isLoading) {
     return null;
@@ -78,24 +68,19 @@ const Community = () => {
           </div>
         </BannerContent>
       </Banner>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogTitle>Are you sure?</DialogTitle>
-          <DialogDescription>
-            {isCommunityOwner
-              ? "This action cannot be undone. Click on delete to confirm that you want to delete the community."
-              : "Click on leave to confirm that you want to leave the community."}
-          </DialogDescription>
-          <div className="flex justify-end gap-3">
-            <Button onClick={() => setOpen(false)} variant="mute">
-              Cancel
-            </Button>
-            <Button variant="action">
-              {isCommunityOwner ? "Delete" : "Leave"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {isCommunityOwner ? (
+        <DeleteCommunity
+          open={open}
+          setOpen={setOpen}
+          communityId={currentCommunity?.community?.id ?? ""}
+        />
+      ) : (
+        <LeaveCommunity
+          open={open}
+          setOpen={setOpen}
+          communityId={currentCommunity?.community?.id ?? ""}
+        />
+      )}
     </div>
   );
 };
