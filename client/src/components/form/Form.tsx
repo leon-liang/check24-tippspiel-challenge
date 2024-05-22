@@ -1,5 +1,8 @@
 import React, { PropsWithChildren } from "react";
 import {
+  DeepPartial,
+  DefaultValues,
+  FieldValues,
   FormProvider,
   SubmitHandler,
   useForm,
@@ -8,27 +11,24 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-type FormSchema = z.Schema;
-type FormData = z.infer<FormSchema>;
-
-interface FormProps {
-  schema: FormSchema;
-  onSubmit: (data: FormData) => Promise<void>;
-  defaultValues?: Record<string, any>;
+interface FormProps<TFormValues> {
+  schema: z.Schema;
+  onSubmit: (data: TFormValues) => Promise<void>;
+  defaultValues?: DefaultValues<TFormValues>;
 }
 
-const Form = ({
+const Form = <TFormValues extends FieldValues>({
   schema,
   onSubmit,
   children,
   defaultValues,
-}: PropsWithChildren<FormProps>) => {
-  const methods = useForm<FormData>({
+}: PropsWithChildren<FormProps<TFormValues>>) => {
+  const methods = useForm<TFormValues>({
     defaultValues,
     resolver: zodResolver(schema),
   });
 
-  const submitHandler: SubmitHandler<FormData> = async (
+  const submitHandler: SubmitHandler<TFormValues> = async (
     data: z.infer<typeof schema>,
   ) => {
     methods.reset();

@@ -8,6 +8,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/dropdown-menu/DropdownMenu";
 import LogoutIcon from "@/components/icons/LogoutIcon";
@@ -37,23 +39,26 @@ const Community = () => {
 
   return (
     <div className="relative">
-      <div className="absolute right-5 top-5">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="rounded p-1.5 hover:bg-colors-gray-4">
-              <EllipsisHorizontalIcon height={22} width={22} />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => setOpen(true)}>
-              <LogoutIcon width={22} height={22} className="mr-2" />
-              {isCommunityOwner ? "Delete Community" : "Leave Community"}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <div className="absolute right-5 top-5"></div>
       <Banner>
-        <BannerTitle>{currentCommunity?.community?.name ?? ""}</BannerTitle>
+        <BannerTitle>
+          {currentCommunity?.community?.name ?? ""}
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <div className="rounded p-1.5 hover:bg-colors-gray-4">
+                <EllipsisHorizontalIcon height={22} width={22} />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>More Options</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setOpen(true)}>
+                <LogoutIcon width={22} height={22} className="mr-2" />
+                {isCommunityOwner ? "Delete Community" : "Leave Community"}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </BannerTitle>
         <BannerContent>
           <div className="flex flex-row gap-1">
             <p className="font-medium">Community Tag:</p>
