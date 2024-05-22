@@ -4,7 +4,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/sheet/Sheet";
-import Form, { Input } from "@/components/form/Form";
+import Form, { Input, Switch } from "@/components/form/Form";
 import Button from "@/components/button/Button";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import React, { Dispatch, SetStateAction } from "react";
@@ -121,6 +121,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
                 required={false}
               />
             </div>
+            <Switch name="recalculateScores" displayName="Recalculate Scores" />
             <div className="flex justify-end gap-4">
               <Button
                 type="button"
