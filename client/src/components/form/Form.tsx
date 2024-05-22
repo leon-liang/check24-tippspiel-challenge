@@ -1,6 +1,5 @@
 import React, { PropsWithChildren } from "react";
 import {
-  DeepPartial,
   DefaultValues,
   FieldValues,
   FormProvider,
