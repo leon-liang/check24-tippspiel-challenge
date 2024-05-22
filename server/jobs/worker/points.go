@@ -13,12 +13,21 @@ type PointsWorkerPool struct {
 }
 
 type PointsContext struct {
+	us    *store.UserStore
+	ms    *store.MatchStore
 	users []model.User
 }
 
 func NewPointsWorkerPool(us *store.UserStore, ms *store.MatchStore) *PointsWorkerPool {
 	scoreContext := PointsContext{}
 	pointsWorkerPool := NewWorkerPool(scoreContext, "points", 5)
+
+	pointsWorkerPool.Middleware(func(ctx *PointsContext, job *work.Job, next work.NextMiddlewareFunc) error {
+		ctx.us = us
+		ctx.ms = ms
+		return next()
+	})
+
 	pointsWorkerPool.Middleware((*PointsContext).Log)
 	pointsWorkerPool.Job("calculate_points", (*PointsContext).CalculatePoints)
 
@@ -33,6 +42,8 @@ func (ctx *PointsContext) Log(job *work.Job, next work.NextMiddlewareFunc) error
 }
 
 func (ctx *PointsContext) CalculatePoints(job *work.Job) error {
+	result, _ := ctx.us.GetByUsername("leon.liang")
+	fmt.Println(result)
 	time.Sleep(10 * time.Second)
 	fmt.Println("Done")
 	return nil
