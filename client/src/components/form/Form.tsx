@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 import {
+  Controller,
   DefaultValues,
   FieldValues,
   FormProvider,
@@ -64,7 +65,7 @@ export const Input = ({
 }: FormInputProps) => {
   const {
     register,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = useFormContext();
 
   return (
@@ -93,14 +94,25 @@ interface SwitchProps {
 }
 
 export const Switch = ({ name, displayName }: SwitchProps) => {
+  const { control } = useFormContext();
+
   return (
     <fieldset className="flex flex-row items-center gap-4">
-      <SwitchPrimitive.Root
-        className="relative h-[25px] w-[42px] cursor-default rounded-full bg-colors-black-A3 outline-none data-[state=checked]:bg-colors-green-10"
-        id={name}
-      >
-        <SwitchPrimitive.Thumb className="block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-colors-white-A12 shadow-[0_2px_2px] shadow-black-A4 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-      </SwitchPrimitive.Root>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <SwitchPrimitive.Root
+            onCheckedChange={field.onChange}
+            checked={field.value}
+            className="relative h-[25px] w-[42px] cursor-pointer rounded-full bg-colors-black-A3 outline-none data-[state=checked]:bg-colors-green-10"
+            id={name}
+            {...field}
+          >
+            <SwitchPrimitive.Thumb className="block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-colors-white-A12 shadow-[0_2px_2px] shadow-black-A4 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+          </SwitchPrimitive.Root>
+        )}
+      />
       <label className="text-left text-sm text-gray-11" htmlFor={name}>
         {displayName}
       </label>

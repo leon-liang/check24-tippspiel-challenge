@@ -39,6 +39,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
     homeTeamResult: match?.homeTeam.result,
     awayTeamName: match?.awayTeam.name,
     awayTeamResult: match?.awayTeam.result,
+    recalculateScores: false,
   };
 
   const FormSchema = z.object({
@@ -46,6 +47,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
     homeTeamResult: z.union([z.number().int(), z.nan()]).optional(),
     awayTeamName: z.string().optional(),
     awayTeamResult: z.union([z.number().int(), z.nan()]).optional(),
+    recalculateScores: z.boolean(),
   });
 
   type FormData = z.infer<typeof FormSchema>;
