@@ -13,10 +13,10 @@ type Handler struct {
 	TeamStore      store.TeamStore
 	BetStore       store.BetStore
 	MatchWriter    mq.MatchWriter
-	ScoreEnqueuer  enqueuer.ScoreEnqueuer
+	PointsEnqueuer enqueuer.PointsEnqueuer
 }
 
-func NewHandler(us store.UserStore, cs store.CommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore, mw mq.MatchWriter, se enqueuer.ScoreEnqueuer) *Handler {
+func NewHandler(us store.UserStore, cs store.CommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore, mw mq.MatchWriter, pe enqueuer.PointsEnqueuer) *Handler {
 	return &Handler{
 		UserStore:      us,
 		CommunityStore: cs,
@@ -24,6 +24,6 @@ func NewHandler(us store.UserStore, cs store.CommunityStore, ms store.MatchStore
 		TeamStore:      ts,
 		BetStore:       bs,
 		MatchWriter:    mw,
-		ScoreEnqueuer:  se,
+		PointsEnqueuer: pe,
 	}
 }

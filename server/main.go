@@ -58,10 +58,10 @@ func main() {
 	ts := store.NewTeamStore(d)
 	bs := store.NewBetStore(d)
 	mw := mq.NewMatchWriter(w)
-	se := enqueuer.NewScoreEnqueuer()
+	pe := enqueuer.NewPointsEnqueuer()
 
 	// Setup Workers
-	sw := worker.NewScoreWorkerPool(us, ms)
+	sw := worker.NewPointsWorkerPool(us, ms)
 	sw.WorkerPool.Start()
 	defer sw.WorkerPool.Stop()
 
@@ -79,7 +79,7 @@ func main() {
 		}
 	)
 
-	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *mw, *se)
+	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *mw, *pe)
 	wsHandler := websocket.NewHandler(upgrader, *ms, *mw)
 
 	r.GET("", httpHandler.GetRoot)
