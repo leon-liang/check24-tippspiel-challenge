@@ -123,7 +123,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
                 required={false}
               />
             </div>
-            <Switch name="recalculateScores" displayName="Recalculate Scores" />
+            <Switch name="recalculatePoints" displayName="Recalculate Points" />
             <div className="flex justify-end gap-4">
               <Button
                 type="button"

@@ -30,3 +30,10 @@ func (us *UserStore) GetByUsername(username string) (*model.User, error) {
 func (us *UserStore) Create(user *model.User) (err error) {
 	return us.db.Create(user).Error
 }
+
+func (us *UserStore) GetAll() ([]model.User, error) {
+	var users []model.User
+	err := us.db.Find(&users).Error
+
+	return users, err
+}
