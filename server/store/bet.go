@@ -46,6 +46,20 @@ func (bs *BetStore) GetBetById(user *model.User, id string) (*model.Bet, error) 
 	return &b, err
 }
 
+func (bs *BetStore) GetAllBets(user *model.User) ([]model.Bet, error) {
+	var bets []model.Bet
+
+	err := bs.db.Preload("Match.HomeTeam").Preload("Match.AwayTeam").Where(&model.Bet{Bettor: user.ID}).Find(&bets).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+	return bets, err
+}
+
 func (bs *BetStore) UpdateBet(b *model.Bet, homeTeam *int, awayTeam *int) (err error) {
 	tx := bs.db.Begin()
 	if err := tx.Model(b).Update("HomeTeam", homeTeam).Update("AwayTeam", awayTeam).Error; err != nil {

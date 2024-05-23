@@ -61,7 +61,7 @@ func main() {
 	pe := enqueuer.NewPointsEnqueuer()
 
 	// Setup Workers
-	sw := worker.NewPointsWorkerPool(us, ms)
+	sw := worker.NewPointsWorkerPool(us, bs)
 	sw.WorkerPool.Start()
 	defer sw.WorkerPool.Stop()
 
