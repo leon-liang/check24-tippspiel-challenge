@@ -11,6 +11,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { z } from "zod";
 import { useUpdateMatch } from "@/hooks/api/matches.api";
 import { toast } from "@/hooks/use-toast";
+import { useCalculatePoints } from "@/hooks/api/points.api";
 
 export type Match = {
   id: string;
@@ -32,14 +33,15 @@ interface UpdateMatchProps {
 }
 
 const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
-  const mutation = useUpdateMatch();
+  const matchMutation = useUpdateMatch();
+  const calculatePointsMutation = useCalculatePoints();
 
   const defaultValues = {
     homeTeamName: match?.homeTeam.name,
     homeTeamResult: match?.homeTeam.result,
     awayTeamName: match?.awayTeam.name,
     awayTeamResult: match?.awayTeam.result,
-    recalculateScores: false,
+    recalculatePoints: false,
   };
 
   const FormSchema = z.object({
@@ -47,20 +49,24 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
     homeTeamResult: z.union([z.number().int(), z.nan()]).optional(),
     awayTeamName: z.string().optional(),
     awayTeamResult: z.union([z.number().int(), z.nan()]).optional(),
-    recalculateScores: z.boolean(),
+    recalculatePoints: z.boolean(),
   });
 
   type FormData = z.infer<typeof FormSchema>;
 
   const onSubmit = async (data: FormData) => {
     try {
-      await mutation.mutateAsync({
+      await matchMutation.mutateAsync({
         matchId: match?.id ?? "",
         homeTeamName: data.homeTeamName,
         homeTeamResult: data.homeTeamResult,
         awayTeamName: data.awayTeamName,
         awayTeamResult: data.awayTeamResult,
       });
+
+      if (data.recalculatePoints) {
+        await calculatePointsMutation.mutateAsync();
+      }
 
       toast({
         variant: "success",
