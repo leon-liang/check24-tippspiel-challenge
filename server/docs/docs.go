@@ -395,6 +395,24 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/points": {
+            "put": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "tags": [
+                    "Points"
+                ],
+                "summary": "Calculate points based on the current of the current match scores and bets",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/v1/users/me": {
             "get": {
                 "security": [

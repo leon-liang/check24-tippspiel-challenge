@@ -1840,6 +1840,147 @@ export class MatchesApi extends BaseAPI {
 }
 
 /**
+ * PointsApi - axios parameter creator
+ * @export
+ */
+export const PointsApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Calculate points based on the current of the current match scores and bets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1PointsPut: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/points`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PUT",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * PointsApi - functional programming interface
+ * @export
+ */
+export const PointsApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = PointsApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary Calculate points based on the current of the current match scores and bets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1PointsPut(
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1PointsPut(options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["PointsApi.v1PointsPut"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * PointsApi - factory interface
+ * @export
+ */
+export const PointsApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = PointsApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary Calculate points based on the current of the current match scores and bets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1PointsPut(options?: any): AxiosPromise<void> {
+      return localVarFp
+        .v1PointsPut(options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * PointsApi - object-oriented interface
+ * @export
+ * @class PointsApi
+ * @extends {BaseAPI}
+ */
+export class PointsApi extends BaseAPI {
+  /**
+   *
+   * @summary Calculate points based on the current of the current match scores and bets
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof PointsApi
+   */
+  public v1PointsPut(options?: RawAxiosRequestConfig) {
+    return PointsApiFp(this.configuration)
+      .v1PointsPut(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
  * RootApi - axios parameter creator
  * @export
  */

@@ -10,8 +10,7 @@ import (
 // CalculatePoints godoc
 // @Tags Points
 // @Summary Calculate points based on the current of the current match scores and bets
-// @Produce json
-// @Success 200 {object} http.calculatePointsResponse
+// @Success 200
 // @Router /v1/points [PUT]
 // @Security OAuth2Implicit
 func (h *Handler) CalculatePoints(ctx echo.Context) error {
@@ -34,6 +33,5 @@ func (h *Handler) CalculatePoints(ctx echo.Context) error {
 		offset += limit
 	}
 
-	// return websocket url to connect to for task updates
-	return nil
+	return ctx.NoContent(http.StatusOK)
 }

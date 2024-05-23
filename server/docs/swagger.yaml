@@ -362,6 +362,17 @@ paths:
       summary: Update match
       tags:
       - Matches
+  /v1/points:
+    put:
+      responses:
+        "200":
+          description: OK
+      security:
+      - OAuth2Implicit: []
+      summary: Calculate points based on the current of the current match scores and
+        bets
+      tags:
+      - Points
   /v1/users/me:
     get:
       produces:
