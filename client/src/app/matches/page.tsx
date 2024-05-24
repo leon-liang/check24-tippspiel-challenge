@@ -33,7 +33,7 @@ const Matches = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   const calculatePointsMutation = useCalculatePoints();
-  const matches = useMatches();
+  const matches: Match[] = useMatches();
   const isOutOfDate = useIsPointsOutOfDate();
   const matchColumns: Column<Match>[] = useMatchColumns();
 
