@@ -489,17 +489,22 @@ const docTemplate = `{
         "http.betResponse": {
             "type": "object",
             "properties": {
-                "awayTeam": {
-                    "type": "integer"
-                },
-                "homeTeam": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "match": {
-                    "$ref": "#/definitions/http.matchResponse"
+                "bet": {
+                    "type": "object",
+                    "properties": {
+                        "awayTeam": {
+                            "type": "integer"
+                        },
+                        "homeTeam": {
+                            "type": "integer"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "match": {
+                            "$ref": "#/definitions/http.matchResponse"
+                        }
+                    }
                 }
             }
         },

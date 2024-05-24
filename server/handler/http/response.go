@@ -162,10 +162,12 @@ func newMatchesResponse(matches []model.Match) *matchesResponse {
 }
 
 type betResponse struct {
-	ID       string        `json:"id"`
-	HomeTeam *int          `json:"homeTeam"`
-	AwayTeam *int          `json:"awayTeam"`
-	Match    matchResponse `json:"match"`
+	Bet struct {
+		ID       string        `json:"id"`
+		HomeTeam *int          `json:"homeTeam"`
+		AwayTeam *int          `json:"awayTeam"`
+		Match    matchResponse `json:"match"`
+	} `json:"bet"`
 }
 
 func newBetResponse(bet model.Bet) *betResponse {
@@ -174,15 +176,15 @@ func newBetResponse(bet model.Bet) *betResponse {
 	mr = *newMatchResponse(bet.Match)
 
 	if bet.HomeTeam != nil {
-		r.HomeTeam = bet.HomeTeam
+		r.Bet.HomeTeam = bet.HomeTeam
 	}
 
 	if bet.AwayTeam != nil {
-		r.AwayTeam = bet.AwayTeam
+		r.Bet.AwayTeam = bet.AwayTeam
 	}
 
-	r.ID = bet.ID
-	r.Match = mr
+	r.Bet.ID = bet.ID
+	r.Bet.Match = mr
 	return r
 }
 
@@ -202,8 +204,8 @@ func newBetsResponse(bets []model.Bet) *betsResponse {
 	}
 
 	sortByGameTime := func(i, j int) bool {
-		timeI := r.Bets[i].Match.Match.GameTime
-		timeJ := r.Bets[j].Match.Match.GameTime
+		timeI := r.Bets[i].Bet.Match.Match.GameTime
+		timeJ := r.Bets[j].Bet.Match.Match.GameTime
 		return timeI.Before(timeJ)
 	}
 

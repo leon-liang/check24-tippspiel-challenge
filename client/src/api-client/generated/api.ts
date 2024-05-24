@@ -47,26 +47,39 @@ import {
 export interface HttpBetResponse {
   /**
    *
-   * @type {number}
+   * @type {HttpBetResponseBet}
    * @memberof HttpBetResponse
+   */
+  bet?: HttpBetResponseBet;
+}
+/**
+ *
+ * @export
+ * @interface HttpBetResponseBet
+ */
+export interface HttpBetResponseBet {
+  /**
+   *
+   * @type {number}
+   * @memberof HttpBetResponseBet
    */
   awayTeam?: number;
   /**
    *
    * @type {number}
-   * @memberof HttpBetResponse
+   * @memberof HttpBetResponseBet
    */
   homeTeam?: number;
   /**
    *
    * @type {string}
-   * @memberof HttpBetResponse
+   * @memberof HttpBetResponseBet
    */
   id?: string;
   /**
    *
    * @type {HttpMatchResponse}
-   * @memberof HttpBetResponse
+   * @memberof HttpBetResponseBet
    */
   match?: HttpMatchResponse;
 }

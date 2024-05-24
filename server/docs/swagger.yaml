@@ -8,14 +8,17 @@ definitions:
     type: object
   http.betResponse:
     properties:
-      awayTeam:
-        type: integer
-      homeTeam:
-        type: integer
-      id:
-        type: string
-      match:
-        $ref: '#/definitions/http.matchResponse'
+      bet:
+        properties:
+          awayTeam:
+            type: integer
+          homeTeam:
+            type: integer
+          id:
+            type: string
+          match:
+            $ref: '#/definitions/http.matchResponse'
+        type: object
     type: object
   http.betUpdateRequest:
     properties:
