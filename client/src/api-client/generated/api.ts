@@ -285,7 +285,7 @@ export interface HttpMatchResponseMatch {
    * @type {string}
    * @memberof HttpMatchResponseMatch
    */
-  updatedAt?: string;
+  resultUpdatedAt?: string;
 }
 /**
  *

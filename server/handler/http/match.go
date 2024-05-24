@@ -80,8 +80,10 @@ func (h *Handler) UpdateMatch(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	if err := h.MatchStore.UpdateMatchResults(m, req.Match.HomeTeam.Result, req.Match.AwayTeam.Result); err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	if req.Match.HomeTeam.Result != nil || req.Match.AwayTeam.Result != nil {
+		if err := h.MatchStore.UpdateMatchResults(m, req.Match.HomeTeam.Result, req.Match.AwayTeam.Result); err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
 	}
 
 	h.MatchWriter.WriteMatch(m)

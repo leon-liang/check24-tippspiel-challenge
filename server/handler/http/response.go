@@ -104,11 +104,11 @@ type Team struct {
 
 type matchResponse struct {
 	Match struct {
-		ID        string    `json:"id"`
-		HomeTeam  Team      `json:"homeTeam"`
-		AwayTeam  Team      `json:"awayTeam"`
-		GameTime  time.Time `json:"gameTime"`
-		UpdatedAt time.Time `json:"updatedAt"`
+		ID              string    `json:"id"`
+		HomeTeam        Team      `json:"homeTeam"`
+		AwayTeam        Team      `json:"awayTeam"`
+		GameTime        time.Time `json:"gameTime"`
+		ResultUpdatedAt time.Time `json:"resultUpdatedAt"`
 	} `json:"match"`
 }
 
@@ -131,7 +131,7 @@ func newMatchResponse(match model.Match) *matchResponse {
 	r.Match.HomeTeam = ht
 	r.Match.AwayTeam = at
 	r.Match.GameTime = match.GameTime
-	r.Match.UpdatedAt = match.UpdatedAt
+	r.Match.ResultUpdatedAt = match.ResultUpdatedAt
 
 	return r
 }

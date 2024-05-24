@@ -11,8 +11,8 @@ const useMatches = () => {
         const gameTime = DateTime.fromISO(
           match.match?.gameTime?.slice(0, -1) ?? "",
         ).toLocaleString(DateTime.DATETIME_MED);
-        const updatedAt = DateTime.fromISO(
-          match.match?.updatedAt?.slice(0, -1) ?? "",
+        const resultUpdatedAt = DateTime.fromISO(
+          match.match?.resultUpdatedAt?.slice(0, -1) ?? "",
         );
         return {
           id: match.match?.id ?? "",
@@ -25,7 +25,7 @@ const useMatches = () => {
             name: match.match?.awayTeam?.name ?? "",
             result: match.match?.awayTeam?.result,
           },
-          updatedAt: updatedAt,
+          resultUpdatedAt: resultUpdatedAt,
         };
       }) ?? []
     );

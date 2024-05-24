@@ -70,7 +70,7 @@ func (ms *MatchStore) UpdateMatchTeams(m *model.Match, homeTeam *model.Team, awa
 func (ms *MatchStore) UpdateMatchResults(m *model.Match, homeTeamResult *int, awayTeamResult *int) (err error) {
 	tx := ms.db.Begin()
 
-	if err := tx.Model(m).Update("HomeTeamResult", homeTeamResult).Update("AwayTeamResult", awayTeamResult).Error; err != nil {
+	if err := tx.Model(m).Update("HomeTeamResult", homeTeamResult).Update("AwayTeamResult", awayTeamResult).Update("ResultUpdatedAt", time.Now()).Error; err != nil {
 		tx.Rollback()
 		return err
 	}

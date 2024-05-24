@@ -616,7 +616,7 @@ const docTemplate = `{
                         "id": {
                             "type": "string"
                         },
-                        "updatedAt": {
+                        "resultUpdatedAt": {
                             "type": "string"
                         }
                     }
