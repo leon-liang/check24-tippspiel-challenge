@@ -97,7 +97,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
               <Input
                 required
                 name="homeTeamName"
-                displayName="Home Team Name *"
+                displayName="Home Team Name"
                 type="text"
               />
               <Input
@@ -112,7 +112,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
               <Input
                 required
                 name="awayTeamName"
-                displayName="Away Team Name *"
+                displayName="Away Team Name"
                 type="text"
               />
               <Input

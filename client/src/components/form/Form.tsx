@@ -70,7 +70,7 @@ export const Input = ({
   return (
     <fieldset className="flex flex-col items-start gap-1 rounded-[4px] border border-gray-6 bg-colors-gray-2 px-[10px] py-[8px] text-gray-11">
       <label className="w-full text-left text-xs text-gray-11" htmlFor={name}>
-        {displayName}
+        {displayName} <span className="text-red-11">{required ? "*" : ""}</span>
       </label>
       <input
         className="inline-flex h-[25px] w-full items-center justify-center rounded-[4px] border-none bg-colors-gray-2 text-[15px] leading-none text-gray-12 outline-none"

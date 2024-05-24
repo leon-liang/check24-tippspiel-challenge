@@ -80,7 +80,7 @@ const JoinCommunity = () => {
               <div className="flex flex-col gap-2">
                 <Input
                   required
-                  displayName="Community Tag *"
+                  displayName="Community Tag"
                   name="communityTag"
                   type="text"
                 />

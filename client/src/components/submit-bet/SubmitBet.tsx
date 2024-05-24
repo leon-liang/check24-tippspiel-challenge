@@ -113,13 +113,13 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
                 <Input
                   required
                   name="homeTeamScore"
-                  displayName={`${homeTeam.name}'s final score *`}
+                  displayName={`${homeTeam.name}'s final score`}
                   type="number"
                 />
                 <Input
                   required
                   name="awayTeamScore"
-                  displayName={`${awayTeam.name}'s final score *`}
+                  displayName={`${awayTeam.name}'s final score`}
                   type="number"
                 />
               </div>
