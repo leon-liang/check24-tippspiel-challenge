@@ -3,10 +3,14 @@ package kafka
 import (
 	"fmt"
 	"github.com/segmentio/kafka-go"
+	"os"
 )
 
 func NewConn(topic string) *kafka.Conn {
-	conn, err := kafka.Dial("tcp", "kafka:9092")
+	kafkaHost := os.Getenv("KAFKA_HOST")
+	kafkaPort := os.Getenv("KAFKA_PORT")
+
+	conn, err := kafka.Dial("tcp", kafkaHost+":"+kafkaPort)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -26,8 +30,11 @@ func NewConn(topic string) *kafka.Conn {
 }
 
 func NewWriter(topic string) *kafka.Writer {
+	kafkaHost := os.Getenv("KAFKA_HOST")
+	kafkaPort := os.Getenv("KAFKA_PORT")
+
 	writer := kafka.Writer{
-		Addr:                   kafka.TCP("kafka:9092"),
+		Addr:                   kafka.TCP(kafkaHost + ":" + kafkaPort),
 		Topic:                  topic,
 		Balancer:               &kafka.LeastBytes{},
 		AllowAutoTopicCreation: true,
@@ -37,8 +44,11 @@ func NewWriter(topic string) *kafka.Writer {
 }
 
 func NewReader(topic string) *kafka.Reader {
+	kafkaHost := os.Getenv("KAFKA_HOST")
+	kafkaPort := os.Getenv("KAFKA_PORT")
+
 	reader := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{"kafka:9092"},
+		Brokers:   []string{kafkaHost + ":" + kafkaPort},
 		Topic:     topic,
 		Partition: 0,
 		MinBytes:  1,
