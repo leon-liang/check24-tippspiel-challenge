@@ -32,7 +32,6 @@ const Form = <TFormValues extends FieldValues>({
   const submitHandler: SubmitHandler<TFormValues> = async (
     data: z.infer<typeof schema>,
   ) => {
-    methods.reset();
     await onSubmit(data);
   };
 

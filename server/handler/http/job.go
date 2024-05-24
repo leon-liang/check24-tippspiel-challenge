@@ -7,13 +7,13 @@ import (
 )
 
 // GetJob godoc
-// @Tag Jobs
+// @Tags Jobs
 // @Summary Retrieved specified job
 // @Accept json
 // @Produce json
 // @Success 200 {object} http.jobResponse
 // @Param job_name path string true "Job Name"
-// @Router /v1/job/{job_name} [GET]
+// @Router /v1/jobs/{job_name} [GET]
 // @Security OAuth2Implicit
 func (h *Handler) GetJob(ctx echo.Context) error {
 	jobName := ctx.Param("job_id")

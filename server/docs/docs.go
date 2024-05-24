@@ -326,7 +326,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/job/{job_name}": {
+        "/v1/jobs/{job_name}": {
             "get": {
                 "security": [
                     {
@@ -338,6 +338,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Jobs"
                 ],
                 "summary": "Retrieved specified job",
                 "parameters": [

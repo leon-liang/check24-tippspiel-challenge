@@ -34,14 +34,12 @@ interface UpdateMatchProps {
 
 const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
   const matchMutation = useUpdateMatch();
-  const calculatePointsMutation = useCalculatePoints();
 
   const defaultValues = {
     homeTeamName: match?.homeTeam.name,
     homeTeamResult: match?.homeTeam.result,
     awayTeamName: match?.awayTeam.name,
     awayTeamResult: match?.awayTeam.result,
-    recalculatePoints: false,
   };
 
   const FormSchema = z.object({
@@ -49,7 +47,6 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
     homeTeamResult: z.union([z.number().int(), z.nan()]).optional(),
     awayTeamName: z.string().optional(),
     awayTeamResult: z.union([z.number().int(), z.nan()]).optional(),
-    recalculatePoints: z.boolean(),
   });
 
   type FormData = z.infer<typeof FormSchema>;
@@ -63,10 +60,6 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
         awayTeamName: data.awayTeamName,
         awayTeamResult: data.awayTeamResult,
       });
-
-      if (data.recalculatePoints) {
-        await calculatePointsMutation.mutateAsync();
-      }
 
       toast({
         variant: "success",
@@ -129,7 +122,6 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
                 required={false}
               />
             </div>
-            <Switch name="recalculatePoints" displayName="Recalculate Points" />
             <div className="flex justify-end gap-4">
               <Button
                 type="button"
