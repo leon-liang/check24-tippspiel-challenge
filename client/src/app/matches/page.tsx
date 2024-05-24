@@ -9,10 +9,9 @@ import useMatches from "@/hooks/use-matches";
 import UpdateMatch from "@/components/update-match/UpdateMatch";
 import useMatchColumns from "@/hooks/use-match-columns";
 import Button from "@/components/button/Button";
-import useCalculatePointsJob from "@/hooks/use-jobs";
-import { DateTime } from "luxon";
 import { useCalculatePoints } from "@/hooks/api/points.api";
 import { toast } from "@/hooks/use-toast";
+import useIsPointsOutOfDate from "@/hooks/use-points";
 
 type Match = {
   id: string;
@@ -35,7 +34,7 @@ const Matches = () => {
 
   const calculatePointsMutation = useCalculatePoints();
   const matches = useMatches();
-  const calculatePointsJob = useCalculatePointsJob();
+  const isOutOfDate = useIsPointsOutOfDate();
   const matchColumns: Column<Match>[] = useMatchColumns();
 
   const selectedMatch = matches[selectedRow ?? 0];
@@ -47,12 +46,22 @@ const Matches = () => {
     setSelectedRow(selectedIndex);
   }
 
-  const calculatePointsJobLastUpdated =
-    calculatePointsJob?.updatedAt ?? DateTime.now();
-
-  const isOutOfDate =
-    matches.filter((match) => match.updatedAt > calculatePointsJobLastUpdated)
-      .length > 0;
+  async function onCalculatePointsClicked() {
+    try {
+      await calculatePointsMutation.mutateAsync();
+      toast({
+        variant: "success",
+        title: "Successfully initiated",
+        description: "The points will be recalculated shortly!",
+      });
+    } catch (e) {
+      toast({
+        variant: "error",
+        title: "Failed to update match",
+        description: "Please try again later!",
+      });
+    }
+  }
 
   return (
     <>
@@ -71,22 +80,7 @@ const Matches = () => {
             <Button
               className="text-xs"
               variant="outline"
-              onClick={async () => {
-                try {
-                  await calculatePointsMutation.mutateAsync();
-                  toast({
-                    variant: "success",
-                    title: "Successfully initiated",
-                    description: "The points will be recalculated shortly!",
-                  });
-                } catch (e) {
-                  toast({
-                    variant: "error",
-                    title: "Failed to update match",
-                    description: "Please try again later!",
-                  });
-                }
-              }}
+              onClick={onCalculatePointsClicked}
             >
               Calculate Points
             </Button>
