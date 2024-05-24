@@ -4,14 +4,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/sheet/Sheet";
-import Form, { Input, Switch } from "@/components/form/Form";
+import Form, { Input } from "@/components/form/Form";
 import Button from "@/components/button/Button";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import React, { Dispatch, SetStateAction } from "react";
 import { z } from "zod";
 import { useUpdateMatch } from "@/hooks/api/matches.api";
 import { toast } from "@/hooks/use-toast";
-import { useCalculatePoints } from "@/hooks/api/points.api";
 
 export type Match = {
   id: string;
