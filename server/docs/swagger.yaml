@@ -64,6 +64,16 @@ definitions:
             type: string
         type: object
     type: object
+  http.jobResponse:
+    properties:
+      job:
+        properties:
+          name:
+            type: string
+          updatedAt:
+            type: string
+        type: object
+    type: object
   http.matchResponse:
     properties:
       match:
@@ -75,6 +85,8 @@ definitions:
           homeTeam:
             $ref: '#/definitions/http.Team'
           id:
+            type: string
+          updatedAt:
             type: string
         type: object
     type: object
@@ -320,6 +332,26 @@ paths:
       summary: Retrieve all users that are part of a community
       tags:
       - Communities
+  /v1/job/{job_name}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Job Name
+        in: path
+        name: job_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.jobResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Retrieved specified job
   /v1/matches:
     get:
       produces:

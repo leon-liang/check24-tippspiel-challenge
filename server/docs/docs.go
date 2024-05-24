@@ -326,6 +326,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/job/{job_name}": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieved specified job",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Job Name",
+                        "name": "job_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.jobResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/matches": {
             "get": {
                 "security": [
@@ -541,6 +574,22 @@ const docTemplate = `{
                 }
             }
         },
+        "http.jobResponse": {
+            "type": "object",
+            "properties": {
+                "job": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "updatedAt": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "http.matchResponse": {
             "type": "object",
             "properties": {
@@ -557,6 +606,9 @@ const docTemplate = `{
                             "$ref": "#/definitions/http.Team"
                         },
                         "id": {
+                            "type": "string"
+                        },
+                        "updatedAt": {
                             "type": "string"
                         }
                     }

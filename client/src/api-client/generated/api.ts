@@ -195,6 +195,38 @@ export interface HttpCommunityResponseCommunity {
 /**
  *
  * @export
+ * @interface HttpJobResponse
+ */
+export interface HttpJobResponse {
+  /**
+   *
+   * @type {HttpJobResponseJob}
+   * @memberof HttpJobResponse
+   */
+  job?: HttpJobResponseJob;
+}
+/**
+ *
+ * @export
+ * @interface HttpJobResponseJob
+ */
+export interface HttpJobResponseJob {
+  /**
+   *
+   * @type {string}
+   * @memberof HttpJobResponseJob
+   */
+  name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HttpJobResponseJob
+   */
+  updatedAt?: string;
+}
+/**
+ *
+ * @export
  * @interface HttpMatchResponse
  */
 export interface HttpMatchResponse {
@@ -235,6 +267,12 @@ export interface HttpMatchResponseMatch {
    * @memberof HttpMatchResponseMatch
    */
   id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HttpMatchResponseMatch
+   */
+  updatedAt?: string;
 }
 /**
  *
@@ -1552,6 +1590,166 @@ export class CommunitiesApi extends BaseAPI {
   ) {
     return CommunitiesApiFp(this.configuration)
       .v1CommunitiesPost(data, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
+ * DefaultApi - axios parameter creator
+ * @export
+ */
+export const DefaultApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Retrieved specified job
+     * @param {string} jobName Job Name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1JobJobNameGet: async (
+      jobName: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'jobName' is not null or undefined
+      assertParamExists("v1JobJobNameGet", "jobName", jobName);
+      const localVarPath = `/v1/job/{job_name}`.replace(
+        `{${"job_name"}}`,
+        encodeURIComponent(String(jobName)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * DefaultApi - functional programming interface
+ * @export
+ */
+export const DefaultApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary Retrieved specified job
+     * @param {string} jobName Job Name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1JobJobNameGet(
+      jobName: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HttpJobResponse>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.v1JobJobNameGet(
+        jobName,
+        options,
+      );
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["DefaultApi.v1JobJobNameGet"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * DefaultApi - factory interface
+ * @export
+ */
+export const DefaultApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = DefaultApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary Retrieved specified job
+     * @param {string} jobName Job Name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1JobJobNameGet(
+      jobName: string,
+      options?: any,
+    ): AxiosPromise<HttpJobResponse> {
+      return localVarFp
+        .v1JobJobNameGet(jobName, options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * DefaultApi - object-oriented interface
+ * @export
+ * @class DefaultApi
+ * @extends {BaseAPI}
+ */
+export class DefaultApi extends BaseAPI {
+  /**
+   *
+   * @summary Retrieved specified job
+   * @param {string} jobName Job Name
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public v1JobJobNameGet(jobName: string, options?: RawAxiosRequestConfig) {
+    return DefaultApiFp(this.configuration)
+      .v1JobJobNameGet(jobName, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

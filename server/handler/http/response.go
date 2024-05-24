@@ -104,10 +104,11 @@ type Team struct {
 
 type matchResponse struct {
 	Match struct {
-		ID       string    `json:"id"`
-		HomeTeam Team      `json:"homeTeam"`
-		AwayTeam Team      `json:"awayTeam"`
-		GameTime time.Time `json:"gameTime"`
+		ID        string    `json:"id"`
+		HomeTeam  Team      `json:"homeTeam"`
+		AwayTeam  Team      `json:"awayTeam"`
+		GameTime  time.Time `json:"gameTime"`
+		UpdatedAt time.Time `json:"updatedAt"`
 	} `json:"match"`
 }
 
@@ -130,6 +131,7 @@ func newMatchResponse(match model.Match) *matchResponse {
 	r.Match.HomeTeam = ht
 	r.Match.AwayTeam = at
 	r.Match.GameTime = match.GameTime
+	r.Match.UpdatedAt = match.UpdatedAt
 
 	return r
 }
@@ -206,6 +208,22 @@ func newBetsResponse(bets []model.Bet) *betsResponse {
 	}
 
 	sort.Slice(r.Bets, sortByGameTime)
+
+	return r
+}
+
+type jobResponse struct {
+	Job struct {
+		Name      string    `json:"name"`
+		UpdatedAt time.Time `json:"updatedAt"`
+	} `json:"job"`
+}
+
+func newJobResponse(job model.Job) *jobResponse {
+	r := new(jobResponse)
+
+	r.Job.Name = job.Name
+	r.Job.UpdatedAt = job.UpdatedAt
 
 	return r
 }
