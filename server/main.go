@@ -57,6 +57,7 @@ func main() {
 	ms := store.NewMatchStore(d)
 	ts := store.NewTeamStore(d)
 	bs := store.NewBetStore(d)
+	js := store.NewJobStore(d)
 	mw := mq.NewMatchWriter(w)
 	pe := enqueuer.NewPointsEnqueuer()
 
@@ -79,7 +80,7 @@ func main() {
 		}
 	)
 
-	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *mw, *pe)
+	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *js, *mw, *pe)
 	wsHandler := websocket.NewHandler(upgrader, *ms, *mw)
 
 	r.GET("", httpHandler.GetRoot)

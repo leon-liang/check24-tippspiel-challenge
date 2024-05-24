@@ -36,6 +36,7 @@ func AutoMigrate(db *gorm.DB) {
 		&model.Match{},
 		&model.Team{},
 		&model.Bet{},
+		&model.Job{},
 	)
 
 	if err != nil {

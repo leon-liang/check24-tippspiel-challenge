@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import cn from "classnames";
 
 type ButtonProps = React.ComponentProps<"button"> & {
-  variant?: "action" | "mute";
+  variant?: "action" | "mute" | "outline";
 };
 const buttonVariants = cva(
   [
@@ -19,7 +19,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         action: "bg-colors-gray-12 text-white-A12 hover:bg-colors-gray-11",
-        mute: "bg-colors-indigo-3 text-grey-12 hover:bg-colors-indigo-4",
+        mute: "bg-colors-indigo-3 text-gray-12 hover:bg-colors-indigo-4",
+        outline:
+          "bg-colors-white-A12 text-gray-11 border border-gray-6 hover:bg-colors-gray-2",
       },
     },
     defaultVariants: {
