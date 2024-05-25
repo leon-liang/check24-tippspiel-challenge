@@ -21,7 +21,7 @@ const buttonVariants = cva(
         action: "bg-colors-gray-12 text-white-A12 hover:bg-colors-gray-11",
         mute: "bg-colors-indigo-3 text-gray-12 hover:bg-colors-indigo-4",
         outline:
-          "bg-colors-white-A12 text-gray-11 border border-gray-6 hover:bg-colors-gray-2",
+          "bg-colors-white-A12 text-gray-11 border border-gray-6 hover:bg-colors-gray-3",
       },
     },
     defaultVariants: {
