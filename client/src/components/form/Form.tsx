@@ -1,5 +1,9 @@
 import React, { PropsWithChildren } from "react";
+import * as SwitchPrimitive from "@radix-ui/react-switch";
 import {
+  Controller,
+  DefaultValues,
+  FieldValues,
   FormProvider,
   SubmitHandler,
   useForm,
@@ -8,30 +12,26 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-type FormSchema = z.Schema;
-type FormData = z.infer<FormSchema>;
-
-interface FormProps {
-  schema: FormSchema;
-  onSubmit: (data: FormData) => Promise<void>;
-  defaultValues?: Record<string, any>;
+interface FormProps<TFormValues> {
+  schema: z.Schema;
+  onSubmit: (data: TFormValues) => Promise<void>;
+  defaultValues?: DefaultValues<TFormValues>;
 }
 
-const Form = ({
+const Form = <TFormValues extends FieldValues>({
   schema,
   onSubmit,
   children,
   defaultValues,
-}: PropsWithChildren<FormProps>) => {
-  const methods = useForm<FormData>({
+}: PropsWithChildren<FormProps<TFormValues>>) => {
+  const methods = useForm<TFormValues>({
     defaultValues,
     resolver: zodResolver(schema),
   });
 
-  const submitHandler: SubmitHandler<FormData> = async (
+  const submitHandler: SubmitHandler<TFormValues> = async (
     data: z.infer<typeof schema>,
   ) => {
-    methods.reset();
     await onSubmit(data);
   };
 
@@ -64,13 +64,13 @@ export const Input = ({
 }: FormInputProps) => {
   const {
     register,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = useFormContext();
 
   return (
     <fieldset className="flex flex-col items-start gap-1 rounded-[4px] border border-gray-6 bg-colors-gray-2 px-[10px] py-[8px] text-gray-11">
       <label className="w-full text-left text-xs text-gray-11" htmlFor={name}>
-        {displayName}
+        {displayName} <span className="text-red-11">{required ? "*" : ""}</span>
       </label>
       <input
         className="inline-flex h-[25px] w-full items-center justify-center rounded-[4px] border-none bg-colors-gray-2 text-[15px] leading-none text-gray-12 outline-none"
@@ -83,6 +83,38 @@ export const Input = ({
         })}
         disabled={isSubmitting}
       />
+    </fieldset>
+  );
+};
+
+interface SwitchProps {
+  name: string;
+  displayName: string;
+}
+
+export const Switch = ({ name, displayName }: SwitchProps) => {
+  const { control } = useFormContext();
+
+  return (
+    <fieldset className="flex flex-row items-center gap-4">
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <SwitchPrimitive.Root
+            onCheckedChange={field.onChange}
+            checked={field.value}
+            className="relative h-[25px] w-[42px] cursor-pointer rounded-full bg-colors-black-A3 outline-none data-[state=checked]:bg-colors-green-10"
+            id={name}
+            {...field}
+          >
+            <SwitchPrimitive.Thumb className="block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-colors-white-A12 shadow-[0_2px_2px] shadow-black-A4 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+          </SwitchPrimitive.Root>
+        )}
+      />
+      <label className="text-left text-sm text-gray-11" htmlFor={name}>
+        {displayName}
+      </label>
     </fieldset>
   );
 };

@@ -16,7 +16,7 @@ type User struct {
 	CreatedCommunities []Community `gorm:"foreignKey:Owner"`
 	JoinedCommunities  []Community `gorm:"many2many:user_community;"`
 	Bets               []Bet       `gorm:"foreignKey:Bettor"`
-	Score              int         `gorm:"default:0"`
+	Points             int         `gorm:"default:0"`
 }
 
 type UserCommunity struct {

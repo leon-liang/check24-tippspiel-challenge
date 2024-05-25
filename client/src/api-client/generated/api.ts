@@ -47,26 +47,39 @@ import {
 export interface HttpBetResponse {
   /**
    *
-   * @type {number}
+   * @type {HttpBetResponseBet}
    * @memberof HttpBetResponse
+   */
+  bet?: HttpBetResponseBet;
+}
+/**
+ *
+ * @export
+ * @interface HttpBetResponseBet
+ */
+export interface HttpBetResponseBet {
+  /**
+   *
+   * @type {number}
+   * @memberof HttpBetResponseBet
    */
   awayTeam?: number;
   /**
    *
    * @type {number}
-   * @memberof HttpBetResponse
+   * @memberof HttpBetResponseBet
    */
   homeTeam?: number;
   /**
    *
    * @type {string}
-   * @memberof HttpBetResponse
+   * @memberof HttpBetResponseBet
    */
   id?: string;
   /**
    *
    * @type {HttpMatchResponse}
-   * @memberof HttpBetResponse
+   * @memberof HttpBetResponseBet
    */
   match?: HttpMatchResponse;
 }
@@ -195,6 +208,38 @@ export interface HttpCommunityResponseCommunity {
 /**
  *
  * @export
+ * @interface HttpJobResponse
+ */
+export interface HttpJobResponse {
+  /**
+   *
+   * @type {HttpJobResponseJob}
+   * @memberof HttpJobResponse
+   */
+  job?: HttpJobResponseJob;
+}
+/**
+ *
+ * @export
+ * @interface HttpJobResponseJob
+ */
+export interface HttpJobResponseJob {
+  /**
+   *
+   * @type {string}
+   * @memberof HttpJobResponseJob
+   */
+  name?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HttpJobResponseJob
+   */
+  updatedAt?: string;
+}
+/**
+ *
+ * @export
  * @interface HttpMatchResponse
  */
 export interface HttpMatchResponse {
@@ -235,6 +280,12 @@ export interface HttpMatchResponseMatch {
    * @memberof HttpMatchResponseMatch
    */
   id?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof HttpMatchResponseMatch
+   */
+  resultUpdatedAt?: string;
 }
 /**
  *
@@ -1557,6 +1608,164 @@ export class CommunitiesApi extends BaseAPI {
 }
 
 /**
+ * JobsApi - axios parameter creator
+ * @export
+ */
+export const JobsApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Retrieved specified job
+     * @param {string} jobName Job Name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1JobsJobNameGet: async (
+      jobName: string,
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'jobName' is not null or undefined
+      assertParamExists("v1JobsJobNameGet", "jobName", jobName);
+      const localVarPath = `/v1/jobs/{job_name}`.replace(
+        `{${"job_name"}}`,
+        encodeURIComponent(String(jobName)),
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * JobsApi - functional programming interface
+ * @export
+ */
+export const JobsApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = JobsApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary Retrieved specified job
+     * @param {string} jobName Job Name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1JobsJobNameGet(
+      jobName: string,
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<HttpJobResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1JobsJobNameGet(jobName, options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["JobsApi.v1JobsJobNameGet"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * JobsApi - factory interface
+ * @export
+ */
+export const JobsApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = JobsApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary Retrieved specified job
+     * @param {string} jobName Job Name
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1JobsJobNameGet(
+      jobName: string,
+      options?: any,
+    ): AxiosPromise<HttpJobResponse> {
+      return localVarFp
+        .v1JobsJobNameGet(jobName, options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * JobsApi - object-oriented interface
+ * @export
+ * @class JobsApi
+ * @extends {BaseAPI}
+ */
+export class JobsApi extends BaseAPI {
+  /**
+   *
+   * @summary Retrieved specified job
+   * @param {string} jobName Job Name
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof JobsApi
+   */
+  public v1JobsJobNameGet(jobName: string, options?: RawAxiosRequestConfig) {
+    return JobsApiFp(this.configuration)
+      .v1JobsJobNameGet(jobName, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
  * MatchesApi - axios parameter creator
  * @export
  */
@@ -1835,6 +2044,147 @@ export class MatchesApi extends BaseAPI {
   ) {
     return MatchesApiFp(this.configuration)
       .v1MatchesMatchIdPut(matchId, data, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+}
+
+/**
+ * PointsApi - axios parameter creator
+ * @export
+ */
+export const PointsApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Calculate points based on the current of the current match scores and bets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1PointsPut: async (
+      options: RawAxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/points`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "PUT",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication OAuth2Implicit required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        "OAuth2Implicit",
+        [],
+        configuration,
+      );
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+  };
+};
+
+/**
+ * PointsApi - functional programming interface
+ * @export
+ */
+export const PointsApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = PointsApiAxiosParamCreator(configuration);
+  return {
+    /**
+     *
+     * @summary Calculate points based on the current of the current match scores and bets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async v1PointsPut(
+      options?: RawAxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.v1PointsPut(options);
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+      const localVarOperationServerBasePath =
+        operationServerMap["PointsApi.v1PointsPut"]?.[
+          localVarOperationServerIndex
+        ]?.url;
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration,
+        )(axios, localVarOperationServerBasePath || basePath);
+    },
+  };
+};
+
+/**
+ * PointsApi - factory interface
+ * @export
+ */
+export const PointsApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = PointsApiFp(configuration);
+  return {
+    /**
+     *
+     * @summary Calculate points based on the current of the current match scores and bets
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    v1PointsPut(options?: any): AxiosPromise<void> {
+      return localVarFp
+        .v1PointsPut(options)
+        .then((request) => request(axios, basePath));
+    },
+  };
+};
+
+/**
+ * PointsApi - object-oriented interface
+ * @export
+ * @class PointsApi
+ * @extends {BaseAPI}
+ */
+export class PointsApi extends BaseAPI {
+  /**
+   *
+   * @summary Calculate points based on the current of the current match scores and bets
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof PointsApi
+   */
+  public v1PointsPut(options?: RawAxiosRequestConfig) {
+    return PointsApiFp(this.configuration)
+      .v1PointsPut(options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

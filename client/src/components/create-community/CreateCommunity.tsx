@@ -87,7 +87,7 @@ const CreateCommunity = () => {
                 <Input
                   required={true}
                   name="communityName"
-                  displayName="Community Name *"
+                  displayName="Community Name"
                   type="text"
                 />
               </div>

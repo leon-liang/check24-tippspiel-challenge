@@ -27,4 +27,12 @@ func (h *Handler) Register(v1 *echo.Group) {
 	bets := v1.Group("/bets")
 	bets.GET("", h.GetBets)
 	bets.PUT("/:bet_id", h.UpdateBet)
+
+	points := v1.Group("/points")
+	points.Use(authMiddleware.ValidatePermissions([]string{"admin:full"}))
+	points.PUT("", h.CalculatePoints)
+
+	jobs := v1.Group("/jobs")
+	jobs.Use(authMiddleware.ValidatePermissions([]string{"admin:full"}))
+	jobs.GET("/:job_name", h.GetJob)
 }

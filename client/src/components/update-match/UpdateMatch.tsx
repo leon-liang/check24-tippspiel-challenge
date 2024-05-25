@@ -32,7 +32,7 @@ interface UpdateMatchProps {
 }
 
 const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
-  const mutation = useUpdateMatch();
+  const matchMutation = useUpdateMatch();
 
   const defaultValues = {
     homeTeamName: match?.homeTeam.name,
@@ -52,7 +52,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      await mutation.mutateAsync({
+      await matchMutation.mutateAsync({
         matchId: match?.id ?? "",
         homeTeamName: data.homeTeamName,
         homeTeamResult: data.homeTeamResult,
@@ -96,7 +96,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
               <Input
                 required
                 name="homeTeamName"
-                displayName="Home Team Name *"
+                displayName="Home Team Name"
                 type="text"
               />
               <Input
@@ -111,7 +111,7 @@ const UpdateMatch = ({ open, setOpen, match }: UpdateMatchProps) => {
               <Input
                 required
                 name="awayTeamName"
-                displayName="Away Team Name *"
+                displayName="Away Team Name"
                 type="text"
               />
               <Input

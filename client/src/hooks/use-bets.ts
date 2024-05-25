@@ -12,25 +12,27 @@ const useBets = () => {
 
   return useMemo(() => {
     const betIndex = data?.data.bets?.findIndex((bet) => {
-      return bet.match?.match?.id === updatedMatch?.match.id;
+      return bet.bet?.match?.match?.id === updatedMatch?.match.id;
     });
 
     const updatedBets = data?.data.bets?.map((bet, index) => {
       return index === betIndex
         ? {
-            awayTeam: bet.awayTeam,
-            homeTeam: bet.homeTeam,
-            id: bet.id,
-            match: {
+            bet: {
+              awayTeam: bet.bet?.awayTeam,
+              homeTeam: bet.bet?.homeTeam,
+              id: bet.bet?.id,
               match: {
-                gameTime: bet.match?.match?.gameTime,
-                awayTeam: {
-                  name: updatedMatch?.match.awayTeam.name,
-                  result: updatedMatch?.match.awayTeam.result,
-                },
-                homeTeam: {
-                  name: updatedMatch?.match.homeTeam.name,
-                  result: updatedMatch?.match.homeTeam.result,
+                match: {
+                  gameTime: bet.bet?.match?.match?.gameTime,
+                  awayTeam: {
+                    name: updatedMatch?.match.awayTeam.name,
+                    result: updatedMatch?.match.awayTeam.result,
+                  },
+                  homeTeam: {
+                    name: updatedMatch?.match.homeTeam.name,
+                    result: updatedMatch?.match.homeTeam.result,
+                  },
                 },
               },
             },
@@ -40,21 +42,21 @@ const useBets = () => {
 
     const bets = updatedBets?.map((bet) => {
       const date = DateTime.fromISO(
-        bet.match?.match?.gameTime?.slice(0, -1) ?? "",
+        bet.bet?.match?.match?.gameTime?.slice(0, -1) ?? "",
       );
       const currentRound = rounds.find((round) => round.dates.contains(date));
 
       return {
-        betId: bet.id ?? "",
+        betId: bet.bet?.id ?? "",
         homeTeam: {
-          name: bet.match?.match?.homeTeam?.name,
-          bet: bet.homeTeam,
-          result: bet.match?.match?.homeTeam?.result,
+          name: bet.bet?.match?.match?.homeTeam?.name,
+          bet: bet.bet?.homeTeam,
+          result: bet.bet?.match?.match?.homeTeam?.result,
         },
         awayTeam: {
-          name: bet.match?.match?.awayTeam?.name,
-          bet: bet.awayTeam,
-          result: bet.match?.match?.awayTeam?.result,
+          name: bet.bet?.match?.match?.awayTeam?.name,
+          bet: bet.bet?.awayTeam,
+          result: bet.bet?.match?.match?.awayTeam?.result,
         },
         round: currentRound?.name as Round,
         date: date,

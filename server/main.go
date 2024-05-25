@@ -11,6 +11,8 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/http"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/seeds"
 	websocket "github.com/leon-liang/check24-tippspiel-challenge/server/handler/ws"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/jobs/enqueuer"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/jobs/worker"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/kafka"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/mq"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
@@ -38,6 +40,7 @@ func main() {
 	r := router.New()
 	r.GET("/swagger/*", echoSwagger.WrapHandler)
 
+	// Setup kafka
 	topic := "matches"
 	conn := kafka.NewConn(topic)
 	defer conn.Close()
@@ -45,6 +48,7 @@ func main() {
 	w := kafka.NewWriter(topic)
 	defer w.Close()
 
+	// Setup database
 	d := db.New()
 	db.AutoMigrate(d)
 
@@ -53,12 +57,21 @@ func main() {
 	ms := store.NewMatchStore(d)
 	ts := store.NewTeamStore(d)
 	bs := store.NewBetStore(d)
+	js := store.NewJobStore(d)
 	mw := mq.NewMatchWriter(w)
+	pe := enqueuer.NewPointsEnqueuer()
 
+	// Setup Workers
+	sw := worker.NewPointsWorkerPool(us, bs)
+	sw.WorkerPool.Start()
+	defer sw.WorkerPool.Stop()
+
+	// Setup Seeder
 	seedsHandler := seeds.NewHandler(*ms, *ts)
 	seedsHandler.SeedTeams()
 	seedsHandler.SeedMatches()
 
+	// Setup Websocket
 	var (
 		upgrader = gorillaWs.Upgrader{
 			CheckOrigin: func(r *netHttp.Request) bool {
@@ -67,7 +80,7 @@ func main() {
 		}
 	)
 
-	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *mw)
+	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *js, *mw, *pe)
 	wsHandler := websocket.NewHandler(upgrader, *ms, *mw)
 
 	r.GET("", httpHandler.GetRoot)

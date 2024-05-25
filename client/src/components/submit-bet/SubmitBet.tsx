@@ -35,8 +35,8 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
   const [open, setOpen] = React.useState(false);
 
   const FormSchema = z.object({
-    homeTeamScore: z.number().int(),
-    awayTeamScore: z.number().int(),
+    homeTeamScore: z.number().int().min(0),
+    awayTeamScore: z.number().int().min(0),
   });
   type FormData = z.infer<typeof FormSchema>;
 
@@ -104,7 +104,7 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
             </div>
           </SheetHeader>
           {homeTeam.name && awayTeam.name ? (
-            <Form
+            <Form<FormData>
               schema={FormSchema}
               onSubmit={onSubmit}
               defaultValues={defaultValues}
@@ -113,13 +113,13 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
                 <Input
                   required
                   name="homeTeamScore"
-                  displayName={`${homeTeam.name}'s final score *`}
+                  displayName={`${homeTeam.name}'s final score`}
                   type="number"
                 />
                 <Input
                   required
                   name="awayTeamScore"
-                  displayName={`${awayTeam.name}'s final score *`}
+                  displayName={`${awayTeam.name}'s final score`}
                   type="number"
                 />
               </div>
