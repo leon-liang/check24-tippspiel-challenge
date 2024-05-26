@@ -1,10 +1,12 @@
 package http
 
 import (
+	"errors"
 	"github.com/labstack/echo/v4"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/utils"
 	"net/http"
+	"time"
 )
 
 // GetBets godoc
@@ -66,6 +68,11 @@ func (h *Handler) UpdateBet(ctx echo.Context) error {
 
 	if b == nil {
 		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// Bet can't be placed if game has already started
+	if time.Now().Sub(b.Match.GameTime) >= 0 {
+		return ctx.JSON(http.StatusForbidden, utils.NewError(errors.New("bets can't be placed after game has started")))
 	}
 
 	// Bet can't be placed if HomeTeam or AwayTeam are undefined
