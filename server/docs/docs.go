@@ -694,6 +694,9 @@ const docTemplate = `{
                         "id": {
                             "type": "string"
                         },
+                        "pointsUpdatedAt": {
+                            "type": "string"
+                        },
                         "resultUpdatedAt": {
                             "type": "string"
                         }

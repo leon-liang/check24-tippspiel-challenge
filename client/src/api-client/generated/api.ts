@@ -269,6 +269,12 @@ export interface HttpMatchResponseMatch {
      * @type {string}
      * @memberof HttpMatchResponseMatch
      */
+    'pointsUpdatedAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HttpMatchResponseMatch
+     */
     'resultUpdatedAt'?: string;
 }
 /**

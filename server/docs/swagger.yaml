@@ -89,6 +89,8 @@ definitions:
             $ref: '#/definitions/http.Team'
           id:
             type: string
+          pointsUpdatedAt:
+            type: string
           resultUpdatedAt:
             type: string
         type: object
