@@ -13,10 +13,15 @@ interface GameViewProps {
   homeTeam: Team;
   awayTeam: Team;
   gameTime: DateTime;
+  currentDate: DateTime;
 }
 
-const GameView = ({ homeTeam, awayTeam, gameTime }: GameViewProps) => {
-  const currentDate = DateTime.now();
+const GameView = ({
+  homeTeam,
+  awayTeam,
+  gameTime,
+  currentDate,
+}: GameViewProps) => {
   // Maximum duration of a match is 120 min
   const gameDuration = Interval.fromDateTimes(
     gameTime,

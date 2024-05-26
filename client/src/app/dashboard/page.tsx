@@ -65,6 +65,7 @@ const Dashboard = () => {
                 homeTeam={match.homeTeam}
                 awayTeam={match.awayTeam}
                 date={match.date}
+                currentDate={currentDate}
               />
             ))}
           </div>
