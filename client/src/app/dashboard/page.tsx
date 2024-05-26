@@ -2,7 +2,7 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { getClosestDate } from "@/utils/date";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 import useBets from "@/hooks/use-bets";
 import SubmitBet from "@/components/submit-bet/SubmitBet";
 import React from "react";
@@ -17,9 +17,19 @@ const Dashboard = () => {
   const matchDates = bets.map((bet) => bet.date);
   const closestMatchDate = getClosestDate(currentDate, matchDates);
 
+  const currentMatches = bets.filter((bet) => {
+    const matchDuration = Interval.fromDateTimes(
+      bet.date,
+      bet.date.plus({ minute: 120 }),
+    );
+    return matchDuration.contains(currentDate);
+  });
+
   const upcomingMatches = bets.filter((bet) => {
     return bet.date.toISODate() == closestMatchDate?.toISODate();
   });
+
+  const matches = [...currentMatches, ...upcomingMatches];
 
   return (
     <>
@@ -48,7 +58,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="grid w-full gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-            {upcomingMatches.map((match, index) => (
+            {matches.map((match, index) => (
               <SubmitBet
                 key={index}
                 betId={match.betId}

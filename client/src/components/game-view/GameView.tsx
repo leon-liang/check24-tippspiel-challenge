@@ -16,16 +16,17 @@ interface GameViewProps {
 }
 
 const GameView = ({ homeTeam, awayTeam, gameTime }: GameViewProps) => {
-  const currentTime = DateTime.now();
+  const currentDate = DateTime.now();
+  // Maximum duration of a match is 120 min
   const gameDuration = Interval.fromDateTimes(
     gameTime,
-    gameTime.plus({ minute: 90 }),
+    gameTime.plus({ minute: 120 }),
   );
 
   return (
     <div className="w-full rounded-md border border-gray-6 bg-colors-white-A12 transition duration-200 hover:shadow-lg">
       <div className="flex flex-row items-center gap-3 rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
-        {gameDuration.contains(currentTime) ? (
+        {gameDuration.contains(currentDate) ? (
           <Tag
             text="Live"
             icon={<DotIcon width={12} height={12} stroke={colors.red["11"]} />}
