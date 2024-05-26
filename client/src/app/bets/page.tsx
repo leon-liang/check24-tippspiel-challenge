@@ -7,7 +7,7 @@ import BetsOverview from "@/components/bets-overview/BetsOverview";
 import { DateTime } from "luxon";
 import useRounds from "@/hooks/use-rounds";
 import useBets from "@/hooks/use-bets";
-import { useSubscribeMatchUpdate } from "@/hooks/api/matches.api";
+import { getClosestDate } from "@/utils/date";
 
 const Bets = () => {
   const [selectedRound, setSelectedRound] = useState("");
@@ -16,11 +16,13 @@ const Bets = () => {
 
   useEffect(() => {
     const currentDate = DateTime.now();
+    const matchDates = bets?.map((bet) => bet?.date) ?? [];
+    const closestMatchDate = getClosestDate(currentDate, matchDates);
     const currentRound = rounds.find((round) =>
-      round.dates.contains(currentDate),
+      round.dates.contains(closestMatchDate),
     );
     setSelectedRound(currentRound ? currentRound.name : "Match day 1");
-  }, [rounds]);
+  }, [bets, rounds]);
 
   return (
     <div>

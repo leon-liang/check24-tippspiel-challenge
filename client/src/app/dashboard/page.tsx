@@ -38,12 +38,14 @@ const Dashboard = () => {
       </Banner>
       <div className="px-[10%] py-6">
         <div className="flex flex-col gap-6">
-          <div
-            className="flex cursor-pointer flex-row items-center gap-2 underline-offset-2"
-            onClick={() => router.push("/bets")}
-          >
-            <h1 className="text-lg underline">Your Bets</h1>
-            <ExternalLinkIcon width={22} height={22} />
+          <div className="flex flex-row underline-offset-4">
+            <div
+              className="flex cursor-pointer flex-row items-center gap-2"
+              onClick={() => router.push("/bets")}
+            >
+              <h1 className="text-lg underline">Your Bets</h1>
+              <ExternalLinkIcon width={22} height={22} />
+            </div>
           </div>
           <div className="grid w-full gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
             {upcomingMatches.map((match, index) => (
