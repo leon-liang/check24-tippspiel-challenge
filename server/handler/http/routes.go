@@ -17,6 +17,8 @@ func (h *Handler) Register(v1 *echo.Group) {
 	communities.PUT("/:community_id/leave", h.LeaveCommunity)
 	communities.DELETE("/:community_id", h.DeleteCommunity)
 	communities.GET("/:community_id/members", h.GetCommunityMembers)
+	communities.PUT("/:community_id/pinned_users/:user_id", h.AddPinnedUser)
+	communities.DELETE("/:community_id/pinned_users/:user_id", h.RemovePinnedUser)
 
 	matches := v1.Group("/matches")
 	matches.GET("", h.GetMatches)

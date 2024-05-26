@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+	"fmt"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"gorm.io/gorm"
 	"sort"
@@ -168,4 +169,54 @@ func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*mo
 
 	members := append(community.Members, &owner)
 	return members, nil
+}
+
+func (cs *CommunityStore) AddPinnedUser(currentUser *model.User, user *model.User, community *model.Community) error {
+	var userCommunity model.UserCommunity
+	userCommunity.UserID = currentUser.ID
+	userCommunity.CommunityID = community.ID
+
+	if err := cs.db.Find(&userCommunity).Error; err != nil {
+		return err
+	}
+
+	userCommunity.PinnedUsers = append(userCommunity.PinnedUsers, *user)
+	if err := cs.db.Save(&userCommunity).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cs *CommunityStore) DeletePinnedUser(currentUser *model.User, user *model.User, community *model.Community) error {
+	var userCommunity model.UserCommunity
+	userCommunity.UserID = currentUser.ID
+	userCommunity.CommunityID = community.ID
+
+	if err := cs.db.Preload("PinnedUsers").First(&userCommunity).Error; err != nil {
+		return err
+	}
+
+	fmt.Println(userCommunity.PinnedUsers)
+
+	index := -1
+	for i, member := range userCommunity.PinnedUsers {
+		if member.ID == user.ID {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return errors.New("user is not part of the community")
+	}
+
+	userCommunity.PinnedUsers[index] = userCommunity.PinnedUsers[len(userCommunity.PinnedUsers)-1]
+	userCommunity.PinnedUsers = userCommunity.PinnedUsers[:len(userCommunity.PinnedUsers)-1]
+
+	if err := cs.db.Model(&userCommunity).Association("PinnedUsers").Replace(userCommunity.PinnedUsers); err != nil {
+		return err
+	}
+
+	return nil
 }
