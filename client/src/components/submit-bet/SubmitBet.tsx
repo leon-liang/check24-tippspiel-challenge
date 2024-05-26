@@ -72,13 +72,7 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
     <>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
-          <GameView
-            homeTeam={homeTeam}
-            awayTeam={awayTeam}
-            gameTime={date
-              .setLocale("en")
-              .toLocaleString(DateTime.TIME_24_SIMPLE)}
-          />
+          <GameView homeTeam={homeTeam} awayTeam={awayTeam} gameTime={date} />
         </SheetTrigger>
         <SheetContent>
           <SheetHeader className="flex flex-col gap-8">
