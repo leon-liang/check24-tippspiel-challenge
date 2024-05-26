@@ -92,7 +92,7 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
             {DateTime.now() >= date ? (
               <Alert
                 variant="warning"
-                message="Bet submission not possible, as the game has already started."
+                message="Bet submission only possible until the game starts."
               />
             ) : null}
             <div className="flex flex-col gap-6 text-sm text-gray-11">
