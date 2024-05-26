@@ -89,6 +89,12 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
                 message="Bet submission not yet possible, as the pairings for this game day are not known yet."
               />
             ) : null}
+            {DateTime.now() >= date ? (
+              <Alert
+                variant="warning"
+                message="Bet submission not possible, as the game has already started."
+              />
+            ) : null}
             <div className="flex flex-col gap-6 text-sm text-gray-11">
               <p>
                 Place your bet by predicting the final score of the game. Points
@@ -103,7 +109,7 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
               <p>Fields marked with * are required.</p>
             </div>
           </SheetHeader>
-          {homeTeam.name && awayTeam.name ? (
+          {DateTime.now() < date && homeTeam.name && awayTeam.name ? (
             <Form<FormData>
               schema={FormSchema}
               onSubmit={onSubmit}
