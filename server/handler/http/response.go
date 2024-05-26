@@ -109,6 +109,7 @@ type matchResponse struct {
 		AwayTeam        Team      `json:"awayTeam"`
 		GameTime        time.Time `json:"gameTime"`
 		ResultUpdatedAt time.Time `json:"resultUpdatedAt"`
+		PointsUpdatedAt time.Time `json:"pointsUpdatedAt"`
 	} `json:"match"`
 }
 

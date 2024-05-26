@@ -3,7 +3,6 @@ package http
 import (
 	"github.com/gocraft/work"
 	"github.com/labstack/echo/v4"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"math"
 	"net/http"
 	"time"
@@ -37,14 +36,6 @@ func (h *Handler) CalculatePoints(ctx echo.Context) error {
 	}
 
 	job, err := h.JobStore.GetByName(jobName)
-	if job == nil {
-		job := model.Job{
-			Name: jobName,
-		}
-		if err := h.JobStore.Create(&job); err != nil {
-			return ctx.JSON(http.StatusInternalServerError, err)
-		}
-	}
 
 	if err := h.JobStore.UpdateUpdatedAt(job, time.Now()); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, err)

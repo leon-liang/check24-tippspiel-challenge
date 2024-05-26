@@ -67,9 +67,10 @@ func main() {
 	defer sw.WorkerPool.Stop()
 
 	// Setup Seeder
-	seedsHandler := seeds.NewHandler(*ms, *ts)
+	seedsHandler := seeds.NewHandler(*ms, *ts, *js)
 	seedsHandler.SeedTeams()
 	seedsHandler.SeedMatches()
+	seedsHandler.SeedJobs()
 
 	// Setup Websocket
 	var (
