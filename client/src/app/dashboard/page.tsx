@@ -1,8 +1,36 @@
 "use client";
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
+import { getClosestDate } from "@/utils/date";
+import { DateTime, Interval } from "luxon";
+import useBets from "@/hooks/use-bets";
+import SubmitBet from "@/components/submit-bet/SubmitBet";
+import React from "react";
+import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
+  const router = useRouter();
+  const bets = useBets() ?? [];
+
+  const currentDate = DateTime.now();
+  const matchDates = bets.map((bet) => bet.date);
+  const closestMatchDate = getClosestDate(currentDate, matchDates);
+
+  const currentMatches = bets.filter((bet) => {
+    const matchDuration = Interval.fromDateTimes(
+      bet.date,
+      bet.date.plus({ minute: 120 }),
+    );
+    return matchDuration.contains(currentDate);
+  });
+
+  const upcomingMatches = bets.filter((bet) => {
+    return bet.date.toISODate() == closestMatchDate?.toISODate();
+  });
+
+  const matches = [...currentMatches, ...upcomingMatches];
+
   return (
     <>
       <Banner>
@@ -18,6 +46,31 @@ const Dashboard = () => {
           </p>
         </BannerContent>
       </Banner>
+      <div className="px-[10%] py-6">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-row underline-offset-4">
+            <div
+              className="flex cursor-pointer flex-row items-center gap-2"
+              onClick={() => router.push("/bets")}
+            >
+              <h1 className="text-lg underline">Your Bets</h1>
+              <ExternalLinkIcon width={22} height={22} />
+            </div>
+          </div>
+          <div className="grid w-full gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+            {matches.map((match, index) => (
+              <SubmitBet
+                key={index}
+                betId={match.betId}
+                homeTeam={match.homeTeam}
+                awayTeam={match.awayTeam}
+                date={match.date}
+                currentDate={currentDate}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
     </>
   );
 };

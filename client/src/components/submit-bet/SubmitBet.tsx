@@ -26,10 +26,17 @@ interface SubmitBetProps {
   betId: string;
   homeTeam: Team;
   awayTeam: Team;
+  currentDate: DateTime;
   date: DateTime;
 }
 
-const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
+const SubmitBet = ({
+  betId,
+  homeTeam,
+  awayTeam,
+  currentDate,
+  date,
+}: SubmitBetProps) => {
   const mutation = useUpdateBet();
 
   const [open, setOpen] = React.useState(false);
@@ -75,9 +82,8 @@ const SubmitBet = ({ betId, homeTeam, awayTeam, date }: SubmitBetProps) => {
           <GameView
             homeTeam={homeTeam}
             awayTeam={awayTeam}
-            gameTime={date
-              .setLocale("en")
-              .toLocaleString(DateTime.TIME_24_SIMPLE)}
+            gameTime={date}
+            currentDate={currentDate}
           />
         </SheetTrigger>
         <SheetContent>

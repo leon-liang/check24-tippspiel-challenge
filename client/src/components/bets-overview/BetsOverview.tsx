@@ -39,12 +39,12 @@ interface BetOverviewProps {
 }
 
 const BetsOverview = ({ bets }: BetOverviewProps) => {
+  const currentDate = DateTime.now();
   const dates = [...new Set(bets.map((bet) => bet.date.toISODate() ?? ""))];
 
   const [selectedTab, setSelectedTab] = useState(dates[0]);
 
   useEffect(() => {
-    const currentDate = DateTime.now();
     const matchDates = dates.map((date) => DateTime.fromISO(date));
 
     setSelectedTab(getClosestDate(currentDate, matchDates)?.toISODate() ?? "");
@@ -75,6 +75,7 @@ const BetsOverview = ({ bets }: BetOverviewProps) => {
                   homeTeam={bet.homeTeam}
                   awayTeam={bet.awayTeam}
                   date={bet.date}
+                  currentDate={currentDate}
                 />
               ))}
           </div>
