@@ -35,39 +35,14 @@ func (cs *CommunityStore) Join(user *model.User, community *model.Community) (er
 func (cs *CommunityStore) Delete(user *model.User, community *model.Community) (err error) {
 	tx := cs.db.Begin()
 
-	// TODO: Use FindInBatches
-	// Delete community from each member's joined communities
-	if err := cs.db.Preload("Members").First(&community).Error; err != nil {
+	query := `
+		DELETE FROM community_members 
+		WHERE community_id = ?
+	`
+
+	if err := cs.db.Exec(query, community.ID).Error; err != nil {
 		tx.Rollback()
 		return err
-	}
-
-	for _, member := range community.Members {
-		if err := cs.db.Preload("JoinedCommunities").First(&member).Error; err != nil {
-			tx.Rollback()
-			return err
-		}
-
-		index := -1
-		for i, joinedCommunity := range member.JoinedCommunities {
-			if joinedCommunity.ID == community.ID {
-				index = i
-				break
-			}
-		}
-
-		if index == -1 {
-			tx.Rollback()
-			return errors.New("user is not part of the community")
-		}
-
-		member.JoinedCommunities[index] = member.JoinedCommunities[len(member.JoinedCommunities)-1]
-		member.JoinedCommunities = member.JoinedCommunities[:len(member.JoinedCommunities)-1]
-
-		if err := cs.db.Model(&member).Association("JoinedCommunities").Replace(member.JoinedCommunities); err != nil {
-			tx.Rollback()
-			return err
-		}
 	}
 
 	// Delete community from CreatedCommunities
