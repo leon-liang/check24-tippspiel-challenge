@@ -17,6 +17,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	communities.PUT("/:community_id/leave", h.LeaveCommunity)
 	communities.DELETE("/:community_id", h.DeleteCommunity)
 	communities.GET("/:community_id/members", h.GetCommunityMembers)
+	communities.GET("/:community_id/preview", h.GetCommunityPreview)
 	communities.PUT("/:community_id/pinned_users/:user_id", h.AddPinnedUser)
 	communities.DELETE("/:community_id/pinned_users/:user_id", h.RemovePinnedUser)
 

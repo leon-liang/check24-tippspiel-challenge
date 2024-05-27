@@ -116,6 +116,7 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 
 	currentUser := ctx.Get("current_user").(*model.User)
 
+	// TODO: Leverage SQL
 	// Check if the user is already a member of the community
 	for _, member := range members {
 		if member.ID == currentUser.ID {
@@ -219,6 +220,7 @@ func (h *Handler) DeleteCommunity(ctx echo.Context) error {
 // @Router /v1/communities/{community_id}/members [GET]
 // @Security OAuth2Implicit
 func (h *Handler) GetCommunityMembers(ctx echo.Context) error {
+	// TODO: Rework this
 	communityId := ctx.Param("community_id")
 
 	community, err := h.CommunityStore.GetCommunityById(communityId)
@@ -238,82 +240,6 @@ func (h *Handler) GetCommunityMembers(ctx echo.Context) error {
 	}
 
 	response := newUsersResponse(users)
-	return ctx.JSON(http.StatusOK, &response)
-}
-
-// AddPinnedUser godoc
-// @Tags Communities
-// @Summary Add specified user to the pinned users for a given community
-// @Produce json
-// @Success 200 {object} http.communityResponse
-// @Param community_id path string true "Community ID"
-// @Param user_id path string true "User ID"
-// @Router /v1/communities/{community_id}/pinned_users/{user_id} [PUT]
-// @Security OAuth2Implicit
-func (h *Handler) AddPinnedUser(ctx echo.Context) error {
-	communityId := ctx.Param("community_id")
-	userId := ctx.Param("user_id")
-	currentUser := ctx.Get("current_user").(*model.User)
-
-	community, err := h.CommunityStore.GetCommunityById(communityId)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-
-	if community == nil {
-		return ctx.JSON(http.StatusNotFound, utils.NotFound())
-	}
-
-	user, err := h.UserStore.GetById(userId)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	if user == nil {
-		return ctx.JSON(http.StatusNotFound, utils.NotFound())
-	}
-
-	if err := h.UserCommunityStore.AddPinnedUser(currentUser, user, community); err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-
-	response := newCommunityResponse(community)
-	return ctx.JSON(http.StatusOK, &response)
-}
-
-// RemovePinnedUser godoc
-// @Tags Communities
-// @Summary Remove specified user from the pinned users for a given community
-// @Produce json
-// @Success 200 {object} http.communityResponse
-// @Param community_id path string true "Community ID"
-// @Param user_id path string true "User ID"
-// @Router /v1/communities/{community_id}/pinned_users/{user_id} [DELETE]
-// @Security OAuth2Implicit
-func (h *Handler) RemovePinnedUser(ctx echo.Context) error {
-	communityId := ctx.Param("community_id")
-	userId := ctx.Param("user_id")
-	currentUser := ctx.Get("current_user").(*model.User)
-
-	community, err := h.CommunityStore.GetCommunityById(communityId)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	if community == nil {
-		return ctx.JSON(http.StatusNotFound, utils.NotFound())
-	}
-
-	user, err := h.UserStore.GetById(userId)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	if user == nil {
-		return ctx.JSON(http.StatusNotFound, utils.NotFound())
-	}
-
-	if err := h.UserCommunityStore.DeletePinnedUser(currentUser, user, community); err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	response := newCommunityResponse(community)
 	return ctx.JSON(http.StatusOK, &response)
 }
 
@@ -338,6 +264,7 @@ func (h *Handler) GetCommunityPreview(ctx echo.Context) error {
 	}
 
 	// Verify that the user is part of the community
+	// TODO: Leverage SQL to handle this
 	members, err := h.CommunityStore.GetCommunityMembers(community)
 
 	index := -1
@@ -352,10 +279,19 @@ func (h *Handler) GetCommunityPreview(ctx echo.Context) error {
 		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
 	}
 
+	// If there are less than 7 users in the community return all members
+
 	// Get position of current user
+	pos, err := h.CommunityStore.GetUserPosition(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
 
 	// If current user is in the top 4 positions:
 	// Return top 6 positions + last position
+	if pos <= 4 {
+
+	}
 
 	// If current user is in the last 2 positions:
 	// Return last 4 positions + top 3 positions
