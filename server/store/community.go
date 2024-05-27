@@ -107,9 +107,15 @@ func (cs *CommunityStore) Delete(user *model.User, community *model.Community) (
 
 func (cs *CommunityStore) IsMember(user *model.User, community *model.Community) (bool, error) {
 	var isMember bool
-	query := ``
+	query := `
+		SELECT EXISTS (
+			SELECT 1
+			FROM community_members
+			WHERE community_id = ? AND user_id = ?
+		)
+	`
 
-	if err := cs.db.Raw(query).Scan(isMember).Error; err != nil {
+	if err := cs.db.Raw(query, community.ID, user.ID).Scan(&isMember).Error; err != nil {
 		return false, err
 	}
 

@@ -109,19 +109,13 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
 	}
 
-	// TODO: Leverage SQL
 	// Check if the user is already a member of the community
-
-	members, err := h.CommunityStore.GetCommunityMembers(community)
-
+	isMember, err := h.CommunityStore.IsMember(currentUser, community)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
-
-	for _, member := range members {
-		if member.ID == currentUser.ID {
-			return ctx.JSON(http.StatusInternalServerError, "user is already a member of the community")
-		}
+	if isMember {
+		return ctx.JSON(http.StatusInternalServerError, "user is already a member of the community")
 	}
 
 	// Check if the user is the owner of the community
@@ -232,18 +226,8 @@ func (h *Handler) GetCommunityPreview(ctx echo.Context) error {
 	}
 
 	// Verify that the user is part of the community
-	// TODO: Leverage SQL to handle this
-	members, err := h.CommunityStore.GetCommunityMembers(community)
-
-	index := -1
-	for i, member := range members {
-		if member.ID == currentUser.ID {
-			index = i
-			break
-		}
-	}
-
-	if index == -1 {
+	isMember, err := h.CommunityStore.IsMember(currentUser, community)
+	if !isMember {
 		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
 	}
 
