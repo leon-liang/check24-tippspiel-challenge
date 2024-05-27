@@ -14,7 +14,7 @@ type User struct {
 	LastName           string
 	CreatedAt          time.Time
 	CreatedCommunities []Community `gorm:"foreignKey:Owner"`
-	JoinedCommunities  []Community `gorm:"many2many:user_community;"`
+	JoinedCommunities  []Community `gorm:"many2many:community_members;"`
 	Bets               []Bet       `gorm:"foreignKey:Bettor"`
 	Points             int         `gorm:"default:0"`
 }
