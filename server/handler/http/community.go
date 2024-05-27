@@ -256,13 +256,57 @@ func (h *Handler) GetCommunityPreview(ctx echo.Context) error {
 	// If current user is in the top 4 positions:
 	// Return top 6 positions + last position
 	if pos <= 4 {
+		topSix, err := h.CommunityStore.GetMembersAtPosition(community, 1, 6)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+		last, err := h.CommunityStore.GetMembersAtPosition(community, count, count)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
 
+		members := append(topSix, last...)
+		response := newCommunityPreviewResponse(members)
+		return ctx.JSON(http.StatusOK, response)
 	}
 
 	// If current user is in the last 2 positions:
 	// Return last 4 positions + top 3 positions
+	if pos-count < 2 {
+		topThree, err := h.CommunityStore.GetMembersAtPosition(community, 1, 3)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+		lastFour, err := h.CommunityStore.GetMembersAtPosition(community, count-3, count)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+
+		members := append(topThree, lastFour...)
+		response := newCommunityPreviewResponse(members)
+		return ctx.JSON(http.StatusOK, response)
+	}
 
 	// Otherwise:
 	// Return top 3 positions, n-1, n (current user position), n+1 and last position
-	return nil
+	topThree, err := h.CommunityStore.GetMembersAtPosition(community, 1, 3)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	adjacentToUser, err := h.CommunityStore.GetMembersAtPosition(community, pos-1, pos+1)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	last, err := h.CommunityStore.GetMembersAtPosition(community, count, count)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	members := append(topThree, adjacentToUser...)
+	members = append(members, last...)
+
+	response := newCommunityPreviewResponse(members)
+	return ctx.JSON(http.StatusOK, response)
 }

@@ -236,3 +236,37 @@ func (cs *CommunityStore) GetUserRank(user *model.User, community *model.Communi
 
 	return rank, nil
 }
+
+func (cs *CommunityStore) GetMembersAtPosition(community *model.Community, from int, to int) ([]*dtos.Member, error) {
+	var members []*dtos.Member
+
+	query := `
+		WITH members AS (
+			SELECT u.*
+			FROM users u
+			INNER JOIN community_members cm
+			ON u.id = cm.user_id
+			WHERE cm.community_id = ?
+			
+			UNION
+		
+			SELECT u.*
+			FROM users u
+			INNER JOIN communities c
+			ON u.id = c.owner
+			WHERE c.id = ?
+		),
+		ranked_members AS (
+			SELECT m.*, 
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS rank
+			FROM members m
+		)
+		SELECT * FROM ranked_members
+		WHERE rank BETWEEN ? AND ?
+	`
+	if err := cs.db.Raw(query, community.ID, community.ID, from, to).Scan(&members).Error; err != nil {
+		return nil, err
+	}
+
+	return members, nil
+}
