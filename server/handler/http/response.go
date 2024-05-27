@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/leon-liang/check24-tippspiel-challenge/server/dtos"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"sort"
 	"time"
@@ -24,6 +25,7 @@ type userResponse struct {
 		Email     string `json:"email"`
 		FirstName string `json:"firstName"`
 		LastName  string `json:"lastName"`
+		Points    int    `json:"points"`
 	} `json:"user"`
 }
 
@@ -34,7 +36,7 @@ func newUserResponse(u *model.User) *userResponse {
 	r.User.Email = u.Email
 	r.User.FirstName = u.FirstName
 	r.User.LastName = u.LastName
-
+	r.User.Points = u.Points
 	return r
 }
 
@@ -92,6 +94,27 @@ func newCommunitiesResponse(communities []model.Community) *communitiesResponse 
 		cr.Community.Name = c.Name
 
 		r.Communities = append(r.Communities, cr)
+	}
+
+	return r
+}
+
+type communityPreviewResponse struct {
+	Members []dtos.Member `json:"members"`
+}
+
+func newCommunityPreviewResponse(members []*dtos.Member) *communityPreviewResponse {
+	r := new(communityPreviewResponse)
+	m := dtos.Member{}
+
+	r.Members = make([]dtos.Member, 0)
+	for _, member := range members {
+		m.ID = member.ID
+		m.Username = member.Username
+		m.Points = member.Points
+		m.Rank = member.Rank
+
+		r.Members = append(r.Members, m)
 	}
 
 	return r

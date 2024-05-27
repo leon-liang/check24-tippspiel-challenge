@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/dtos"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"gorm.io/gorm"
 	"sort"
@@ -158,23 +159,8 @@ func (cs *CommunityStore) GetUserCommunities(user *model.User) ([]model.Communit
 	return communities, nil
 }
 
-func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*model.User, error) {
-	var owner model.User
-
-	if err := cs.db.Find(&owner, "id = ?", community.Owner).Error; err != nil {
-		return nil, err
-	}
-
-	if err := cs.db.Preload("Members").First(&community).Error; err != nil {
-		return nil, err
-	}
-
-	members := append(community.Members, &owner)
-	return members, nil
-}
-
-func (cs *CommunityStore) GetUserPosition(user *model.User, community *model.Community) (int, error) {
-	var position int
+func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*dtos.Member, error) {
+	var members []*dtos.Member
 
 	query := `
 		WITH members AS (
@@ -194,17 +180,80 @@ func (cs *CommunityStore) GetUserPosition(user *model.User, community *model.Com
 		),
 		ranked_members AS (
 			SELECT m.*, 
-			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS position
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS rank
 			FROM members m
 		)
-		SELECT position
+		SELECT * FROM ranked_members
+	`
+
+	if err := cs.db.Raw(query, community.ID, community.ID).Scan(&members).Error; err != nil {
+		return nil, err
+	}
+
+	return members, nil
+}
+
+func (cs *CommunityStore) CountCommunityMembers(community *model.Community) (int, error) {
+	var count int
+
+	query := `
+		WITH members AS (
+			SELECT u.*
+			FROM users u
+			INNER JOIN community_members cm
+			ON u.id = cm.user_id
+			WHERE cm.community_id = ?
+			
+			UNION
+		
+			SELECT u.*
+			FROM users u
+			INNER JOIN communities c
+			ON u.id = c.owner
+			WHERE c.id = ?
+		)
+		SELECT COUNT(*) FROM members
+	`
+
+	if err := cs.db.Raw(query, community.ID, community.ID).Scan(&count).Error; err != nil {
+		return -1, err
+	}
+
+	return count, nil
+}
+
+func (cs *CommunityStore) GetUserRank(user *model.User, community *model.Community) (int, error) {
+	var rank int
+
+	query := `
+		WITH members AS (
+			SELECT u.*
+			FROM users u
+			INNER JOIN community_members cm
+			ON u.id = cm.user_id
+			WHERE cm.community_id = ?
+			
+			UNION
+		
+			SELECT u.*
+			FROM users u
+			INNER JOIN communities c
+			ON u.id = c.owner
+			WHERE c.id = ?
+		),
+		ranked_members AS (
+			SELECT m.*, 
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS rank
+			FROM members m
+		)
+		SELECT rank
 		FROM ranked_members
 		WHERE id = ?;
 	`
 
-	if err := cs.db.Raw(query, community.ID, community.ID, user.ID).Scan(&position).Error; err != nil {
+	if err := cs.db.Raw(query, community.ID, community.ID, user.ID).Scan(&rank).Error; err != nil {
 		return -1, err
 	}
 
-	return position, nil
+	return rank, nil
 }

@@ -211,38 +211,6 @@ func (h *Handler) DeleteCommunity(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, &response)
 }
 
-// GetCommunityMembers godoc
-// @Tags Communities
-// @Summary Retrieve all users that are part of a community
-// @Produce json
-// @Success 200 {object} http.communitiesResponse
-// @Param community_id path string true "Community ID"
-// @Router /v1/communities/{community_id}/members [GET]
-// @Security OAuth2Implicit
-func (h *Handler) GetCommunityMembers(ctx echo.Context) error {
-	// TODO: Rework this
-	communityId := ctx.Param("community_id")
-
-	community, err := h.CommunityStore.GetCommunityById(communityId)
-
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-
-	if community == nil {
-		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
-	}
-
-	users, err := h.CommunityStore.GetCommunityMembers(community)
-
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-
-	response := newUsersResponse(users)
-	return ctx.JSON(http.StatusOK, &response)
-}
-
 // GetCommunityPreview godoc
 // @Tags Communities
 // @Summary Get Preview of the specified community
@@ -280,9 +248,23 @@ func (h *Handler) GetCommunityPreview(ctx echo.Context) error {
 	}
 
 	// If there are less than 7 users in the community return all members
+	count, err := h.CommunityStore.CountCommunityMembers(community)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
 
-	// Get position of current user
-	pos, err := h.CommunityStore.GetUserPosition(currentUser, community)
+	if count <= 7 {
+		members, err := h.CommunityStore.GetCommunityMembers(community)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+
+		response := newCommunityPreviewResponse(members)
+		return ctx.JSON(http.StatusOK, response)
+	}
+
+	// Get rank of current user
+	pos, err := h.CommunityStore.GetUserRank(currentUser, community)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
