@@ -99,6 +99,7 @@ func (h *Handler) GetUserCommunities(ctx echo.Context) error {
 func (h *Handler) JoinCommunity(ctx echo.Context) error {
 	communityId := ctx.Param("community_id")
 	community, err := h.CommunityStore.GetCommunityById(communityId)
+	currentUser := ctx.Get("current_user").(*model.User)
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
@@ -108,16 +109,15 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
 	}
 
+	// TODO: Leverage SQL
+	// Check if the user is already a member of the community
+
 	members, err := h.CommunityStore.GetCommunityMembers(community)
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	currentUser := ctx.Get("current_user").(*model.User)
-
-	// TODO: Leverage SQL
-	// Check if the user is already a member of the community
 	for _, member := range members {
 		if member.ID == currentUser.ID {
 			return ctx.JSON(http.StatusInternalServerError, "user is already a member of the community")
@@ -248,7 +248,7 @@ func (h *Handler) GetCommunityPreview(ctx echo.Context) error {
 	}
 
 	// If there are less than 7 users in the community return all members
-	count, err := h.CommunityStore.CountCommunityMembers(community)
+	count, err := h.CommunityStore.GetCommunityMembersCount(community)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}

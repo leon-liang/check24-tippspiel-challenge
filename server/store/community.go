@@ -105,25 +105,24 @@ func (cs *CommunityStore) Delete(user *model.User, community *model.Community) (
 	return tx.Commit().Error
 }
 
+func (cs *CommunityStore) IsMember(user *model.User, community *model.Community) (bool, error) {
+	var isMember bool
+	query := ``
+
+	if err := cs.db.Raw(query).Scan(isMember).Error; err != nil {
+		return false, err
+	}
+
+	return isMember, nil
+}
+
 func (cs *CommunityStore) Leave(user *model.User, community *model.Community) (err error) {
-	// TODO: Leverage SQL for the following
-	index := -1
+	query := `
+		DELETE FROM community_members 
+		WHERE community_id = ? AND user_id = ?
+	`
 
-	for i, member := range community.Members {
-		if member.ID == user.ID {
-			index = i
-			break
-		}
-	}
-
-	if index == -1 {
-		return errors.New("user is not part of the community")
-	}
-
-	community.Members[index] = community.Members[len(community.Members)-1]
-	community.Members = community.Members[:len(community.Members)-1]
-
-	if err := cs.db.Model(&community).Association("Members").Replace(community.Members); err != nil {
+	if err := cs.db.Exec(query, community.ID, user.ID).Error; err != nil {
 		return err
 	}
 
@@ -133,8 +132,7 @@ func (cs *CommunityStore) Leave(user *model.User, community *model.Community) (e
 func (cs *CommunityStore) GetCommunityById(id string) (*model.Community, error) {
 	var community model.Community
 
-	// TODO: Don't Preload members
-	err := cs.db.Preload("Members").Where(&model.Community{ID: id}).First(&community).Error
+	err := cs.db.Where(&model.Community{ID: id}).First(&community).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -193,7 +191,7 @@ func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*dt
 	return members, nil
 }
 
-func (cs *CommunityStore) CountCommunityMembers(community *model.Community) (int, error) {
+func (cs *CommunityStore) GetCommunityMembersCount(community *model.Community) (int, error) {
 	var count int
 
 	query := `
