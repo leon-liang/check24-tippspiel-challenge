@@ -2,7 +2,6 @@ package store
 
 import (
 	"errors"
-	"fmt"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"gorm.io/gorm"
 )
@@ -42,8 +41,6 @@ func (ucs *UserCommunityStore) DeletePinnedUser(currentUser *model.User, user *m
 	if err := ucs.db.Preload("PinnedUsers").First(&userCommunity).Error; err != nil {
 		return err
 	}
-
-	fmt.Println(userCommunity.PinnedUsers)
 
 	index := -1
 	for i, member := range userCommunity.PinnedUsers {
