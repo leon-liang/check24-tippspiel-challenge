@@ -7,25 +7,27 @@ import (
 )
 
 type Handler struct {
-	UserStore      store.UserStore
-	CommunityStore store.CommunityStore
-	MatchStore     store.MatchStore
-	TeamStore      store.TeamStore
-	BetStore       store.BetStore
-	JobStore       store.JobStore
-	MatchWriter    mq.MatchWriter
-	PointsEnqueuer enqueuer.PointsEnqueuer
+	UserStore          store.UserStore
+	CommunityStore     store.CommunityStore
+	UserCommunityStore store.UserCommunityStore
+	MatchStore         store.MatchStore
+	TeamStore          store.TeamStore
+	BetStore           store.BetStore
+	JobStore           store.JobStore
+	MatchWriter        mq.MatchWriter
+	PointsEnqueuer     enqueuer.PointsEnqueuer
 }
 
-func NewHandler(us store.UserStore, cs store.CommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore, js store.JobStore, mw mq.MatchWriter, pe enqueuer.PointsEnqueuer) *Handler {
+func NewHandler(us store.UserStore, cs store.CommunityStore, ucs store.UserCommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore, js store.JobStore, mw mq.MatchWriter, pe enqueuer.PointsEnqueuer) *Handler {
 	return &Handler{
-		UserStore:      us,
-		CommunityStore: cs,
-		MatchStore:     ms,
-		TeamStore:      ts,
-		BetStore:       bs,
-		JobStore:       js,
-		MatchWriter:    mw,
-		PointsEnqueuer: pe,
+		UserStore:          us,
+		CommunityStore:     cs,
+		UserCommunityStore: ucs,
+		MatchStore:         ms,
+		TeamStore:          ts,
+		BetStore:           bs,
+		JobStore:           js,
+		MatchWriter:        mw,
+		PointsEnqueuer:     pe,
 	}
 }

@@ -272,7 +272,7 @@ func (h *Handler) AddPinnedUser(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNotFound, utils.NotFound())
 	}
 
-	if err := h.CommunityStore.AddPinnedUser(currentUser, user, community); err != nil {
+	if err := h.UserCommunityStore.AddPinnedUser(currentUser, user, community); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
@@ -310,9 +310,57 @@ func (h *Handler) RemovePinnedUser(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNotFound, utils.NotFound())
 	}
 
-	if err := h.CommunityStore.DeletePinnedUser(currentUser, user, community); err != nil {
+	if err := h.UserCommunityStore.DeletePinnedUser(currentUser, user, community); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 	response := newCommunityResponse(community)
 	return ctx.JSON(http.StatusOK, &response)
+}
+
+// GetCommunityPreview godoc
+// @Tags Communities
+// @Summary Get Preview of the specified community
+// @Produce json
+// @Success 200 {object} http.communityPreviewResponse
+// @Param community_id path string true "Community ID"
+// @Router /v1/communities/{community_id}/preview [GET]
+// @Security OAuth2Implicit
+func (h *Handler) GetCommunityPreview(ctx echo.Context) error {
+	communityId := ctx.Param("community_id")
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// Verify that the user is part of the community
+	members, err := h.CommunityStore.GetCommunityMembers(community)
+
+	index := -1
+	for i, member := range members {
+		if member.ID == currentUser.ID {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
+	// Get position of current user
+
+	// If current user is in the top 4 positions:
+	// Return top 6 positions + last position
+
+	// If current user is in the last 2 positions:
+	// Return last 4 positions + top 3 positions
+
+	// Otherwise:
+	// Return top 3 positions, n-1, n (current user position), n+1 and last position
+	return nil
 }

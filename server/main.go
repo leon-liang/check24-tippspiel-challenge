@@ -54,6 +54,7 @@ func main() {
 
 	us := store.NewUserStore(d)
 	cs := store.NewCommunityStore(d)
+	ucs := store.NewUserCommunityStore(d)
 	ms := store.NewMatchStore(d)
 	ts := store.NewTeamStore(d)
 	bs := store.NewBetStore(d)
@@ -81,7 +82,7 @@ func main() {
 		}
 	)
 
-	httpHandler := http.NewHandler(*us, *cs, *ms, *ts, *bs, *js, *mw, *pe)
+	httpHandler := http.NewHandler(*us, *cs, *ucs, *ms, *ts, *bs, *js, *mw, *pe)
 	wsHandler := websocket.NewHandler(upgrader, *ms, *mw)
 
 	r.GET("", httpHandler.GetRoot)
