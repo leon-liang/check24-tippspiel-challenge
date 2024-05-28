@@ -73,7 +73,7 @@ export const useGetUserCommunities = () => {
   });
 };
 
-export const useGetCommunityPreview = () => {
+export const useGetUserCommunitiesPreview = () => {
   return useQuery({
     queryFn: communitiesApiFactory.v1CommunitiesPreviewGet,
     queryKey: ["community-preview"],
