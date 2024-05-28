@@ -49,9 +49,9 @@ const Dashboard = () => {
           </p>
         </BannerContent>
       </Banner>
-      <div className="flex flex-row px-[10%] py-6">
+      <div className="flex flex-row gap-6 px-[10%] py-6">
         <div className="flex w-full flex-1 flex-col gap-6 text-lg">
-          Community Previews
+          <h1 className="text-xl font-medium text-gray-12">Your Communities</h1>
           {data?.data.communityPreviews?.map((preview, index) => {
             return (
               <CommunityPreview
@@ -62,13 +62,7 @@ const Dashboard = () => {
           })}
         </div>
         <div className="flex flex-none flex-col gap-6">
-          <div
-            className="flex cursor-pointer flex-row items-center justify-end gap-2"
-            onClick={() => router.push("/bets")}
-          >
-            <h1 className="text-lg underline underline-offset-4">Your Bets</h1>
-            <ExternalLinkIcon width={22} height={22} />
-          </div>
+          <h1 className="text-xl font-medium text-gray-12">Your Bets</h1>
           <div className="grid w-full grid-cols-1 gap-3">
             {matches.map((match, index) => (
               <SubmitBet
