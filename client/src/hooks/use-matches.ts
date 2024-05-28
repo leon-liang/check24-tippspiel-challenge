@@ -1,8 +1,10 @@
 import { useMemo } from "react";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 import { useGetMatches } from "@/hooks/api/matches.api";
+import useBets from "@/hooks/use-bets";
+import { getClosestDate } from "@/utils/date";
 
-const useMatches = () => {
+export const useMatches = () => {
   const { data } = useGetMatches();
 
   return useMemo(() => {
@@ -32,4 +34,25 @@ const useMatches = () => {
   }, [data?.data.matches]);
 };
 
-export default useMatches;
+export const useUpcomingMatches = (currentDate: DateTime) => {
+  const bets = useBets() ?? [];
+
+  return useMemo(() => {
+    const matchDates = bets.map((bet) => bet.date);
+    const closestMatchDate = getClosestDate(currentDate, matchDates);
+
+    const currentMatches = bets.filter((bet) => {
+      const matchDuration = Interval.fromDateTimes(
+        bet.date,
+        bet.date.plus({ minute: 120 }),
+      );
+      return matchDuration.contains(currentDate);
+    });
+
+    const upcomingMatches = bets.filter((bet) => {
+      return bet.date.toISODate() == closestMatchDate?.toISODate();
+    });
+
+    return [...currentMatches, ...upcomingMatches];
+  }, [currentDate]);
+};

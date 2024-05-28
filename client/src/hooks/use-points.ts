@@ -1,7 +1,7 @@
 import { useGetJob } from "@/hooks/api/jobs.api";
 import { useMemo } from "react";
 import { DateTime } from "luxon";
-import useMatches from "@/hooks/use-matches";
+import { useMatches } from "@/hooks/use-matches";
 
 const useIsPointsOutOfDate = () => {
   const { data, isLoading } = useGetJob("calculate_points");

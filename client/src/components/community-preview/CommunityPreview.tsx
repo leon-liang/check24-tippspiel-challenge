@@ -1,14 +1,119 @@
+import { useRouter } from "next/navigation";
+import {
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import React from "react";
+import cn from "classnames";
+import { useGetMe } from "@/hooks/api/users.api";
+
+type Member = {
+  rank?: number;
+  username?: string;
+  points?: number;
+};
+
 interface CommunityPreviewProps {
+  communityId: string;
   communityName: string;
+  members: Member[];
 }
 
-const CommunityPreview = ({ communityName }: CommunityPreviewProps) => {
+const CommunityPreview = ({
+  communityId,
+  communityName,
+  members,
+}: CommunityPreviewProps) => {
+  const router = useRouter();
+
+  const leaderboardColumns = [
+    {
+      accessorKey: "rank",
+      header: "Position",
+    },
+    {
+      accessorKey: "username",
+      header: "Username",
+    },
+    {
+      accessorKey: "points",
+      header: "Points",
+    },
+  ];
+
+  let data = members.map((member) => {
+    return {
+      rank: member.rank,
+      username: member.username,
+      points: member.points,
+    };
+  });
+
+  const table = useReactTable({
+    data,
+    columns: leaderboardColumns,
+    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  const { data: meData } = useGetMe();
+
   return (
-    <div className="w-full rounded-md border border-gray-6 bg-colors-white-A12 hover:shadow-lg">
+    <div
+      onClick={() => {
+        router.push(`/communities/${communityId}`);
+      }}
+      className="w-full rounded-md border border-gray-6 bg-colors-white-A12 hover:shadow-lg"
+    >
       <div className="rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
         <div className="p-1 font-mono text-sm">{communityName}</div>
       </div>
-      <div className="h-[250px]"></div>
+      <table className="w-full">
+        <thead className="border-gray-6 text-gray-11">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr className="border-b border-gray-6" key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  className="rounded-md border-b border-gray-6 pb-1 pt-6 text-sm font-normal text-gray-11"
+                  key={header.id}
+                  colSpan={header.colSpan}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr
+              className={cn(
+                "cursor-pointer rounded-md border-b border-gray-6 text-center last:border-b-0",
+                row.getValue("username") == meData?.data.user?.username
+                  ? "bg-colors-purple-2"
+                  : "",
+              )}
+              key={row.id}
+            >
+              {row.getVisibleCells().map((cell) => (
+                <td
+                  className="rounded-md py-1.5 text-gray-11 last:border-r-0"
+                  key={cell.id}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
