@@ -8,8 +8,6 @@ import SubmitBet from "@/components/submit-bet/SubmitBet";
 import React from "react";
 import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
 import { useRouter } from "next/navigation";
-import { useGetUserCommunities } from "@/hooks/api/communities.api";
-import CommunityPreview from "@/components/community-preview/CommunityPreview";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -18,7 +16,6 @@ const Dashboard = () => {
   const currentDate = DateTime.now();
   const matchDates = bets.map((bet) => bet.date);
   const closestMatchDate = getClosestDate(currentDate, matchDates);
-  const { data } = useGetUserCommunities();
 
   const currentMatches = bets.filter((bet) => {
     const matchDuration = Interval.fromDateTimes(
@@ -52,12 +49,6 @@ const Dashboard = () => {
       <div className="flex flex-row px-[10%] py-6">
         <div className="flex w-full flex-1 flex-col gap-6 text-lg">
           Community Previews
-          {data?.data.communities?.map((community, i) => (
-            <CommunityPreview
-              key={i}
-              communityName={community.community?.name ?? ""}
-            />
-          ))}
         </div>
         <div className="flex flex-none flex-col gap-6">
           <div

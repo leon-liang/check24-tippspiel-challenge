@@ -205,108 +205,107 @@ func (h *Handler) DeleteCommunity(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, &response)
 }
 
-// GetCommunityPreview godoc
+// GetUserCommunitiesPreview godoc
 // @Tags Communities
-// @Summary Get Preview of the specified community
+// @Summary Get preview of a user's communities
 // @Produce json
-// @Success 200 {object} http.communityPreviewResponse
-// @Param community_id path string true "Community ID"
-// @Router /v1/communities/{community_id}/preview [GET]
+// @Success 200 {object} http.userCommunitiesPreviewResponse
+// @Router /v1/communities/preview [GET]
 // @Security OAuth2Implicit
-func (h *Handler) GetCommunityPreview(ctx echo.Context) error {
-	communityId := ctx.Param("community_id")
+func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 	currentUser := ctx.Get("current_user").(*model.User)
 
-	community, err := h.CommunityStore.GetCommunityById(communityId)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-	if community == nil {
-		return ctx.JSON(http.StatusNotFound, utils.NotFound())
-	}
-
-	// Verify that the user is part of the community
-	isMember, err := h.CommunityStore.IsMember(currentUser, community)
-	if !isMember {
-		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
-	}
-
-	// If there are less than 7 users in the community return all members
-	count, err := h.CommunityStore.GetCommunityMembersCount(community)
+	communities, err := h.CommunityStore.GetUserCommunities(currentUser)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	if count <= 7 {
-		members, err := h.CommunityStore.GetCommunityMembers(community)
+	communityPreviews := make([]*communityPreviewResponse, 0)
+
+	for _, community := range communities {
+		// If there are less than 7 users in the community return all members
+		count, err := h.CommunityStore.GetCommunityMembersCount(&community)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 		}
 
-		response := newCommunityPreviewResponse(members)
-		return ctx.JSON(http.StatusOK, response)
-	}
+		if count <= 7 {
+			members, err := h.CommunityStore.GetCommunityMembers(&community)
+			if err != nil {
+				return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+			}
 
-	// Get rank of current user
-	pos, err := h.CommunityStore.GetUserRank(currentUser, community)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-
-	// If current user is in the top 4 positions:
-	// Return top 6 positions + last position
-	if pos <= 4 {
-		topSix, err := h.CommunityStore.GetMembersAtPosition(community, 1, 6)
-		if err != nil {
-			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+			communityPreview := newCommunityPreviewResponse(&community, members)
+			communityPreviews = append(communityPreviews, communityPreview)
+			continue
 		}
-		last, err := h.CommunityStore.GetMembersAtPosition(community, count, count)
+
+		// Get rank of current user
+		pos, err := h.CommunityStore.GetUserRank(currentUser, &community)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 		}
 
-		members := append(topSix, last...)
-		response := newCommunityPreviewResponse(members)
-		return ctx.JSON(http.StatusOK, response)
-	}
+		// If current user is in the top 4 positions:
+		// Return top 6 positions + last position
+		if pos <= 4 {
+			topSix, err := h.CommunityStore.GetMembersAtPosition(&community, 1, 6)
+			if err != nil {
+				return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+			}
+			last, err := h.CommunityStore.GetMembersAtPosition(&community, count, count)
+			if err != nil {
+				return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+			}
 
-	// If current user is in the last 2 positions:
-	// Return last 4 positions + top 3 positions
-	if pos-count < 2 {
-		topThree, err := h.CommunityStore.GetMembersAtPosition(community, 1, 3)
+			members := append(topSix, last...)
+			communityPreview := newCommunityPreviewResponse(&community, members)
+			communityPreviews = append(communityPreviews, communityPreview)
+			continue
+		}
+
+		// If current user is in the last 2 positions:
+		// Return last 4 positions + top 3 positions
+		if pos-count < 2 {
+			topThree, err := h.CommunityStore.GetMembersAtPosition(&community, 1, 3)
+			if err != nil {
+				return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+			}
+			lastFour, err := h.CommunityStore.GetMembersAtPosition(&community, count-3, count)
+			if err != nil {
+				return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+			}
+
+			members := append(topThree, lastFour...)
+			communityPreview := newCommunityPreviewResponse(&community, members)
+			communityPreviews = append(communityPreviews, communityPreview)
+			continue
+		}
+
+		// Otherwise:
+		// Return top 3 positions, n-1, n (current user position), n+1 and last position
+		topThree, err := h.CommunityStore.GetMembersAtPosition(&community, 1, 3)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 		}
-		lastFour, err := h.CommunityStore.GetMembersAtPosition(community, count-3, count)
+
+		adjacentToUser, err := h.CommunityStore.GetMembersAtPosition(&community, pos-1, pos+1)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 		}
 
-		members := append(topThree, lastFour...)
-		response := newCommunityPreviewResponse(members)
-		return ctx.JSON(http.StatusOK, response)
+		last, err := h.CommunityStore.GetMembersAtPosition(&community, count, count)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+
+		members := append(topThree, adjacentToUser...)
+		members = append(members, last...)
+
+		communityPreview := newCommunityPreviewResponse(&community, members)
+		communityPreviews = append(communityPreviews, communityPreview)
 	}
 
-	// Otherwise:
-	// Return top 3 positions, n-1, n (current user position), n+1 and last position
-	topThree, err := h.CommunityStore.GetMembersAtPosition(community, 1, 3)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-
-	adjacentToUser, err := h.CommunityStore.GetMembersAtPosition(community, pos-1, pos+1)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-
-	last, err := h.CommunityStore.GetMembersAtPosition(community, count, count)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
-	}
-
-	members := append(topThree, adjacentToUser...)
-	members = append(members, last...)
-
-	response := newCommunityPreviewResponse(members)
+	response := newUserCommunityPreviewResponse(communityPreviews)
 	return ctx.JSON(http.StatusOK, response)
 }

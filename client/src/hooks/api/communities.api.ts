@@ -73,10 +73,9 @@ export const useGetUserCommunities = () => {
   });
 };
 
-export const useGetCommunityPreview = (communityId: string) => {
+export const useGetCommunityPreview = () => {
   return useQuery({
-    queryFn: () =>
-      communitiesApiFactory.v1CommunitiesCommunityIdPreviewGet(communityId),
+    queryFn: communitiesApiFactory.v1CommunitiesPreviewGet,
     queryKey: ["community-preview"],
   });
 };

@@ -100,12 +100,17 @@ func newCommunitiesResponse(communities []model.Community) *communitiesResponse 
 }
 
 type communityPreviewResponse struct {
+	ID      string        `json:"id"`
+	Name    string        `json:"name"`
 	Members []dtos.Member `json:"members"`
 }
 
-func newCommunityPreviewResponse(members []*dtos.Member) *communityPreviewResponse {
+func newCommunityPreviewResponse(community *model.Community, members []*dtos.Member) *communityPreviewResponse {
 	r := new(communityPreviewResponse)
 	m := dtos.Member{}
+
+	r.ID = community.ID
+	r.Name = community.Name
 
 	r.Members = make([]dtos.Member, 0)
 	for _, member := range members {
@@ -115,6 +120,26 @@ func newCommunityPreviewResponse(members []*dtos.Member) *communityPreviewRespon
 		m.Rank = member.Rank
 
 		r.Members = append(r.Members, m)
+	}
+
+	return r
+}
+
+type userCommunitiesPreviewResponse struct {
+	CommunityPreviews []communityPreviewResponse `json:"communityPreviews"`
+}
+
+func newUserCommunityPreviewResponse(communityPreviews []*communityPreviewResponse) *userCommunitiesPreviewResponse {
+	r := new(userCommunitiesPreviewResponse)
+	cp := communityPreviewResponse{}
+
+	r.CommunityPreviews = make([]communityPreviewResponse, 0)
+	for _, communityPreview := range communityPreviews {
+		cp.ID = communityPreview.ID
+		cp.Name = communityPreview.Name
+		cp.Members = communityPreview.Members
+
+		r.CommunityPreviews = append(r.CommunityPreviews, cp)
 	}
 
 	return r

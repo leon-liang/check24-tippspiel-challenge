@@ -163,6 +163,30 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/communities/preview": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Get preview of a user's communities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.userCommunitiesPreviewResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/communities/{community_id}": {
             "get": {
                 "security": [
@@ -366,39 +390,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/http.communityResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/communities/{community_id}/preview": {
-            "get": {
-                "security": [
-                    {
-                        "OAuth2Implicit": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Communities"
-                ],
-                "summary": "Get Preview of the specified community",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Community ID",
-                        "name": "community_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/http.communityPreviewResponse"
                         }
                     }
                 }
@@ -661,11 +652,17 @@ const docTemplate = `{
         "http.communityPreviewResponse": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "members": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/dtos.Member"
                     }
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },
@@ -780,6 +777,17 @@ const docTemplate = `{
             "properties": {
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "http.userCommunitiesPreviewResponse": {
+            "type": "object",
+            "properties": {
+                "communityPreviews": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.communityPreviewResponse"
+                    }
                 }
             }
         },

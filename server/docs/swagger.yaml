@@ -68,10 +68,14 @@ definitions:
     type: object
   http.communityPreviewResponse:
     properties:
+      id:
+        type: string
       members:
         items:
           $ref: '#/definitions/dtos.Member'
         type: array
+      name:
+        type: string
     type: object
   http.communityResponse:
     properties:
@@ -144,6 +148,13 @@ definitions:
     properties:
       message:
         type: string
+    type: object
+  http.userCommunitiesPreviewResponse:
+    properties:
+      communityPreviews:
+        items:
+          $ref: '#/definitions/http.communityPreviewResponse'
+        type: array
     type: object
   http.userResponse:
     properties:
@@ -386,24 +397,18 @@ paths:
       summary: Add specified user to the pinned users for a given community
       tags:
       - Communities
-  /v1/communities/{community_id}/preview:
+  /v1/communities/preview:
     get:
-      parameters:
-      - description: Community ID
-        in: path
-        name: community_id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/http.communityPreviewResponse'
+            $ref: '#/definitions/http.userCommunitiesPreviewResponse'
       security:
       - OAuth2Implicit: []
-      summary: Get Preview of the specified community
+      summary: Get preview of a user's communities
       tags:
       - Communities
   /v1/jobs/{job_name}:
