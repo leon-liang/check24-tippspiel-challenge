@@ -1,7 +1,9 @@
-interface CommunityPreviewProps {}
+interface CommunityPreviewProps {
+  communityName: string;
+}
 
-const CommunityPreview = () => {
-  return <div></div>;
+const CommunityPreview = ({ communityName }: CommunityPreviewProps) => {
+  return <div>{communityName}</div>;
 };
 
 export default CommunityPreview;

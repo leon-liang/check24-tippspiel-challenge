@@ -8,6 +8,8 @@ import SubmitBet from "@/components/submit-bet/SubmitBet";
 import React from "react";
 import ExternalLinkIcon from "@/components/icons/ExternalLinkIcon";
 import { useRouter } from "next/navigation";
+import { useGetUserCommunities } from "@/hooks/api/communities.api";
+import CommunityPreview from "@/components/community-preview/CommunityPreview";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -16,6 +18,7 @@ const Dashboard = () => {
   const currentDate = DateTime.now();
   const matchDates = bets.map((bet) => bet.date);
   const closestMatchDate = getClosestDate(currentDate, matchDates);
+  const { data } = useGetUserCommunities();
 
   const currentMatches = bets.filter((bet) => {
     const matchDuration = Interval.fromDateTimes(
@@ -46,18 +49,25 @@ const Dashboard = () => {
           </p>
         </BannerContent>
       </Banner>
-      <div className="px-[10%] py-6">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-row underline-offset-4">
-            <div
-              className="flex cursor-pointer flex-row items-center gap-2"
-              onClick={() => router.push("/bets")}
-            >
-              <h1 className="text-lg underline">Your Bets</h1>
-              <ExternalLinkIcon width={22} height={22} />
-            </div>
+      <div className="flex flex-row px-[10%] py-6">
+        <div className="flex w-full flex-1 flex-col gap-6 text-lg">
+          Community Previews
+          {data?.data.communities?.map((community, i) => (
+            <CommunityPreview
+              key={i}
+              communityName={community.community?.name ?? ""}
+            />
+          ))}
+        </div>
+        <div className="flex flex-none flex-col gap-6">
+          <div
+            className="flex cursor-pointer flex-row items-center justify-end gap-2"
+            onClick={() => router.push("/bets")}
+          >
+            <h1 className="text-lg underline underline-offset-4">Your Bets</h1>
+            <ExternalLinkIcon width={22} height={22} />
           </div>
-          <div className="grid w-full gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+          <div className="grid w-full grid-cols-1 gap-3">
             {matches.map((match, index) => (
               <SubmitBet
                 key={index}

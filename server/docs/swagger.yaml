@@ -1,4 +1,15 @@
 definitions:
+  dtos.Member:
+    properties:
+      id:
+        type: string
+      points:
+        type: integer
+      rank:
+        type: integer
+      username:
+        type: string
+    type: object
   http.Team:
     properties:
       name:
@@ -54,6 +65,13 @@ definitions:
           name:
             type: string
         type: object
+    type: object
+  http.communityPreviewResponse:
+    properties:
+      members:
+        items:
+          $ref: '#/definitions/dtos.Member'
+        type: array
     type: object
   http.communityResponse:
     properties:
@@ -139,6 +157,8 @@ definitions:
             type: string
           lastName:
             type: string
+          points:
+            type: integer
           username:
             type: string
         type: object
@@ -317,26 +337,6 @@ paths:
       summary: Leave the specified community
       tags:
       - Communities
-  /v1/communities/{community_id}/members:
-    get:
-      parameters:
-      - description: Community ID
-        in: path
-        name: community_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/http.communitiesResponse'
-      security:
-      - OAuth2Implicit: []
-      summary: Retrieve all users that are part of a community
-      tags:
-      - Communities
   /v1/communities/{community_id}/pinned_users/{user_id}:
     delete:
       parameters:
@@ -384,6 +384,26 @@ paths:
       security:
       - OAuth2Implicit: []
       summary: Add specified user to the pinned users for a given community
+      tags:
+      - Communities
+  /v1/communities/{community_id}/preview:
+    get:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.communityPreviewResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Get Preview of the specified community
       tags:
       - Communities
   /v1/jobs/{job_name}:
