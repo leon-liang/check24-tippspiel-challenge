@@ -118,7 +118,7 @@ func newCommunityPreviewResponse(community *model.Community, members []*dtos.Mem
 		m.Username = member.Username
 		m.Points = member.Points
 		m.Rank = member.Rank
-
+		m.Position = member.Position
 		r.Members = append(r.Members, m)
 	}
 

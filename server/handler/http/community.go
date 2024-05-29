@@ -240,8 +240,8 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 			continue
 		}
 
-		// Get rank of current user
-		pos, err := h.CommunityStore.GetUserRank(currentUser, &community)
+		// Get position of current user
+		pos, err := h.CommunityStore.GetUserPosition(currentUser, &community)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 		}

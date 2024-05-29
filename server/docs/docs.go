@@ -553,6 +553,9 @@ const docTemplate = `{
                 "points": {
                     "type": "integer"
                 },
+                "position": {
+                    "type": "integer"
+                },
                 "rank": {
                     "type": "integer"
                 },

@@ -159,7 +159,8 @@ func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*dt
 		),
 		ranked_members AS (
 			SELECT m.*, 
-			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS rank
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS position,
+    		DENSE_RANK() OVER (ORDER BY m.points DESC) AS rank
 			FROM members m
 		)
 		SELECT * FROM ranked_members
@@ -201,7 +202,7 @@ func (cs *CommunityStore) GetCommunityMembersCount(community *model.Community) (
 	return count, nil
 }
 
-func (cs *CommunityStore) GetUserRank(user *model.User, community *model.Community) (int, error) {
+func (cs *CommunityStore) GetUserPosition(user *model.User, community *model.Community) (int, error) {
 	var rank int
 
 	query := `
@@ -222,10 +223,11 @@ func (cs *CommunityStore) GetUserRank(user *model.User, community *model.Communi
 		),
 		ranked_members AS (
 			SELECT m.*, 
-			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS rank
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS position,
+    		DENSE_RANK() OVER (ORDER BY m.points DESC) AS rank
 			FROM members m
 		)
-		SELECT rank
+		SELECT position
 		FROM ranked_members
 		WHERE id = ?;
 	`
@@ -258,11 +260,13 @@ func (cs *CommunityStore) GetMembersAtPosition(community *model.Community, from 
 		),
 		ranked_members AS (
 			SELECT m.*, 
-			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS rank
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS position,
+    		DENSE_RANK() OVER (ORDER BY m.points DESC) AS rank
+
 			FROM members m
 		)
 		SELECT * FROM ranked_members
-		WHERE rank BETWEEN ? AND ?
+		WHERE position BETWEEN ? AND ?
 	`
 	if err := cs.db.Raw(query, community.ID, community.ID, from, to).Scan(&members).Error; err != nil {
 		return nil, err

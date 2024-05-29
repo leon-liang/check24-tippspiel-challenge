@@ -9,8 +9,10 @@ import React from "react";
 import cn from "classnames";
 import { useGetMe } from "@/hooks/api/users.api";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
+import { colors } from "../../../tailwind.config";
 
 type Member = {
+  position?: number;
   rank?: number;
   username?: string;
   points?: number;
@@ -31,8 +33,12 @@ const CommunityPreview = ({
 
   const leaderboardColumns = [
     {
-      accessorKey: "rank",
+      accessorKey: "position",
       header: "Position",
+    },
+    {
+      accessorKey: "rank",
+      header: "Rank",
     },
     {
       accessorKey: "username",
@@ -46,6 +52,7 @@ const CommunityPreview = ({
 
   let data = members.map((member) => {
     return {
+      position: member.position,
       rank: member.rank,
       username: member.username,
       points: member.points,
@@ -57,6 +64,11 @@ const CommunityPreview = ({
     columns: leaderboardColumns,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      columnVisibility: {
+        position: false,
+      },
+    },
   });
 
   const { data: meData } = useGetMe();
@@ -119,13 +131,14 @@ const CommunityPreview = ({
                 {table.getRowModel().rows[index + 1] &&
                 (table
                   .getRowModel()
-                  .rows[index + 1].getValue("rank") as number) >
-                  (row.getValue("rank") as number) + 1 ? (
+                  .rows[index + 1].getValue("position") as number) >
+                  (row.getValue("position") as number) + 1 ? (
                   <tr className="border-b border-gray-6 bg-colors-gray-2">
                     <td className="py-1.5 text-center" colSpan={3}>
                       <EllipsisHorizontalIcon
                         height={18}
                         width={18}
+                        stroke={colors.gray["11"]}
                         className="inline-block"
                       />
                     </td>

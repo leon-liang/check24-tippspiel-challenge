@@ -46,6 +46,12 @@ export interface DtosMember {
      * @type {number}
      * @memberof DtosMember
      */
+    'position'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DtosMember
+     */
     'rank'?: number;
     /**
      * 

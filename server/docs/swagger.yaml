@@ -5,6 +5,8 @@ definitions:
         type: string
       points:
         type: integer
+      position:
+        type: integer
       rank:
         type: integer
       username:
