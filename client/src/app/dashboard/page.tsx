@@ -13,12 +13,14 @@ import {
   TabsTrigger,
 } from "@/components/tabs/Tabs";
 import { useUpcomingMatches } from "@/hooks/use-matches";
+import { usePointsUpdates } from "@/hooks/use-points";
 
 const Dashboard = () => {
   const { data } = useGetUserCommunitiesPreview();
   const [selectedTab, setSelectedTab] = useState("user-communities");
   const currentDate = DateTime.now();
   const matches = useUpcomingMatches(currentDate);
+  usePointsUpdates();
 
   return (
     <>

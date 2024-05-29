@@ -26,7 +26,6 @@ export const useSubscribeCalculatePointsJob = (jobName: string) => {
     );
 
     websocket.onmessage = (event) => {
-      console.log(JSON.parse(event.data));
       setJob(JSON.parse(event.data));
     };
 

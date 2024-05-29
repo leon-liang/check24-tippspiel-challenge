@@ -2,8 +2,10 @@ import { useGetJob } from "@/hooks/api/jobs.api";
 import { useMemo } from "react";
 import { DateTime } from "luxon";
 import { useMatches } from "@/hooks/use-matches";
+import { useSubscribePointsUpdates } from "@/hooks/api/points.api";
+import { useQueryClient } from "@tanstack/react-query";
 
-const useIsPointsOutOfDate = () => {
+export const useIsPointsOutOfDate = () => {
   const { data, isLoading } = useGetJob("calculate_points");
   const matches = useMatches();
 
@@ -20,4 +22,13 @@ const useIsPointsOutOfDate = () => {
   }, [matches, data, isLoading]);
 };
 
-export default useIsPointsOutOfDate;
+export const usePointsUpdates = () => {
+  const status = useSubscribePointsUpdates();
+  const queryClient = useQueryClient();
+
+  if (status?.status.message === "UPDATED") {
+    queryClient.invalidateQueries({
+      queryKey: ["communities", "communities-preview"],
+    });
+  }
+};

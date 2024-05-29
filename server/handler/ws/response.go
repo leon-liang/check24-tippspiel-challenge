@@ -56,3 +56,16 @@ func newJobResponse(job model.Job) *jobResponse {
 
 	return r
 }
+
+type pointsResponse struct {
+	Status struct {
+		Message string `json:"message"`
+	} `json:"status"`
+}
+
+func newPointsResponse(message string) *pointsResponse {
+	r := new(pointsResponse)
+	r.Status.Message = message
+
+	return r
+}

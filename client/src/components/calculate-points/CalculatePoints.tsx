@@ -11,7 +11,7 @@ const CalculatePoints = ({ onClick }: CalculatePointsProps) => {
 
   return (
     <Button
-      className="flex flex-row gap-2 text-xs"
+      className="flex flex-row items-center gap-3 text-xs"
       variant="outline"
       onClick={() => {
         setIsLoading(true);

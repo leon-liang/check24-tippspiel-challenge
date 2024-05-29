@@ -12,9 +12,7 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 )
 
-func (h *Handler) wsJobs(ctx echo.Context) error {
-	jobName := ctx.Param("job_name")
-
+func (h *Handler) wsPoints(ctx echo.Context) error {
 	ws, err := h.Upgrader.Upgrade(ctx.Response(), ctx.Request(), nil)
 	if err != nil {
 		fmt.Println(err)
@@ -39,7 +37,7 @@ func (h *Handler) wsJobs(ctx echo.Context) error {
 
 		// decode message
 		var j model.Job
-		if string(message.Key) == jobName {
+		if string(message.Key) == "calculate_points" {
 			// decode message
 			buf := bytes.NewBuffer(message.Value)
 			decoder := gob.NewDecoder(buf)
@@ -48,18 +46,16 @@ func (h *Handler) wsJobs(ctx echo.Context) error {
 				fmt.Println("Error decoding gob: ", err)
 			}
 
-			r := newJobResponse(j)
-			b, err := json.Marshal(r)
-			if err != nil {
-				fmt.Println("Error encoding JSON", err)
-			}
-
-			if err := ws.WriteMessage(websocket.TextMessage, b); err != nil {
-				fmt.Println(err)
-			}
-
 			if j.Completed == j.Outstanding {
-				ws.Close()
+				r := newPointsResponse("UPDATED")
+				b, err := json.Marshal(r)
+				if err != nil {
+					fmt.Println("Error encoding JSON", err)
+				}
+
+				if err := ws.WriteMessage(websocket.TextMessage, b); err != nil {
+					fmt.Println(err)
+				}
 			}
 		}
 	}

@@ -8,4 +8,7 @@ func (h *Handler) Register(ws *echo.Group) {
 
 	jobs := ws.Group("/jobs")
 	jobs.GET("/:job_name/status", h.wsJobs)
+
+	points := ws.Group("/points")
+	points.GET("/status", h.wsPoints)
 }
