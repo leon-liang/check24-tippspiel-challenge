@@ -15,14 +15,6 @@ export const useCreateCommunity = () => {
   });
 };
 
-export const useGetCommunity = (communityId: string) => {
-  return useQuery({
-    queryFn: () =>
-      communitiesApiFactory.v1CommunitiesCommunityIdGet(communityId),
-    queryKey: [communityId],
-  });
-};
-
 export const useJoinCommunity = () => {
   const queryClient = useQueryClient();
 
@@ -70,5 +62,12 @@ export const useGetUserCommunities = () => {
   return useQuery({
     queryFn: communitiesApiFactory.v1CommunitiesGet,
     queryKey: ["communities"],
+  });
+};
+
+export const useGetUserCommunitiesPreview = () => {
+  return useQuery({
+    queryFn: communitiesApiFactory.v1CommunitiesPreviewGet,
+    queryKey: ["communities", "communities-preview"],
   });
 };

@@ -163,6 +163,30 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/communities/preview": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Get preview of a user's communities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.userCommunitiesPreviewResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/communities/{community_id}": {
             "get": {
                 "security": [
@@ -288,39 +312,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/http.communityResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/communities/{community_id}/members": {
-            "get": {
-                "security": [
-                    {
-                        "OAuth2Implicit": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Communities"
-                ],
-                "summary": "Retrieve all users that are part of a community",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Community ID",
-                        "name": "community_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/http.communitiesResponse"
                         }
                     }
                 }
@@ -553,6 +544,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dtos.Member": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "position": {
+                    "type": "integer"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "http.Team": {
             "type": "object",
             "properties": {
@@ -638,6 +649,23 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        },
+        "http.communityPreviewResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.Member"
+                    }
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },
@@ -755,6 +783,17 @@ const docTemplate = `{
                 }
             }
         },
+        "http.userCommunitiesPreviewResponse": {
+            "type": "object",
+            "properties": {
+                "communityPreviews": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.communityPreviewResponse"
+                    }
+                }
+            }
+        },
         "http.userResponse": {
             "type": "object",
             "properties": {
@@ -772,6 +811,9 @@ const docTemplate = `{
                         },
                         "lastName": {
                             "type": "string"
+                        },
+                        "points": {
+                            "type": "integer"
                         },
                         "username": {
                             "type": "string"

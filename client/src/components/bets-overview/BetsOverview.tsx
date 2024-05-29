@@ -65,7 +65,7 @@ const BetsOverview = ({ bets }: BetOverviewProps) => {
       </div>
       {dates.map((date, index) => (
         <TabsContent key={index} value={date}>
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-12 grid gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
             {bets
               .filter((bet) => bet.date.toISODate() === date)
               .map((bet, index) => (

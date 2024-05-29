@@ -2,7 +2,7 @@ package store
 
 import (
 	"errors"
-	"fmt"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/dtos"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"gorm.io/gorm"
 	"sort"
@@ -35,38 +35,14 @@ func (cs *CommunityStore) Join(user *model.User, community *model.Community) (er
 func (cs *CommunityStore) Delete(user *model.User, community *model.Community) (err error) {
 	tx := cs.db.Begin()
 
-	// Delete community from each member's joined communities
-	if err := cs.db.Preload("Members").First(&community).Error; err != nil {
+	query := `
+		DELETE FROM community_members 
+		WHERE community_id = ?
+	`
+
+	if err := cs.db.Exec(query, community.ID).Error; err != nil {
 		tx.Rollback()
 		return err
-	}
-
-	for _, member := range community.Members {
-		if err := cs.db.Preload("JoinedCommunities").First(&member).Error; err != nil {
-			tx.Rollback()
-			return err
-		}
-
-		index := -1
-		for i, joinedCommunity := range member.JoinedCommunities {
-			if joinedCommunity.ID == community.ID {
-				index = i
-				break
-			}
-		}
-
-		if index == -1 {
-			tx.Rollback()
-			return errors.New("user is not part of the community")
-		}
-
-		member.JoinedCommunities[index] = member.JoinedCommunities[len(member.JoinedCommunities)-1]
-		member.JoinedCommunities = member.JoinedCommunities[:len(member.JoinedCommunities)-1]
-
-		if err := cs.db.Model(&member).Association("JoinedCommunities").Replace(member.JoinedCommunities); err != nil {
-			tx.Rollback()
-			return err
-		}
 	}
 
 	// Delete community from CreatedCommunities
@@ -104,24 +80,30 @@ func (cs *CommunityStore) Delete(user *model.User, community *model.Community) (
 	return tx.Commit().Error
 }
 
+func (cs *CommunityStore) IsMember(user *model.User, community *model.Community) (bool, error) {
+	var isMember bool
+	query := `
+		SELECT EXISTS (
+			SELECT 1
+			FROM community_members, communities
+			WHERE community_id = ? AND user_id = ? OR communities.owner = ?
+		)
+	`
+
+	if err := cs.db.Raw(query, community.ID, user.ID, user.ID).Scan(&isMember).Error; err != nil {
+		return false, err
+	}
+
+	return isMember, nil
+}
+
 func (cs *CommunityStore) Leave(user *model.User, community *model.Community) (err error) {
-	index := -1
+	query := `
+		DELETE FROM community_members 
+		WHERE community_id = ? AND user_id = ?
+	`
 
-	for i, member := range community.Members {
-		if member.ID == user.ID {
-			index = i
-			break
-		}
-	}
-
-	if index == -1 {
-		return errors.New("user is not part of the community")
-	}
-
-	community.Members[index] = community.Members[len(community.Members)-1]
-	community.Members = community.Members[:len(community.Members)-1]
-
-	if err := cs.db.Model(&community).Association("Members").Replace(community.Members); err != nil {
+	if err := cs.db.Exec(query, community.ID, user.ID).Error; err != nil {
 		return err
 	}
 
@@ -131,7 +113,7 @@ func (cs *CommunityStore) Leave(user *model.User, community *model.Community) (e
 func (cs *CommunityStore) GetCommunityById(id string) (*model.Community, error) {
 	var community model.Community
 
-	err := cs.db.Preload("Members").Where(&model.Community{ID: id}).First(&community).Error
+	err := cs.db.Where(&model.Community{ID: id}).First(&community).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -156,67 +138,139 @@ func (cs *CommunityStore) GetUserCommunities(user *model.User) ([]model.Communit
 	return communities, nil
 }
 
-func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*model.User, error) {
-	var owner model.User
+func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*dtos.Member, error) {
+	var members []*dtos.Member
 
-	if err := cs.db.Find(&owner, "id = ?", community.Owner).Error; err != nil {
+	query := `
+		WITH members AS (
+			SELECT u.*
+			FROM users u
+			INNER JOIN community_members cm
+			ON u.id = cm.user_id
+			WHERE cm.community_id = ?
+			
+			UNION
+		
+			SELECT u.*
+			FROM users u
+			INNER JOIN communities c
+			ON u.id = c.owner
+			WHERE c.id = ?
+		),
+		ranked_members AS (
+			SELECT m.*, 
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS position,
+    		DENSE_RANK() OVER (ORDER BY m.points DESC) AS rank
+			FROM members m
+		)
+		SELECT * FROM ranked_members
+	`
+
+	if err := cs.db.Raw(query, community.ID, community.ID).Scan(&members).Error; err != nil {
 		return nil, err
 	}
 
-	if err := cs.db.Preload("Members").First(&community).Error; err != nil {
-		return nil, err
-	}
-
-	members := append(community.Members, &owner)
 	return members, nil
 }
 
-func (cs *CommunityStore) AddPinnedUser(currentUser *model.User, user *model.User, community *model.Community) error {
-	var userCommunity model.UserCommunity
-	userCommunity.UserID = currentUser.ID
-	userCommunity.CommunityID = community.ID
+func (cs *CommunityStore) GetCommunityMembersCount(community *model.Community) (int, error) {
+	var count int
 
-	if err := cs.db.Find(&userCommunity).Error; err != nil {
-		return err
+	query := `
+		WITH members AS (
+			SELECT u.*
+			FROM users u
+			INNER JOIN community_members cm
+			ON u.id = cm.user_id
+			WHERE cm.community_id = ?
+			
+			UNION
+		
+			SELECT u.*
+			FROM users u
+			INNER JOIN communities c
+			ON u.id = c.owner
+			WHERE c.id = ?
+		)
+		SELECT COUNT(*) FROM members
+	`
+
+	if err := cs.db.Raw(query, community.ID, community.ID).Scan(&count).Error; err != nil {
+		return -1, err
 	}
 
-	userCommunity.PinnedUsers = append(userCommunity.PinnedUsers, *user)
-	if err := cs.db.Save(&userCommunity).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return count, nil
 }
 
-func (cs *CommunityStore) DeletePinnedUser(currentUser *model.User, user *model.User, community *model.Community) error {
-	var userCommunity model.UserCommunity
-	userCommunity.UserID = currentUser.ID
-	userCommunity.CommunityID = community.ID
+func (cs *CommunityStore) GetUserPosition(user *model.User, community *model.Community) (int, error) {
+	var rank int
 
-	if err := cs.db.Preload("PinnedUsers").First(&userCommunity).Error; err != nil {
-		return err
+	query := `
+		WITH members AS (
+			SELECT u.*
+			FROM users u
+			INNER JOIN community_members cm
+			ON u.id = cm.user_id
+			WHERE cm.community_id = ?
+			
+			UNION
+		
+			SELECT u.*
+			FROM users u
+			INNER JOIN communities c
+			ON u.id = c.owner
+			WHERE c.id = ?
+		),
+		ranked_members AS (
+			SELECT m.*, 
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS position,
+    		DENSE_RANK() OVER (ORDER BY m.points DESC) AS rank
+			FROM members m
+		)
+		SELECT position
+		FROM ranked_members
+		WHERE id = ?;
+	`
+
+	if err := cs.db.Raw(query, community.ID, community.ID, user.ID).Scan(&rank).Error; err != nil {
+		return -1, err
 	}
 
-	fmt.Println(userCommunity.PinnedUsers)
+	return rank, nil
+}
 
-	index := -1
-	for i, member := range userCommunity.PinnedUsers {
-		if member.ID == user.ID {
-			index = i
-			break
-		}
+func (cs *CommunityStore) GetMembersAtPosition(community *model.Community, from int, to int) ([]*dtos.Member, error) {
+	var members []*dtos.Member
+
+	query := `
+		WITH members AS (
+			SELECT u.*
+			FROM users u
+			INNER JOIN community_members cm
+			ON u.id = cm.user_id
+			WHERE cm.community_id = ?
+			
+			UNION
+		
+			SELECT u.*
+			FROM users u
+			INNER JOIN communities c
+			ON u.id = c.owner
+			WHERE c.id = ?
+		),
+		ranked_members AS (
+			SELECT m.*, 
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS position,
+    		DENSE_RANK() OVER (ORDER BY m.points DESC) AS rank
+
+			FROM members m
+		)
+		SELECT * FROM ranked_members
+		WHERE position BETWEEN ? AND ?
+	`
+	if err := cs.db.Raw(query, community.ID, community.ID, from, to).Scan(&members).Error; err != nil {
+		return nil, err
 	}
 
-	if index == -1 {
-		return errors.New("user is not part of the community")
-	}
-
-	userCommunity.PinnedUsers[index] = userCommunity.PinnedUsers[len(userCommunity.PinnedUsers)-1]
-	userCommunity.PinnedUsers = userCommunity.PinnedUsers[:len(userCommunity.PinnedUsers)-1]
-
-	if err := cs.db.Model(&userCommunity).Association("PinnedUsers").Replace(userCommunity.PinnedUsers); err != nil {
-		return err
-	}
-
-	return nil
+	return members, nil
 }

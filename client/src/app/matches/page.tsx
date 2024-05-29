@@ -5,7 +5,7 @@ import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import useValidatePermissions from "@/hooks/use-validate-permissions";
 import Table, { Column } from "@/components/table/Table";
 import React, { useState } from "react";
-import useMatches from "@/hooks/use-matches";
+import { useMatches } from "@/hooks/use-matches";
 import UpdateMatch from "@/components/update-match/UpdateMatch";
 import useMatchColumns from "@/hooks/use-match-columns";
 import Button from "@/components/button/Button";

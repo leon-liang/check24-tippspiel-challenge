@@ -40,7 +40,30 @@ func (us *UserStore) GetById(id string) (*model.User, error) {
 }
 
 func (us *UserStore) Create(user *model.User) (err error) {
-	return us.db.Create(user).Error
+	tx := us.db.Begin()
+
+	if err := tx.Exec("LOCK TABLE users IN ACCESS EXCLUSIVE MODE").Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	var count int64
+	if err := tx.Model(user).Where(&model.User{Username: user.Username}).Count(&count).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if count > 0 {
+		tx.Rollback()
+		return errors.New("user already exists")
+	}
+
+	if err := tx.Create(user).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 func (us *UserStore) GetAll(offset int, limit int) ([]model.User, error) {
