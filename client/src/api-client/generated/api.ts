@@ -275,13 +275,13 @@ export interface HttpJobResponseJob {
      * @type {string}
      * @memberof HttpJobResponseJob
      */
-    'name'?: string;
+    'completedAt'?: string;
     /**
      * 
      * @type {string}
      * @memberof HttpJobResponseJob
      */
-    'updatedAt'?: string;
+    'name'?: string;
 }
 /**
  * 

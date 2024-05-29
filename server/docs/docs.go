@@ -694,10 +694,10 @@ const docTemplate = `{
                 "job": {
                     "type": "object",
                     "properties": {
-                        "name": {
+                        "completedAt": {
                             "type": "string"
                         },
-                        "updatedAt": {
+                        "name": {
                             "type": "string"
                         }
                     }

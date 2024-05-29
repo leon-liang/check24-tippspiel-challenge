@@ -38,3 +38,21 @@ func newMatchResponse(match model.Match) *matchResponse {
 
 	return r
 }
+
+type jobResponse struct {
+	Job struct {
+		Name        string `json:"name"`
+		Outstanding int    `json:"outstanding"`
+		Completed   int    `json:"completed"`
+	} `json:"job"`
+}
+
+func newJobResponse(job model.Job) *jobResponse {
+	r := new(jobResponse)
+
+	r.Job.Name = job.Name
+	r.Job.Outstanding = job.Outstanding
+	r.Job.Completed = job.Completed
+
+	return r
+}

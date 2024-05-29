@@ -41,12 +41,19 @@ func main() {
 	r.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// Setup kafka
-	topic := "matches"
-	conn := kafka.NewConn(topic)
-	defer conn.Close()
+	matchTopic := "matches"
+	matchConn := kafka.NewConn(matchTopic)
+	defer matchConn.Close()
 
-	w := kafka.NewWriter(topic)
-	defer w.Close()
+	matchWriter := kafka.NewWriter(matchTopic)
+	defer matchWriter.Close()
+
+	jobTopic := "jobs"
+	jobConn := kafka.NewConn(jobTopic)
+	defer jobConn.Close()
+
+	jobWriter := kafka.NewWriter(jobTopic)
+	defer jobWriter.Close()
 
 	// Setup database
 	d := db.New()
@@ -59,11 +66,12 @@ func main() {
 	ts := store.NewTeamStore(d)
 	bs := store.NewBetStore(d)
 	js := store.NewJobStore(d)
-	mw := mq.NewMatchWriter(w)
+	mw := mq.NewMatchWriter(matchWriter)
+	jw := mq.NewJobWriter(jobWriter)
 	pe := enqueuer.NewPointsEnqueuer()
 
 	// Setup Workers
-	sw := worker.NewPointsWorkerPool(us, bs)
+	sw := worker.NewPointsWorkerPool(us, bs, js, jw)
 	sw.WorkerPool.Start()
 	defer sw.WorkerPool.Stop()
 
@@ -82,7 +90,7 @@ func main() {
 		}
 	)
 
-	httpHandler := http.NewHandler(*us, *cs, *ucs, *ms, *ts, *bs, *js, *mw, *pe)
+	httpHandler := http.NewHandler(*us, *cs, *ucs, *ms, *ts, *bs, *js, *mw, *jw, *pe)
 	wsHandler := websocket.NewHandler(upgrader, *ms, *mw)
 
 	r.GET("", httpHandler.GetRoot)

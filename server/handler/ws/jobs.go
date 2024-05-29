@@ -12,14 +12,14 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 )
 
-func (h *Handler) wsMatches(ctx echo.Context) error {
+func (h *Handler) wsJobs(ctx echo.Context) error {
 	ws, err := h.Upgrader.Upgrade(ctx.Response(), ctx.Request(), nil)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer ws.Close()
 
-	reader := kafka.NewReader("matches")
+	reader := kafka.NewReader("jobs")
 	reader.SetOffset(-1)
 	defer reader.Close()
 
@@ -36,18 +36,16 @@ func (h *Handler) wsMatches(ctx echo.Context) error {
 		}
 
 		// decode message
-		var m model.Match
+		var j model.Job
 		buf := bytes.NewBuffer(message.Value)
 		decoder := gob.NewDecoder(buf)
 
-		if err := decoder.Decode(&m); err != nil {
+		if err := decoder.Decode(&j); err != nil {
 			fmt.Println("Error decoding gob: ", err)
 		}
 
-		// TODO: don't send matchResponse over websocket, but only notify client to refetch
-		r := newMatchResponse(m)
+		r := newJobResponse(j)
 		b, err := json.Marshal(r)
-
 		if err != nil {
 			fmt.Println("Error encoding JSON", err)
 		}
@@ -55,6 +53,9 @@ func (h *Handler) wsMatches(ctx echo.Context) error {
 		if err := ws.WriteMessage(websocket.TextMessage, b); err != nil {
 			fmt.Println(err)
 		}
-	}
 
+		if r.Job.Completed == r.Job.Outstanding {
+			ws.Close()
+		}
+	}
 }

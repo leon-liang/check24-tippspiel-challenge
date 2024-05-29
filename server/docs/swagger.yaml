@@ -95,9 +95,9 @@ definitions:
     properties:
       job:
         properties:
-          name:
+          completedAt:
             type: string
-          updatedAt:
+          name:
             type: string
         type: object
     type: object
