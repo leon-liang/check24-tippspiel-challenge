@@ -53,6 +53,8 @@ export const useUpcomingMatches = (currentDate: DateTime) => {
       return bet.date.toISODate() == closestMatchDate?.toISODate();
     });
 
-    return [...currentMatches, ...upcomingMatches];
+    const combinedMatches = [...currentMatches, ...upcomingMatches];
+
+    return [...new Set(combinedMatches)];
   }, [currentDate]);
 };
