@@ -223,7 +223,7 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 	communityPreviews := make([]*communityPreviewResponse, 0)
 
 	for _, community := range communities {
-		// If there are less than 7 users in the community return all members
+		// If there are <= 7 users in the community return all members
 		count, err := h.CommunityStore.GetCommunityMembersCount(&community)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
@@ -266,7 +266,7 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 
 		// If current user is in the last 2 positions:
 		// Return last 4 positions + top 3 positions
-		if pos-count < 2 {
+		if count-pos < 2 {
 			topThree, err := h.CommunityStore.GetMembersAtPosition(&community, 1, 3)
 			if err != nil {
 				return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
