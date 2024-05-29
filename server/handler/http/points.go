@@ -11,8 +11,9 @@ import (
 // CalculatePoints godoc
 // @Tags Points
 // @Summary Calculate points based on the current of the current match scores and bets
-// @Success 200
+// @Success 200 {object} http.jobResponse
 // @Router /v1/points [PUT]
+// @Produce json
 // @Security OAuth2Implicit
 func (h *Handler) CalculatePoints(ctx echo.Context) error {
 	jobName := "calculate_points"
@@ -42,5 +43,6 @@ func (h *Handler) CalculatePoints(ctx echo.Context) error {
 		offset += limit
 	}
 
-	return ctx.NoContent(http.StatusOK)
+	response := newJobResponse(*job)
+	return ctx.JSON(http.StatusOK, response)
 }

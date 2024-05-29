@@ -97,6 +97,8 @@ definitions:
         properties:
           completedAt:
             type: string
+          id:
+            type: string
           name:
             type: string
         type: object
@@ -479,9 +481,13 @@ paths:
       - Matches
   /v1/points:
     put:
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/http.jobResponse'
       security:
       - OAuth2Implicit: []
       summary: Calculate points based on the current of the current match scores and

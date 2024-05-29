@@ -65,23 +65,20 @@ interface UpdatedMatch {
 
 export const useSubscribeMatchUpdate = () => {
   const [match, setMatch] = useState<UpdatedMatch>();
-  const { status, data } = useSession();
 
   useEffect(() => {
-    if (status !== "loading") {
-      const websocket = new WebSocket(
-        `${process.env.NEXT_PUBLIC_WS_URL}/v1/ws/matches`,
-      );
+    const websocket = new WebSocket(
+      `${process.env.NEXT_PUBLIC_WS_URL}/v1/ws/matches`,
+    );
 
-      websocket.onmessage = (event) => {
-        setMatch(JSON.parse(event.data));
-      };
+    websocket.onmessage = (event) => {
+      setMatch(JSON.parse(event.data));
+    };
 
-      return () => {
-        websocket.close();
-      };
-    }
-  }, [status]);
+    return () => {
+      websocket.close();
+    };
+  }, []);
 
   return match;
 };

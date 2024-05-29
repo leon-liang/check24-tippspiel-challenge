@@ -10,8 +10,10 @@ import UpdateMatch from "@/components/update-match/UpdateMatch";
 import useMatchColumns from "@/hooks/use-match-columns";
 import Button from "@/components/button/Button";
 import { useCalculatePoints } from "@/hooks/api/points.api";
-import { toast } from "@/hooks/use-toast";
 import useIsPointsOutOfDate from "@/hooks/use-points";
+import { readJsonFromDiskSync } from "tsconfig-paths/lib/filesystem";
+import { useSubscribeCalculatePointsJob } from "@/hooks/api/jobs.api";
+import CalculatePointsStatus from "@/components/job-status/CalculatePointsStatus";
 
 type Match = {
   id: string;
@@ -31,6 +33,7 @@ const Matches = () => {
   const [selectedRow, setSelectedRow] = useState<number>();
 
   const [open, setOpen] = useState<boolean>(false);
+  const [jobName, setJobName] = useState<string>();
 
   const calculatePointsMutation = useCalculatePoints();
   const matches: Match[] = useMatches();
@@ -48,18 +51,10 @@ const Matches = () => {
 
   async function onCalculatePointsClicked() {
     try {
-      await calculatePointsMutation.mutateAsync();
-      toast({
-        variant: "success",
-        title: "Successfully initiated",
-        description: "The points will be recalculated shortly!",
-      });
+      const result = await calculatePointsMutation.mutateAsync();
+      setJobName(result.data.job?.name);
     } catch (e) {
-      toast({
-        variant: "error",
-        title: "Failed to update match",
-        description: "Please try again later!",
-      });
+      console.log(e);
     }
   }
 
@@ -77,6 +72,7 @@ const Matches = () => {
           <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-amber-6 bg-colors-amber-3 px-6 py-2 text-sm text-amber-12">
             The match scores have been updated since you last recalculated the
             points
+            {jobName && <CalculatePointsStatus jobName={jobName} />}
             <Button
               className="text-xs"
               variant="outline"

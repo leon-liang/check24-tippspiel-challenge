@@ -7,5 +7,5 @@ func (h *Handler) Register(ws *echo.Group) {
 	matches.GET("", h.wsMatches)
 
 	jobs := ws.Group("/jobs")
-	jobs.GET("", h.wsJobs)
+	jobs.GET("/:job_name/status", h.wsJobs)
 }

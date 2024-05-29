@@ -16,7 +16,7 @@ import (
 // @Router /v1/jobs/{job_name} [GET]
 // @Security OAuth2Implicit
 func (h *Handler) GetJob(ctx echo.Context) error {
-	jobName := ctx.Param("job_id")
+	jobName := ctx.Param("job_name")
 	job, err := h.JobStore.GetByName(jobName)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))

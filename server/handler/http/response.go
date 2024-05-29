@@ -265,6 +265,7 @@ func newBetsResponse(bets []model.Bet) *betsResponse {
 
 type jobResponse struct {
 	Job struct {
+		ID          string    `json:"id"`
 		Name        string    `json:"name"`
 		CompletedAt time.Time `json:"completedAt"`
 	} `json:"job"`
@@ -273,6 +274,7 @@ type jobResponse struct {
 func newJobResponse(job model.Job) *jobResponse {
 	r := new(jobResponse)
 
+	r.Job.ID = job.ID
 	r.Job.Name = job.Name
 	r.Job.CompletedAt = job.CompletedAt
 
