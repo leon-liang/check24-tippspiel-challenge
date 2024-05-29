@@ -15,14 +15,6 @@ export const useCreateCommunity = () => {
   });
 };
 
-export const useGetCommunity = (communityId: string) => {
-  return useQuery({
-    queryFn: () =>
-      communitiesApiFactory.v1CommunitiesCommunityIdGet(communityId),
-    queryKey: [communityId],
-  });
-};
-
 export const useJoinCommunity = () => {
   const queryClient = useQueryClient();
 
