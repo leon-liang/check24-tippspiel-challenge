@@ -8,12 +8,10 @@ import React, { useState } from "react";
 import { useMatches } from "@/hooks/use-matches";
 import UpdateMatch from "@/components/update-match/UpdateMatch";
 import useMatchColumns from "@/hooks/use-match-columns";
-import Button from "@/components/button/Button";
 import { useCalculatePoints } from "@/hooks/api/points.api";
 import useIsPointsOutOfDate from "@/hooks/use-points";
-import { readJsonFromDiskSync } from "tsconfig-paths/lib/filesystem";
-import { useSubscribeCalculatePointsJob } from "@/hooks/api/jobs.api";
 import CalculatePointsStatus from "@/components/job-status/CalculatePointsStatus";
+import CalculatePoints from "@/components/calculate-points/CalculatePoints";
 
 type Match = {
   id: string;
@@ -73,13 +71,7 @@ const Matches = () => {
             The match scores have been updated since you last recalculated the
             points
             {jobName && <CalculatePointsStatus jobName={jobName} />}
-            <Button
-              className="text-xs"
-              variant="outline"
-              onClick={onCalculatePointsClicked}
-            >
-              Calculate Points
-            </Button>
+            <CalculatePoints onClick={onCalculatePointsClicked} />
           </div>
         ) : null}
         <Table
