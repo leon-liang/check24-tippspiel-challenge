@@ -5,7 +5,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { useMemo } from "react";
 import cn from "classnames";
 import { useGetMe } from "@/hooks/api/users.api";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
@@ -50,14 +50,18 @@ const CommunityPreview = ({
     },
   ];
 
-  let data = members.map((member) => {
-    return {
-      position: member.position,
-      rank: member.rank,
-      username: member.username,
-      points: member.points,
-    };
-  });
+  let data = useMemo(
+    () =>
+      members.map((member) => {
+        return {
+          position: member.position,
+          rank: member.rank,
+          username: member.username,
+          points: member.points,
+        };
+      }),
+    [members],
+  );
 
   const table = useReactTable({
     data,

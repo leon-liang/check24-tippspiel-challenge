@@ -68,6 +68,6 @@ export const useGetUserCommunities = () => {
 export const useGetUserCommunitiesPreview = () => {
   return useQuery({
     queryFn: communitiesApiFactory.v1CommunitiesPreviewGet,
-    queryKey: ["communities-preview"],
+    queryKey: ["communities", "communities-preview"],
   });
 };
