@@ -3,8 +3,9 @@ import {
   useGetCommunityLeaderboard,
   usePaginateCommunityMembers,
 } from "@/hooks/api/communities.api";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DtosMember } from "@/api-client/generated";
+import { useSubscribePointsUpdates } from "@/hooks/api/points.api";
 
 export type Member = {
   position?: number;
@@ -17,11 +18,18 @@ export const usePaginatedMembers = (
   communityId: string,
   paginationParams: PaginateCommunityMembersParams,
 ) => {
+  const message = useSubscribePointsUpdates();
   const { data: initialMembersData } = useGetCommunityLeaderboard(communityId);
   const { data: paginatedMembersData } =
     usePaginateCommunityMembers(paginationParams);
 
   const [members, setMembers] = useState<DtosMember[]>([]);
+
+  useEffect(() => {
+    if (message?.message.status === "UPDATED") {
+      setMembers([]);
+    }
+  }, [message?.message.status, message?.message.updatedAt]);
 
   return useMemo(() => {
     const initialMembers =
