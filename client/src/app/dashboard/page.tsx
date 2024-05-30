@@ -52,7 +52,7 @@ const Dashboard = () => {
               </TabsList>
             </div>
             <TabsContent value="user-communities">
-              <div className="mt-6 flex flex-col gap-6">
+              <div className="mt-6 flex flex-col gap-3">
                 {data?.data.communityPreviews?.map((preview, index) => {
                   return (
                     <CommunityPreview
