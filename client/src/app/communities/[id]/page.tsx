@@ -2,11 +2,7 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { useParams } from "next/navigation";
-import {
-  GetCommunityMembersParams,
-  useGetCommunityLeaderboard,
-  useGetCommunityMembers,
-} from "@/hooks/api/communities.api";
+import { PaginateCommunityMembersParams } from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
   DropdownMenu,
@@ -19,53 +15,34 @@ import {
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
 import { useState } from "react";
-import { useGetMe } from "@/hooks/api/users.api";
 import DeleteCommunity from "@/components/delete-community/DeleteCommunity";
 import LeaveCommunity from "@/components/leave-community/LeaveCommunity";
 import Leaderboard from "@/components/leaderboard/Leaderboard";
 import { usePointsUpdates } from "@/hooks/use-points";
-import { Member } from "@/hooks/use-leaderboard";
-import { useGetCurrentCommunity } from "@/hooks/use-communities";
+import {
+  useGetCurrentCommunity,
+  useIsCommunityOwner,
+} from "@/hooks/use-communities";
+import { usePaginatedMembers } from "@/hooks/use-members";
 
 const Community = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const [queryParams, setQueryParams] = useState<GetCommunityMembersParams>();
-
+  const [paginationParams, setPaginationParams] =
+    useState<PaginateCommunityMembersParams>();
   const params = useParams<{ id: string }>();
-  const { data: meData } = useGetMe();
+
   const currentCommunity = useGetCurrentCommunity(params.id);
-  const { data: leaderboardData } = useGetCommunityLeaderboard(params.id);
-  const { data: membersData } = useGetCommunityMembers(
-    queryParams as GetCommunityMembersParams,
+  const isCommunityOwner = useIsCommunityOwner(params.id);
+
+  const members = usePaginatedMembers(
+    params.id,
+    paginationParams as PaginateCommunityMembersParams,
   );
 
   usePointsUpdates();
 
-  const isCommunityOwner =
-    meData?.data.user?.id === currentCommunity?.community?.owner;
-
-  const members = leaderboardData?.data.communityLeaderboard?.members ?? [];
-  const newMembers = membersData?.data.communityLeaderboard?.members ?? [];
-
-  const combinedMembers = [...members, ...newMembers];
-
-  const positionMap: { [position: string]: boolean } = {};
-  const uniqueMembers: Member[] = combinedMembers.reduce(
-    (acc: Member[], current) => {
-      if (!positionMap[current.position!]) {
-        positionMap[current.position!] = true;
-        return acc.concat([current]);
-      } else {
-        return acc;
-      }
-    },
-    [],
-  );
-
-  const sortedMembers = uniqueMembers.sort((a, b) => a.position! - b.position!);
-
   function onPaginate(position: number, direction: "forward" | "backward") {
-    setQueryParams({
+    setPaginationParams({
       communityId: params.id,
       from: position,
       pageSize: 10,
@@ -122,13 +99,11 @@ const Community = () => {
         />
       )}
       <div className="flex flex-row gap-6 px-[10%] py-6">
-        {leaderboardData ? (
-          <Leaderboard
-            onBackClicked={onPaginate}
-            onForwardClicked={onPaginate}
-            members={sortedMembers ?? []}
-          />
-        ) : null}
+        <Leaderboard
+          onBackClicked={onPaginate}
+          onForwardClicked={onPaginate}
+          members={members ?? []}
+        />
       </div>
     </div>
   );

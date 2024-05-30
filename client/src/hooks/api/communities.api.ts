@@ -80,14 +80,16 @@ export const useGetCommunityLeaderboard = (communityId: string) => {
   });
 };
 
-export type GetCommunityMembersParams = {
+export type PaginateCommunityMembersParams = {
   communityId: string;
   from?: number;
   pageSize?: number;
   direction?: "forward" | "backward";
 };
 
-export const useGetCommunityMembers = (params: GetCommunityMembersParams) => {
+export const usePaginateCommunityMembers = (
+  params: PaginateCommunityMembersParams,
+) => {
   return useQuery({
     queryFn: () =>
       communitiesApiFactory.v1CommunitiesCommunityIdMembersGet(
