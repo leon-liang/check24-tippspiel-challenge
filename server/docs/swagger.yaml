@@ -68,16 +68,19 @@ definitions:
             type: string
         type: object
     type: object
-  http.communityPreviewResponse:
+  http.communityLeaderboardResponse:
     properties:
-      id:
-        type: string
-      members:
-        items:
-          $ref: '#/definitions/dtos.Member'
-        type: array
-      name:
-        type: string
+      communityLeaderboard:
+        properties:
+          id:
+            type: string
+          members:
+            items:
+              $ref: '#/definitions/dtos.Member'
+            type: array
+          name:
+            type: string
+        type: object
     type: object
   http.communityResponse:
     properties:
@@ -153,11 +156,11 @@ definitions:
       message:
         type: string
     type: object
-  http.userCommunitiesPreviewResponse:
+  http.userCommunitiesLeaderboardResponse:
     properties:
-      communityPreviews:
+      communityLeaderboard:
         items:
-          $ref: '#/definitions/http.communityPreviewResponse'
+          $ref: '#/definitions/http.communityLeaderboardResponse'
         type: array
     type: object
   http.userResponse:
@@ -306,10 +309,10 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/http.communityResponse'
+            $ref: '#/definitions/http.communityLeaderboardResponse'
       security:
       - OAuth2Implicit: []
-      summary: Retrieve a community with the given id
+      summary: Get the leaderboard for a specified community
       tags:
       - Communities
   /v1/communities/{community_id}/join:
@@ -409,7 +412,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/http.userCommunitiesPreviewResponse'
+            $ref: '#/definitions/http.userCommunitiesLeaderboardResponse'
       security:
       - OAuth2Implicit: []
       summary: Get preview of a user's communities

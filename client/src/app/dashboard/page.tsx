@@ -53,13 +53,13 @@ const Dashboard = () => {
             </div>
             <TabsContent value="user-communities">
               <div className="mt-6 flex flex-col gap-3">
-                {data?.data.communityPreviews?.map((preview, index) => {
+                {data?.data.communityLeaderboard?.map((preview, index) => {
                   return (
                     <CommunityPreview
                       key={index}
-                      communityName={preview.name ?? ""}
-                      communityId={preview.id ?? ""}
-                      members={preview.members ?? []}
+                      communityName={preview.communityLeaderboard?.name ?? ""}
+                      communityId={preview.communityLeaderboard?.id ?? ""}
+                      members={preview.communityLeaderboard?.members ?? []}
                     />
                   );
                 })}

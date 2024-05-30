@@ -12,7 +12,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	communities := v1.Group("/communities")
 	communities.POST("", h.CreateCommunity)
 	communities.GET("", h.GetUserCommunities)
-	communities.GET("/:community_id", h.GetCommunity)
+	communities.GET("/:community_id", h.GetCommunityLeaderboard)
 	communities.POST("/:community_id/join", h.JoinCommunity)
 	communities.PUT("/:community_id/leave", h.LeaveCommunity)
 	communities.DELETE("/:community_id", h.DeleteCommunity)

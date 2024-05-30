@@ -181,7 +181,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.userCommunitiesPreviewResponse"
+                            "$ref": "#/definitions/http.userCommunitiesLeaderboardResponse"
                         }
                     }
                 }
@@ -200,7 +200,7 @@ const docTemplate = `{
                 "tags": [
                     "Communities"
                 ],
-                "summary": "Retrieve a community with the given id",
+                "summary": "Get the leaderboard for a specified community",
                 "parameters": [
                     {
                         "type": "string",
@@ -214,7 +214,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.communityResponse"
+                            "$ref": "#/definitions/http.communityLeaderboardResponse"
                         }
                     }
                 }
@@ -658,20 +658,25 @@ const docTemplate = `{
                 }
             }
         },
-        "http.communityPreviewResponse": {
+        "http.communityLeaderboardResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "members": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dtos.Member"
+                "communityLeaderboard": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "members": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.Member"
+                            }
+                        },
+                        "name": {
+                            "type": "string"
+                        }
                     }
-                },
-                "name": {
-                    "type": "string"
                 }
             }
         },
@@ -792,13 +797,13 @@ const docTemplate = `{
                 }
             }
         },
-        "http.userCommunitiesPreviewResponse": {
+        "http.userCommunitiesLeaderboardResponse": {
             "type": "object",
             "properties": {
-                "communityPreviews": {
+                "communityLeaderboard": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/http.communityPreviewResponse"
+                        "$ref": "#/definitions/http.communityLeaderboardResponse"
                     }
                 }
             }

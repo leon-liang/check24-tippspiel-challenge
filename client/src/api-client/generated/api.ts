@@ -191,25 +191,38 @@ export interface HttpCommunityCreateRequestCommunity {
 /**
  * 
  * @export
- * @interface HttpCommunityPreviewResponse
+ * @interface HttpCommunityLeaderboardResponse
  */
-export interface HttpCommunityPreviewResponse {
+export interface HttpCommunityLeaderboardResponse {
+    /**
+     * 
+     * @type {HttpCommunityLeaderboardResponseCommunityLeaderboard}
+     * @memberof HttpCommunityLeaderboardResponse
+     */
+    'communityLeaderboard'?: HttpCommunityLeaderboardResponseCommunityLeaderboard;
+}
+/**
+ * 
+ * @export
+ * @interface HttpCommunityLeaderboardResponseCommunityLeaderboard
+ */
+export interface HttpCommunityLeaderboardResponseCommunityLeaderboard {
     /**
      * 
      * @type {string}
-     * @memberof HttpCommunityPreviewResponse
+     * @memberof HttpCommunityLeaderboardResponseCommunityLeaderboard
      */
     'id'?: string;
     /**
      * 
      * @type {Array<DtosMember>}
-     * @memberof HttpCommunityPreviewResponse
+     * @memberof HttpCommunityLeaderboardResponseCommunityLeaderboard
      */
     'members'?: Array<DtosMember>;
     /**
      * 
      * @type {string}
-     * @memberof HttpCommunityPreviewResponse
+     * @memberof HttpCommunityLeaderboardResponseCommunityLeaderboard
      */
     'name'?: string;
 }
@@ -444,15 +457,15 @@ export interface HttpTeam {
 /**
  * 
  * @export
- * @interface HttpUserCommunitiesPreviewResponse
+ * @interface HttpUserCommunitiesLeaderboardResponse
  */
-export interface HttpUserCommunitiesPreviewResponse {
+export interface HttpUserCommunitiesLeaderboardResponse {
     /**
      * 
-     * @type {Array<HttpCommunityPreviewResponse>}
-     * @memberof HttpUserCommunitiesPreviewResponse
+     * @type {Array<HttpCommunityLeaderboardResponse>}
+     * @memberof HttpUserCommunitiesLeaderboardResponse
      */
-    'communityPreviews'?: Array<HttpCommunityPreviewResponse>;
+    'communityLeaderboard'?: Array<HttpCommunityLeaderboardResponse>;
 }
 /**
  * 
@@ -744,7 +757,7 @@ export const CommunitiesApiAxiosParamCreator = function (configuration?: Configu
         },
         /**
          * 
-         * @summary Retrieve a community with the given id
+         * @summary Get the leaderboard for a specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1073,12 +1086,12 @@ export const CommunitiesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Retrieve a community with the given id
+         * @summary Get the leaderboard for a specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async v1CommunitiesCommunityIdGet(communityId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpCommunityResponse>> {
+        async v1CommunitiesCommunityIdGet(communityId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpCommunityLeaderboardResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesCommunityIdGet(communityId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CommunitiesApi.v1CommunitiesCommunityIdGet']?.[localVarOperationServerIndex]?.url;
@@ -1169,7 +1182,7 @@ export const CommunitiesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async v1CommunitiesPreviewGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpUserCommunitiesPreviewResponse>> {
+        async v1CommunitiesPreviewGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpUserCommunitiesLeaderboardResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesPreviewGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CommunitiesApi.v1CommunitiesPreviewGet']?.[localVarOperationServerIndex]?.url;
@@ -1197,12 +1210,12 @@ export const CommunitiesApiFactory = function (configuration?: Configuration, ba
         },
         /**
          * 
-         * @summary Retrieve a community with the given id
+         * @summary Get the leaderboard for a specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1CommunitiesCommunityIdGet(communityId: string, options?: any): AxiosPromise<HttpCommunityResponse> {
+        v1CommunitiesCommunityIdGet(communityId: string, options?: any): AxiosPromise<HttpCommunityLeaderboardResponse> {
             return localVarFp.v1CommunitiesCommunityIdGet(communityId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1272,7 +1285,7 @@ export const CommunitiesApiFactory = function (configuration?: Configuration, ba
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1CommunitiesPreviewGet(options?: any): AxiosPromise<HttpUserCommunitiesPreviewResponse> {
+        v1CommunitiesPreviewGet(options?: any): AxiosPromise<HttpUserCommunitiesLeaderboardResponse> {
             return localVarFp.v1CommunitiesPreviewGet(options).then((request) => request(axios, basePath));
         },
     };
@@ -1299,7 +1312,7 @@ export class CommunitiesApi extends BaseAPI {
 
     /**
      * 
-     * @summary Retrieve a community with the given id
+     * @summary Get the leaderboard for a specified community
      * @param {string} communityId Community ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

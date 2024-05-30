@@ -13,18 +13,18 @@ func (h *Handler) SeedTeams() {
 
 		// Extract teams from matches in the group stage (first 36 matches)
 		groupStageMatches := data[1:37]
-		var teams []string
+		var teams []*string
 		for _, m := range groupStageMatches {
 			for j, entry := range m {
 				if j == 0 || j == 1 {
-					teams = append(teams, entry)
+					teams = append(teams, &entry)
 				}
 			}
 		}
 
-		teams = utils.Unique[string](teams)
+		teams = utils.Unique(teams)
 		for _, team := range teams {
-			if err := h.TeamStore.Create(team); err != nil {
+			if err := h.TeamStore.Create(*team); err != nil {
 				log.Fatal(err)
 			}
 		}
