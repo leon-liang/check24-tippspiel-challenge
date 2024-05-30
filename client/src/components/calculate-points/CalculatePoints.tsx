@@ -19,11 +19,7 @@ const CalculatePoints = ({ onClick }: CalculatePointsProps) => {
       }}
     >
       {isLoading ? (
-        <SpinnerIcon
-          height={16}
-          width={16}
-          className="text-white animate-spin"
-        />
+        <SpinnerIcon height={16} width={16} className="animate-spin" />
       ) : null}
       Calculate Points
     </Button>
