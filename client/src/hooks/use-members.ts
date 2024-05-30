@@ -39,8 +39,8 @@ export const usePaginatedMembers = (
 
     const combinedMembers = [
       ...initialMembers,
-      ...members,
       ...newPaginatedMembers,
+      ...members,
     ];
 
     const positionMap: { [position: string]: boolean } = {};

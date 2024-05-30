@@ -106,7 +106,7 @@ export const usePaginateCommunityMembers = (
     ],
     enabled:
       params?.from !== undefined &&
-      params?.pageSize != undefined &&
-      params?.direction != undefined,
+      params?.pageSize !== undefined &&
+      params?.direction !== undefined,
   });
 };

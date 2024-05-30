@@ -30,6 +30,7 @@ export const usePointsUpdates = () => {
     if (message?.message.status === "UPDATED") {
       queryClient.invalidateQueries({
         queryKey: ["communities", "community-leaderboard"],
+        refetchType: "all",
       });
     }
   }, [message?.message.status, message?.message.updatedAt, queryClient]);
