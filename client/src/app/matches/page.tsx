@@ -49,12 +49,8 @@ const Matches = () => {
   }
 
   async function onCalculatePointsClicked() {
-    try {
-      const result = await calculatePointsMutation.mutateAsync();
-      setJobName(result.data.job?.name ?? "");
-    } catch (e) {
-      console.log(e);
-    }
+    const result = await calculatePointsMutation.mutateAsync();
+    setJobName(result.data.job?.name ?? "");
   }
 
   return (
