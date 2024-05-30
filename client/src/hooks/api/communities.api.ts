@@ -80,29 +80,31 @@ export const useGetCommunityLeaderboard = (communityId: string) => {
   });
 };
 
-export const useGetCommunityMembers = (
-  communityId: string,
-  from?: number,
-  pageSize?: number,
-  direction?: "forward" | "backward",
-) => {
+export type GetCommunityMembersParams = {
+  communityId: string;
+  from?: number;
+  pageSize?: number;
+  direction?: "forward" | "backward";
+};
+
+export const useGetCommunityMembers = (params: GetCommunityMembersParams) => {
   return useQuery({
     queryFn: () =>
       communitiesApiFactory.v1CommunitiesCommunityIdMembersGet(
-        communityId,
-        from,
-        pageSize,
-        direction,
+        params?.communityId,
+        params?.from ?? 0,
+        params?.pageSize ?? 10,
+        params?.direction ?? "forward",
       ),
     queryKey: [
       "communities",
       "community-leaderboard",
       "community-members",
-      communityId,
-      from,
-      pageSize,
+      params,
     ],
     enabled:
-      from !== undefined && pageSize != undefined && direction != undefined,
+      params?.from !== undefined &&
+      params?.pageSize != undefined &&
+      params?.direction != undefined,
   });
 };

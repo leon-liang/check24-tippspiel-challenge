@@ -18,8 +18,11 @@ import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 
 interface LeaderboardProps {
   members: Member[];
-  onBackClicked: (position: number) => void;
-  onForwardClicked: (position: number) => void;
+  onBackClicked: (position: number, direction: "forward" | "backward") => void;
+  onForwardClicked: (
+    position: number,
+    direction: "forward" | "backward",
+  ) => void;
 }
 
 const Leaderboard = ({
@@ -106,6 +109,7 @@ const Leaderboard = ({
                           (table
                             .getRowModel()
                             .rows[index].getValue("position") as number) + 1,
+                          "forward",
                         )
                       }
                       className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3"
@@ -126,6 +130,7 @@ const Leaderboard = ({
                             .getRowModel()
                             .rows[index + 1].getValue("position") as number) -
                             1,
+                          "backward",
                         );
                       }}
                       className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3"

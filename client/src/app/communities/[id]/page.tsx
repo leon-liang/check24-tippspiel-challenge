@@ -3,9 +3,9 @@
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { useParams } from "next/navigation";
 import {
+  GetCommunityMembersParams,
   useGetCommunityLeaderboard,
   useGetCommunityMembers,
-  useGetUserCommunities,
 } from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
@@ -18,52 +18,31 @@ import {
 } from "@/components/dropdown-menu/DropdownMenu";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useGetMe } from "@/hooks/api/users.api";
 import DeleteCommunity from "@/components/delete-community/DeleteCommunity";
 import LeaveCommunity from "@/components/leave-community/LeaveCommunity";
 import Leaderboard from "@/components/leaderboard/Leaderboard";
 import { usePointsUpdates } from "@/hooks/use-points";
 import { Member } from "@/hooks/use-leaderboard";
-
-type GetCommunityMembersParams = {
-  from: number;
-  pageSize: number;
-  direction: "forward" | "backward";
-};
+import { useGetCurrentCommunity } from "@/hooks/use-communities";
 
 const Community = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const [getCommunityMembersParams, setGetCommunityMembersParams] =
-    useState<GetCommunityMembersParams>();
+  const [queryParams, setQueryParams] = useState<GetCommunityMembersParams>();
 
   const params = useParams<{ id: string }>();
   const { data: meData } = useGetMe();
-  const { data: communitiesData, isLoading } = useGetUserCommunities();
-
+  const currentCommunity = useGetCurrentCommunity(params.id);
   const { data: leaderboardData } = useGetCommunityLeaderboard(params.id);
-
   const { data: membersData } = useGetCommunityMembers(
-    params.id,
-    getCommunityMembersParams?.from,
-    getCommunityMembersParams?.pageSize,
-    getCommunityMembersParams?.direction,
+    queryParams as GetCommunityMembersParams,
   );
 
   usePointsUpdates();
 
-  const currentCommunity = useMemo(() => {
-    return communitiesData?.data.communities?.find(
-      (entry) => entry.community?.id === params.id,
-    );
-  }, [communitiesData?.data.communities, params.id]);
-
   const isCommunityOwner =
     meData?.data.user?.id === currentCommunity?.community?.owner;
-
-  if (isLoading) {
-    return null;
-  }
 
   const members = leaderboardData?.data.communityLeaderboard?.members ?? [];
   const newMembers = membersData?.data.communityLeaderboard?.members ?? [];
@@ -82,21 +61,14 @@ const Community = () => {
     [],
   );
 
-  const sortedMembers = uniqueMembers.sort((a, b) => a.position - b.position);
+  const sortedMembers = uniqueMembers.sort((a, b) => a.position! - b.position!);
 
-  function onBackClicked(position: number) {
-    setGetCommunityMembersParams({
+  function onPaginate(position: number, direction: "forward" | "backward") {
+    setQueryParams({
+      communityId: params.id,
       from: position,
       pageSize: 10,
-      direction: "backward",
-    });
-  }
-
-  function onForwardClicked(position: number) {
-    setGetCommunityMembersParams({
-      from: position,
-      pageSize: 10,
-      direction: "forward",
+      direction: direction,
     });
   }
 
@@ -151,8 +123,8 @@ const Community = () => {
       <div className="flex flex-row gap-6 px-[10%] py-6">
         {leaderboardData ? (
           <Leaderboard
-            onBackClicked={onBackClicked}
-            onForwardClicked={onForwardClicked}
+            onBackClicked={onPaginate}
+            onForwardClicked={onPaginate}
             members={sortedMembers ?? []}
           />
         ) : null}
