@@ -6,7 +6,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import cn from "classnames";
-import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
 import { colors } from "../../../tailwind.config";
 import {
   Member,
@@ -14,6 +13,8 @@ import {
   useLeaderboardColumns,
 } from "@/hooks/use-leaderboard";
 import { useGetMe } from "@/hooks/api/users.api";
+import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 
 interface LeaderboardProps {
   members: Member[];
@@ -92,16 +93,28 @@ const Leaderboard = ({ members }: LeaderboardProps) => {
                   .getRowModel()
                   .rows[index + 1].getValue("position") as number) >
                   (row.getValue("position") as number) + 1 ? (
-                  <tr className="border-b border-gray-6 bg-colors-gray-2">
-                    <td className="py-1.5 text-center" colSpan={3}>
-                      <EllipsisHorizontalIcon
-                        height={18}
-                        width={18}
-                        stroke={colors.gray["11"]}
-                        className="inline-block"
-                      />
-                    </td>
-                  </tr>
+                  <React.Fragment>
+                    <tr className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3">
+                      <td className="text-center" colSpan={3}>
+                        <ChevronDownIcon
+                          height={18}
+                          width={18}
+                          stroke={colors.gray["11"]}
+                          className="inline-block"
+                        />
+                      </td>
+                    </tr>
+                    <tr className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3">
+                      <td className="text-center" colSpan={3}>
+                        <ChevronUpIcon
+                          height={18}
+                          width={18}
+                          stroke={colors.gray["11"]}
+                          className="inline-block"
+                        />
+                      </td>
+                    </tr>
+                  </React.Fragment>
                 ) : null}
               </React.Fragment>
             );

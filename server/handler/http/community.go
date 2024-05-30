@@ -314,6 +314,16 @@ func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNotFound, utils.NotFound())
 	}
 
+	// check that current user is a member of the community
+	isMember, err := h.CommunityStore.IsMember(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusOK, utils.NewError(err))
+	}
+
+	if !isMember {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
 	// get top 3 positions
 	topThree, err := h.CommunityStore.GetMembersAtPosition(community, 1, 3)
 	if err != nil {
