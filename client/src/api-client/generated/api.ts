@@ -871,6 +871,65 @@ export const CommunitiesApiAxiosParamCreator = function (configuration?: Configu
         },
         /**
          * 
+         * @summary Get members at the specified positions [from:from+pageSize)
+         * @param {string} communityId Community ID
+         * @param {number} from From
+         * @param {number} pageSize Page Size
+         * @param {V1CommunitiesCommunityIdMembersGetDirectionEnum} direction Direction
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1CommunitiesCommunityIdMembersGet: async (communityId: string, from: number, pageSize: number, direction: V1CommunitiesCommunityIdMembersGetDirectionEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'communityId' is not null or undefined
+            assertParamExists('v1CommunitiesCommunityIdMembersGet', 'communityId', communityId)
+            // verify required parameter 'from' is not null or undefined
+            assertParamExists('v1CommunitiesCommunityIdMembersGet', 'from', from)
+            // verify required parameter 'pageSize' is not null or undefined
+            assertParamExists('v1CommunitiesCommunityIdMembersGet', 'pageSize', pageSize)
+            // verify required parameter 'direction' is not null or undefined
+            assertParamExists('v1CommunitiesCommunityIdMembersGet', 'direction', direction)
+            const localVarPath = `/v1/communities/{community_id}/members`
+                .replace(`{${"community_id"}}`, encodeURIComponent(String(communityId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth2Implicit required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2Implicit", [], configuration)
+
+            if (from !== undefined) {
+                localVarQueryParameter['from'] = from;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+
+            if (direction !== undefined) {
+                localVarQueryParameter['direction'] = direction;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Remove specified user from the pinned users for a given community
          * @param {string} communityId Community ID
          * @param {string} userId User ID
@@ -1125,6 +1184,22 @@ export const CommunitiesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get members at the specified positions [from:from+pageSize)
+         * @param {string} communityId Community ID
+         * @param {number} from From
+         * @param {number} pageSize Page Size
+         * @param {V1CommunitiesCommunityIdMembersGetDirectionEnum} direction Direction
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async v1CommunitiesCommunityIdMembersGet(communityId: string, from: number, pageSize: number, direction: V1CommunitiesCommunityIdMembersGetDirectionEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpCommunityLeaderboardResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesCommunityIdMembersGet(communityId, from, pageSize, direction, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CommunitiesApi.v1CommunitiesCommunityIdMembersGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Remove specified user from the pinned users for a given community
          * @param {string} communityId Community ID
          * @param {string} userId User ID
@@ -1240,6 +1315,19 @@ export const CommunitiesApiFactory = function (configuration?: Configuration, ba
         },
         /**
          * 
+         * @summary Get members at the specified positions [from:from+pageSize)
+         * @param {string} communityId Community ID
+         * @param {number} from From
+         * @param {number} pageSize Page Size
+         * @param {V1CommunitiesCommunityIdMembersGetDirectionEnum} direction Direction
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1CommunitiesCommunityIdMembersGet(communityId: string, from: number, pageSize: number, direction: V1CommunitiesCommunityIdMembersGetDirectionEnum, options?: any): AxiosPromise<HttpCommunityLeaderboardResponse> {
+            return localVarFp.v1CommunitiesCommunityIdMembersGet(communityId, from, pageSize, direction, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Remove specified user from the pinned users for a given community
          * @param {string} communityId Community ID
          * @param {string} userId User ID
@@ -1348,6 +1436,21 @@ export class CommunitiesApi extends BaseAPI {
 
     /**
      * 
+     * @summary Get members at the specified positions [from:from+pageSize)
+     * @param {string} communityId Community ID
+     * @param {number} from From
+     * @param {number} pageSize Page Size
+     * @param {V1CommunitiesCommunityIdMembersGetDirectionEnum} direction Direction
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CommunitiesApi
+     */
+    public v1CommunitiesCommunityIdMembersGet(communityId: string, from: number, pageSize: number, direction: V1CommunitiesCommunityIdMembersGetDirectionEnum, options?: RawAxiosRequestConfig) {
+        return CommunitiesApiFp(this.configuration).v1CommunitiesCommunityIdMembersGet(communityId, from, pageSize, direction, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Remove specified user from the pinned users for a given community
      * @param {string} communityId Community ID
      * @param {string} userId User ID
@@ -1407,6 +1510,14 @@ export class CommunitiesApi extends BaseAPI {
     }
 }
 
+/**
+ * @export
+ */
+export const V1CommunitiesCommunityIdMembersGetDirectionEnum = {
+    Forward: 'forward',
+    Backward: 'backward'
+} as const;
+export type V1CommunitiesCommunityIdMembersGetDirectionEnum = typeof V1CommunitiesCommunityIdMembersGetDirectionEnum[keyof typeof V1CommunitiesCommunityIdMembersGetDirectionEnum];
 
 
 /**

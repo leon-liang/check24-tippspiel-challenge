@@ -74,7 +74,7 @@ func (ctx *PointsContext) CalculatePoints(job *work.Job) error {
 				case homeDiff == awayDiff && *bet.Match.HomeTeamResult != *bet.Match.AwayTeamResult:
 					// 6 points for the correct goal difference if not a draw
 					points += 6
-				case (homeDiff >= 0 && awayDiff >= 0) || (homeDiff < 0 && awayDiff < 0):
+				case (*bet.Match.HomeTeamResult-*bet.Match.AwayTeamResult > 0 && *bet.HomeTeam-*bet.AwayTeam > 0) || (*bet.Match.HomeTeamResult-*bet.Match.AwayTeamResult < 0 && *bet.HomeTeam-*bet.AwayTeam < 0) || (*bet.Match.HomeTeamResult-*bet.Match.AwayTeamResult == 0 && *bet.HomeTeam-*bet.AwayTeam == 0):
 					// 4 points for the correct tendency
 					points += 4
 				}

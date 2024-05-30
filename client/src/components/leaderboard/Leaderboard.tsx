@@ -18,9 +18,15 @@ import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 
 interface LeaderboardProps {
   members: Member[];
+  onBackClicked: (position: number) => void;
+  onForwardClicked: (position: number) => void;
 }
 
-const Leaderboard = ({ members }: LeaderboardProps) => {
+const Leaderboard = ({
+  members,
+  onBackClicked,
+  onForwardClicked,
+}: LeaderboardProps) => {
   const data = useLeaderboard(members);
   const leaderboardColumns = useLeaderboardColumns();
 
@@ -94,7 +100,16 @@ const Leaderboard = ({ members }: LeaderboardProps) => {
                   .rows[index + 1].getValue("position") as number) >
                   (row.getValue("position") as number) + 1 ? (
                   <React.Fragment>
-                    <tr className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3">
+                    <tr
+                      onClick={() =>
+                        onForwardClicked(
+                          (table
+                            .getRowModel()
+                            .rows[index].getValue("position") as number) + 1,
+                        )
+                      }
+                      className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3"
+                    >
                       <td className="text-center" colSpan={3}>
                         <ChevronDownIcon
                           height={18}
@@ -104,7 +119,17 @@ const Leaderboard = ({ members }: LeaderboardProps) => {
                         />
                       </td>
                     </tr>
-                    <tr className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3">
+                    <tr
+                      onClick={() => {
+                        onBackClicked(
+                          (table
+                            .getRowModel()
+                            .rows[index + 1].getValue("position") as number) -
+                            1,
+                        );
+                      }}
+                      className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3"
+                    >
                       <td className="text-center" colSpan={3}>
                         <ChevronUpIcon
                           height={18}

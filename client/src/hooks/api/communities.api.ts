@@ -76,6 +76,33 @@ export const useGetCommunityLeaderboard = (communityId: string) => {
   return useQuery({
     queryFn: () =>
       communitiesApiFactory.v1CommunitiesCommunityIdLeaderboardGet(communityId),
-    queryKey: ["communities", "community-leaderboard"],
+    queryKey: ["communities", "community-leaderboard", communityId],
+  });
+};
+
+export const useGetCommunityMembers = (
+  communityId: string,
+  from?: number,
+  pageSize?: number,
+  direction?: "forward" | "backward",
+) => {
+  return useQuery({
+    queryFn: () =>
+      communitiesApiFactory.v1CommunitiesCommunityIdMembersGet(
+        communityId,
+        from,
+        pageSize,
+        direction,
+      ),
+    queryKey: [
+      "communities",
+      "community-leaderboard",
+      "community-members",
+      communityId,
+      from,
+      pageSize,
+    ],
+    enabled:
+      from !== undefined && pageSize != undefined && direction != undefined,
   });
 };

@@ -9,6 +9,7 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/utils"
 	"net/http"
 	"slices"
+	"strconv"
 )
 
 // CreateCommunity godoc
@@ -340,12 +341,12 @@ func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 		}
 
-		member, err := h.CommunityStore.GetMembersAtPosition(community, pos, pos)
+		members, err := h.CommunityStore.GetMembersAtPosition(community, pos, pos)
 		if err != nil {
 			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 		}
 
-		pinnedMembers = append(pinnedMembers, member...)
+		pinnedMembers = append(pinnedMembers, members...)
 	}
 
 	// get position of the current user
@@ -376,6 +377,74 @@ func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 	slices.SortFunc(members, func(a, b *dtos.Member) int {
 		return cmp.Compare(a.Position, b.Position)
 	})
+
+	response := newCommunityLeaderboardResponse(community, members)
+	return ctx.JSON(http.StatusOK, response)
+}
+
+// GetMembersAtPosition godoc
+// @Tags communities
+// @Summary Get members at the specified positions [from:from+pageSize)
+// @Produce json
+// @Success 200 {object} http.communityLeaderboardResponse
+// @Param community_id path string true "Community ID"
+// @Param from query int true "From"
+// @Param pageSize query int true "Page Size"
+// @Param direction query string true "Direction" Enums(forward, backward)
+// @Router /v1/communities/{community_id}/members [GET]
+// @Security OAuth2Implicit
+func (h *Handler) GetMembersAtPosition(ctx echo.Context) error {
+	f := ctx.QueryParam("from")
+	ps := ctx.QueryParam("pageSize")
+	direction := ctx.QueryParam("direction")
+
+	pageSize, err := strconv.Atoi(ps)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewValidatorError(err))
+	}
+
+	from, err := strconv.Atoi(f)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewValidatorError(err))
+	}
+
+	communityId := ctx.Param("community_id")
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// check that current user is a member of the community
+	isMember, err := h.CommunityStore.IsMember(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusOK, utils.NewError(err))
+	}
+
+	if !isMember {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
+	var start int
+	var end int
+	if direction == "forward" {
+		start = from
+		end = from + (pageSize - 1)
+	} else {
+		start = from - (pageSize - 1)
+		end = from
+	}
+
+	members, err := h.CommunityStore.GetMembersAtPosition(community, start, end)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
 
 	response := newCommunityLeaderboardResponse(community, members)
 	return ctx.JSON(http.StatusOK, response)

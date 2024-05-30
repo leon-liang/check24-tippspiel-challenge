@@ -310,6 +310,64 @@
                 }
             }
         },
+        "/v1/communities/{community_id}/members": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "communities"
+                ],
+                "summary": "Get members at the specified positions [from:from+pageSize)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "From",
+                        "name": "from",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "forward",
+                            "backward"
+                        ],
+                        "type": "string",
+                        "description": "Direction",
+                        "name": "direction",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.communityLeaderboardResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/communities/{community_id}/pinned_users/{user_id}": {
             "put": {
                 "security": [
