@@ -82,7 +82,7 @@ const CommunityPreview = ({
       onClick={() => {
         router.push(`/communities/${communityId}`);
       }}
-      className="w-full cursor-pointer rounded-md border border-gray-6 bg-colors-white-A12 hover:shadow-lg"
+      className="w-full cursor-pointer rounded-md border border-gray-6 bg-colors-white-A12 transition duration-200 hover:shadow-lg"
     >
       <div className="flex flex-row items-center gap-2 rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
         <h1 className="p-1 font-mono text-sm">{communityName}</h1>
