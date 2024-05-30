@@ -44,10 +44,8 @@ func (h *Handler) wsMatches(ctx echo.Context) error {
 			fmt.Println("Error decoding gob: ", err)
 		}
 
-		// TODO: don't send matchResponse over websocket, but only notify client to refetch
-		r := newMatchResponse(m)
+		r := newMatchResponse(m, "UPDATED")
 		b, err := json.Marshal(r)
-
 		if err != nil {
 			fmt.Println("Error encoding JSON", err)
 		}

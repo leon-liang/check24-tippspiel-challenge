@@ -12,7 +12,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/tabs/Tabs";
-import { useUpcomingMatches } from "@/hooks/use-matches";
+import { useMatchUpdates, useUpcomingMatches } from "@/hooks/use-matches";
 import { usePointsUpdates } from "@/hooks/use-points";
 
 const Dashboard = () => {
@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [selectedTab, setSelectedTab] = useState("user-communities");
   const currentDate = DateTime.now();
   const matches = useUpcomingMatches(currentDate);
+  useMatchUpdates();
   usePointsUpdates();
 
   return (

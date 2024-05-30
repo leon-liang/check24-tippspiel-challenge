@@ -1,5 +1,5 @@
 import { useGetJob } from "@/hooks/api/jobs.api";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { DateTime } from "luxon";
 import { useMatches } from "@/hooks/use-matches";
 import { useSubscribePointsUpdates } from "@/hooks/api/points.api";
@@ -23,12 +23,14 @@ export const useIsPointsOutOfDate = () => {
 };
 
 export const usePointsUpdates = () => {
-  const status = useSubscribePointsUpdates();
+  const message = useSubscribePointsUpdates();
   const queryClient = useQueryClient();
 
-  if (status?.status.message === "UPDATED") {
-    queryClient.invalidateQueries({
-      queryKey: ["communities", "communities-preview"],
-    });
-  }
+  useEffect(() => {
+    if (message?.message.status === "UPDATED") {
+      queryClient.invalidateQueries({
+        queryKey: ["communities", "communities-preview"],
+      });
+    }
+  }, [message?.message.status, message?.message.updatedAt, queryClient]);
 };

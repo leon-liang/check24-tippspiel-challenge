@@ -8,14 +8,15 @@ export const useCalculatePoints = () => {
   });
 };
 
-interface Status {
-  status: {
-    message: string;
+interface Message {
+  message: {
+    status: string;
+    updatedAt: string;
   };
 }
 
 export const useSubscribePointsUpdates = () => {
-  const [status, setStatus] = useState<Status>();
+  const [message, setMessage] = useState<Message>();
 
   useEffect(() => {
     const websocket = new WebSocket(
@@ -23,7 +24,7 @@ export const useSubscribePointsUpdates = () => {
     );
 
     websocket.onmessage = (event) => {
-      setStatus(JSON.parse(event.data));
+      setMessage(JSON.parse(event.data));
     };
 
     return () => {
@@ -31,5 +32,5 @@ export const useSubscribePointsUpdates = () => {
     };
   }, []);
 
-  return status;
+  return message;
 };

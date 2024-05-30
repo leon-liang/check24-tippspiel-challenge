@@ -2,40 +2,22 @@ package ws
 
 import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
+	"time"
 )
 
-type Team struct {
-	Name   *string `json:"name"`
-	Result *int    `json:"result"`
-}
-
 type matchResponse struct {
-	Match struct {
-		ID       string `json:"id"`
-		HomeTeam Team   `json:"homeTeam"`
-		AwayTeam Team   `json:"awayTeam"`
-	} `json:"match"`
+	Message struct {
+		MatchID   string    `json:"matchId"`
+		Status    string    `json:"status"`
+		UpdatedAt time.Time `json:"updatedAt"`
+	} `json:"message"`
 }
 
-func newMatchResponse(match model.Match) *matchResponse {
+func newMatchResponse(match model.Match, message string) *matchResponse {
 	r := new(matchResponse)
-	ht := Team{}
-	at := Team{}
-
-	if match.HomeTeam != nil {
-		ht.Name = &match.HomeTeam.Name
-		ht.Result = match.HomeTeamResult
-	}
-
-	if match.AwayTeam != nil {
-		at.Name = &match.AwayTeam.Name
-		at.Result = match.AwayTeamResult
-	}
-
-	r.Match.ID = match.ID
-	r.Match.HomeTeam = ht
-	r.Match.AwayTeam = at
-
+	r.Message.MatchID = match.ID
+	r.Message.Status = message
+	r.Message.UpdatedAt = time.Now()
 	return r
 }
 
@@ -58,14 +40,15 @@ func newJobResponse(job model.Job) *jobResponse {
 }
 
 type pointsResponse struct {
-	Status struct {
-		Message string `json:"message"`
-	} `json:"status"`
+	Message struct {
+		Status    string    `json:"status"`
+		UpdatedAt time.Time `json:"updatedAt"`
+	} `json:"message"`
 }
 
-func newPointsResponse(message string) *pointsResponse {
+func newPointsResponse(status string) *pointsResponse {
 	r := new(pointsResponse)
-	r.Status.Message = message
-
+	r.Message.Status = status
+	r.Message.UpdatedAt = time.Now()
 	return r
 }
