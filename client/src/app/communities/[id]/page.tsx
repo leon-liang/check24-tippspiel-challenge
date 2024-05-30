@@ -49,10 +49,11 @@ const Community = () => {
 
   const combinedMembers = [...members, ...newMembers];
 
+  const positionMap: { [position: string]: boolean } = {};
   const uniqueMembers: Member[] = combinedMembers.reduce(
     (acc: Member[], current) => {
-      const x = acc.find((item: Member) => item.position === current.position);
-      if (!x) {
+      if (!positionMap[current.position!]) {
+        positionMap[current.position!] = true;
         return acc.concat([current]);
       } else {
         return acc;
