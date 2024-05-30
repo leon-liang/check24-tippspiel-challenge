@@ -6,10 +6,14 @@ import (
 )
 
 func (h *Handler) SeedJobs() {
-	var job model.Job
-	job.Name = "calculate_points"
+	jobs, err := h.JobStore.GetJobs()
 
-	if err := h.JobStore.Create(&job); err != nil {
-		log.Fatal(err)
+	if len(jobs) == 0 && err == nil {
+		var job model.Job
+		job.Name = "calculate_points"
+
+		if err := h.JobStore.Create(&job); err != nil {
+			log.Fatal(err)
+		}
 	}
 }

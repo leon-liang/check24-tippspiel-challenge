@@ -9,26 +9,26 @@ import (
 	kafkaGo "github.com/segmentio/kafka-go"
 )
 
-type MatchWriter struct {
+type JobWriter struct {
 	writer *kafkaGo.Writer
 }
 
-func NewMatchWriter(mw *kafkaGo.Writer) *MatchWriter {
-	return &MatchWriter{
-		writer: mw,
+func NewJobWriter(jw *kafkaGo.Writer) *JobWriter {
+	return &JobWriter{
+		writer: jw,
 	}
 }
 
-func (mw *MatchWriter) WriteMatch(match *model.Match) {
-	// Encode match as gob
+func (jw *JobWriter) WriteJob(job *model.Job) {
+	// Encode job as gob
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
-	if err := encoder.Encode(match); err != nil {
+	if err := encoder.Encode(job); err != nil {
 		fmt.Println("An error has occurred while encoding: ", err)
 	}
 
-	err := mw.writer.WriteMessages(context.Background(), kafkaGo.Message{
-		Key:   []byte("matches"),
+	err := jw.writer.WriteMessages(context.Background(), kafkaGo.Message{
+		Key:   []byte(job.Name),
 		Value: buf.Bytes(),
 	})
 

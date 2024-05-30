@@ -15,10 +15,11 @@ type Handler struct {
 	BetStore           store.BetStore
 	JobStore           store.JobStore
 	MatchWriter        mq.MatchWriter
+	JobWriter          mq.JobWriter
 	PointsEnqueuer     enqueuer.PointsEnqueuer
 }
 
-func NewHandler(us store.UserStore, cs store.CommunityStore, ucs store.UserCommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore, js store.JobStore, mw mq.MatchWriter, pe enqueuer.PointsEnqueuer) *Handler {
+func NewHandler(us store.UserStore, cs store.CommunityStore, ucs store.UserCommunityStore, ms store.MatchStore, ts store.TeamStore, bs store.BetStore, js store.JobStore, mw mq.MatchWriter, jw mq.JobWriter, pe enqueuer.PointsEnqueuer) *Handler {
 	return &Handler{
 		UserStore:          us,
 		CommunityStore:     cs,
@@ -28,6 +29,7 @@ func NewHandler(us store.UserStore, cs store.CommunityStore, ucs store.UserCommu
 		BetStore:           bs,
 		JobStore:           js,
 		MatchWriter:        mw,
+		JobWriter:          jw,
 		PointsEnqueuer:     pe,
 	}
 }

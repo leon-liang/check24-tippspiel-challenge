@@ -1,8 +1,12 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { DateTime, Interval } from "luxon";
-import { useGetMatches } from "@/hooks/api/matches.api";
-import useBets from "@/hooks/use-bets";
+import {
+  useGetMatches,
+  useSubscribeMatchUpdate,
+} from "@/hooks/api/matches.api";
+import { useBets } from "@/hooks/use-bets";
 import { getClosestDate } from "@/utils/date";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useMatches = () => {
   const { data } = useGetMatches();
@@ -53,6 +57,21 @@ export const useUpcomingMatches = (currentDate: DateTime) => {
       return bet.date.toISODate() == closestMatchDate?.toISODate();
     });
 
-    return [...currentMatches, ...upcomingMatches];
+    const combinedMatches = [...currentMatches, ...upcomingMatches];
+
+    return [...new Set(combinedMatches)];
   }, [currentDate]);
+};
+
+export const useMatchUpdates = () => {
+  const message = useSubscribeMatchUpdate();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (message?.message.status === "UPDATED") {
+      queryClient.invalidateQueries({
+        queryKey: ["bets"],
+      });
+    }
+  }, [message?.message.status, message?.message.updatedAt, queryClient]);
 };

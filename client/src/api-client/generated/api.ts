@@ -275,13 +275,19 @@ export interface HttpJobResponseJob {
      * @type {string}
      * @memberof HttpJobResponseJob
      */
-    'name'?: string;
+    'completedAt'?: string;
     /**
      * 
      * @type {string}
      * @memberof HttpJobResponseJob
      */
-    'updatedAt'?: string;
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HttpJobResponseJob
+     */
+    'name'?: string;
 }
 /**
  * 
@@ -1745,7 +1751,7 @@ export const PointsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async v1PointsPut(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async v1PointsPut(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpJobResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.v1PointsPut(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PointsApi.v1PointsPut']?.[localVarOperationServerIndex]?.url;
@@ -1767,7 +1773,7 @@ export const PointsApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1PointsPut(options?: any): AxiosPromise<void> {
+        v1PointsPut(options?: any): AxiosPromise<HttpJobResponse> {
             return localVarFp.v1PointsPut(options).then((request) => request(axios, basePath));
         },
     };

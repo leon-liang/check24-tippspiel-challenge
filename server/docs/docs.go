@@ -507,13 +507,19 @@ const docTemplate = `{
                         "OAuth2Implicit": []
                     }
                 ],
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "Points"
                 ],
                 "summary": "Calculate points based on the current of the current match scores and bets",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.jobResponse"
+                        }
                     }
                 }
             }
@@ -694,10 +700,13 @@ const docTemplate = `{
                 "job": {
                     "type": "object",
                     "properties": {
-                        "name": {
+                        "completedAt": {
                             "type": "string"
                         },
-                        "updatedAt": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
                             "type": "string"
                         }
                     }

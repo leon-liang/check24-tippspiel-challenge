@@ -12,13 +12,16 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/tabs/Tabs";
-import { useUpcomingMatches } from "@/hooks/use-matches";
+import { useMatchUpdates, useUpcomingMatches } from "@/hooks/use-matches";
+import { usePointsUpdates } from "@/hooks/use-points";
 
 const Dashboard = () => {
   const { data } = useGetUserCommunitiesPreview();
   const [selectedTab, setSelectedTab] = useState("user-communities");
   const currentDate = DateTime.now();
   const matches = useUpcomingMatches(currentDate);
+  useMatchUpdates();
+  usePointsUpdates();
 
   return (
     <>
@@ -49,7 +52,7 @@ const Dashboard = () => {
               </TabsList>
             </div>
             <TabsContent value="user-communities">
-              <div className="mt-6 flex flex-col gap-6">
+              <div className="mt-6 flex flex-col gap-3">
                 {data?.data.communityPreviews?.map((preview, index) => {
                   return (
                     <CommunityPreview

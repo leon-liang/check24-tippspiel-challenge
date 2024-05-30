@@ -265,16 +265,18 @@ func newBetsResponse(bets []model.Bet) *betsResponse {
 
 type jobResponse struct {
 	Job struct {
-		Name      string    `json:"name"`
-		UpdatedAt time.Time `json:"updatedAt"`
+		ID          string    `json:"id"`
+		Name        string    `json:"name"`
+		CompletedAt time.Time `json:"completedAt"`
 	} `json:"job"`
 }
 
 func newJobResponse(job model.Job) *jobResponse {
 	r := new(jobResponse)
 
+	r.Job.ID = job.ID
 	r.Job.Name = job.Name
-	r.Job.UpdatedAt = job.UpdatedAt
+	r.Job.CompletedAt = job.CompletedAt
 
 	return r
 }

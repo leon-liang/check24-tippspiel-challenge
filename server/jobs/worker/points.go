@@ -3,8 +3,9 @@ package worker
 import (
 	"fmt"
 	"github.com/gocraft/work"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/mq"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
+	"time"
 )
 
 type PointsWorkerPool struct {
@@ -12,18 +13,21 @@ type PointsWorkerPool struct {
 }
 
 type PointsContext struct {
-	us    *store.UserStore
-	bs    *store.BetStore
-	users []model.User
+	us *store.UserStore
+	bs *store.BetStore
+	js *store.JobStore
+	jw *mq.JobWriter
 }
 
-func NewPointsWorkerPool(us *store.UserStore, bs *store.BetStore) *PointsWorkerPool {
+func NewPointsWorkerPool(us *store.UserStore, bs *store.BetStore, js *store.JobStore, jw *mq.JobWriter) *PointsWorkerPool {
 	scoreContext := PointsContext{}
 	pointsWorkerPool := NewWorkerPool(scoreContext, "points", 5)
 
 	pointsWorkerPool.Middleware(func(ctx *PointsContext, job *work.Job, next work.NextMiddlewareFunc) error {
 		ctx.us = us
 		ctx.bs = bs
+		ctx.js = js
+		ctx.jw = jw
 		return next()
 	})
 
@@ -70,7 +74,7 @@ func (ctx *PointsContext) CalculatePoints(job *work.Job) error {
 				case homeDiff == awayDiff && *bet.Match.HomeTeamResult != *bet.Match.AwayTeamResult:
 					// 6 points for the correct goal difference if not a draw
 					points += 6
-				case homeDiff^awayDiff >= 0:
+				case (homeDiff >= 0 && awayDiff >= 0) || (homeDiff < 0 && awayDiff < 0):
 					// 4 points for the correct tendency
 					points += 4
 				}
@@ -81,5 +85,24 @@ func (ctx *PointsContext) CalculatePoints(job *work.Job) error {
 			return err
 		}
 	}
+
+	// Update Job status
+	j, err := ctx.js.GetByName(job.Name)
+	if err != nil {
+		return err
+	}
+
+	if err := ctx.js.SetStatus(j, j.Outstanding, j.Completed+1); err != nil {
+		return err
+	}
+
+	if j.Completed == j.Outstanding {
+		if err := ctx.js.UpdateCompletedAt(j, time.Now()); err != nil {
+			return err
+		}
+	}
+
+	ctx.jw.WriteJob(j)
+
 	return nil
 }

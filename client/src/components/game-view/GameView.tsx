@@ -34,7 +34,12 @@ const GameView = ({
         {gameDuration.contains(currentDate) ? (
           <Tag
             text="Live"
-            icon={<DotIcon width={12} height={12} stroke={colors.red["11"]} />}
+            icon={
+              <span className="relative mr-1 flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-colors-red-11 opacity-75"></span>
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-colors-red-11"></span>
+              </span>
+            }
           />
         ) : null}
         <div className="p-1 font-mono text-sm">

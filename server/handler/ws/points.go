@@ -12,14 +12,14 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 )
 
-func (h *Handler) wsMatches(ctx echo.Context) error {
+func (h *Handler) wsPoints(ctx echo.Context) error {
 	ws, err := h.Upgrader.Upgrade(ctx.Response(), ctx.Request(), nil)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer ws.Close()
 
-	reader := kafka.NewReader("matches")
+	reader := kafka.NewReader("jobs")
 	reader.SetOffset(-1)
 	defer reader.Close()
 
@@ -36,23 +36,27 @@ func (h *Handler) wsMatches(ctx echo.Context) error {
 		}
 
 		// decode message
-		var m model.Match
-		buf := bytes.NewBuffer(message.Value)
-		decoder := gob.NewDecoder(buf)
+		var j model.Job
+		if string(message.Key) == "calculate_points" {
+			// decode message
+			buf := bytes.NewBuffer(message.Value)
+			decoder := gob.NewDecoder(buf)
 
-		if err := decoder.Decode(&m); err != nil {
-			fmt.Println("Error decoding gob: ", err)
-		}
+			if err := decoder.Decode(&j); err != nil {
+				fmt.Println("Error decoding gob: ", err)
+			}
 
-		r := newMatchResponse(m, "UPDATED")
-		b, err := json.Marshal(r)
-		if err != nil {
-			fmt.Println("Error encoding JSON", err)
-		}
+			if j.Completed == j.Outstanding {
+				r := newPointsResponse("UPDATED")
+				b, err := json.Marshal(r)
+				if err != nil {
+					fmt.Println("Error encoding JSON", err)
+				}
 
-		if err := ws.WriteMessage(websocket.TextMessage, b); err != nil {
-			fmt.Println(err)
+				if err := ws.WriteMessage(websocket.TextMessage, b); err != nil {
+					fmt.Println(err)
+				}
+			}
 		}
 	}
-
 }

@@ -61,7 +61,7 @@ const Table = <TData, TValue>({
             <tr className="border-b border-gray-6" key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
-                  className="rounded-md border-b border-r border-gray-6 py-1.5 font-normal text-gray-12 last:border-r-0"
+                  className="rounded-md border-b border-r border-gray-6 p-1 font-mono text-sm font-normal text-gray-11 last:border-r-0"
                   key={header.id}
                   colSpan={header.colSpan}
                 >
@@ -101,7 +101,7 @@ const Table = <TData, TValue>({
           ))}
         </tbody>
       </table>
-      <div className="flex items-center justify-end gap-2 px-4 py-2">
+      <div className="flex items-center justify-end gap-2 px-4 py-1 text-sm">
         <button onClick={() => table.firstPage()}>
           <ChevronFirstIcon width={20} height={20} stroke={colors.gray["11"]} />
         </button>
