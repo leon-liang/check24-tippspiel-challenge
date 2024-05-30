@@ -1,13 +1,11 @@
-import { useRouter } from "next/navigation";
+import React from "react";
 import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
 import cn from "classnames";
-import { useGetMe } from "@/hooks/api/users.api";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
 import { colors } from "../../../tailwind.config";
 import {
@@ -15,20 +13,13 @@ import {
   useLeaderboard,
   useLeaderboardColumns,
 } from "@/hooks/use-leaderboard";
+import { useGetMe } from "@/hooks/api/users.api";
 
-interface CommunityPreviewProps {
-  communityId: string;
-  communityName: string;
+interface LeaderboardProps {
   members: Member[];
 }
 
-const CommunityPreview = ({
-  communityId,
-  communityName,
-  members,
-}: CommunityPreviewProps) => {
-  const router = useRouter();
-
+const Leaderboard = ({ members }: LeaderboardProps) => {
   const data = useLeaderboard(members);
   const leaderboardColumns = useLeaderboardColumns();
 
@@ -47,14 +38,9 @@ const CommunityPreview = ({
   const { data: meData } = useGetMe();
 
   return (
-    <div
-      onClick={() => {
-        router.push(`/communities/${communityId}`);
-      }}
-      className="w-full cursor-pointer rounded-md border border-gray-6 bg-colors-white-A12 transition duration-200 hover:shadow-lg"
-    >
+    <div className="w-full rounded-md border border-gray-6 bg-colors-white-A12">
       <div className="flex flex-row items-center gap-2 rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
-        <h1 className="p-1 font-mono text-sm">{communityName}</h1>
+        <h1 className="p-1 font-mono text-sm">Leaderboard</h1>
       </div>
       <table className="w-full">
         <thead className="border-gray-6 text-gray-11">
@@ -126,4 +112,4 @@ const CommunityPreview = ({
   );
 };
 
-export default CommunityPreview;
+export default Leaderboard;

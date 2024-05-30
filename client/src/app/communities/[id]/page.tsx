@@ -2,7 +2,10 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { useParams } from "next/navigation";
-import { useGetUserCommunities } from "@/hooks/api/communities.api";
+import {
+  useGetCommunityLeaderboard,
+  useGetUserCommunities,
+} from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
   DropdownMenu,
@@ -18,11 +21,16 @@ import { useMemo, useState } from "react";
 import { useGetMe } from "@/hooks/api/users.api";
 import DeleteCommunity from "@/components/delete-community/DeleteCommunity";
 import LeaveCommunity from "@/components/leave-community/LeaveCommunity";
+import Leaderboard from "@/components/leaderboard/Leaderboard";
+import { usePointsUpdates } from "@/hooks/use-points";
 
 const Community = () => {
   const params = useParams<{ id: string }>();
   const { data: meData } = useGetMe();
   const { data: communitiesData, isLoading } = useGetUserCommunities();
+  const { data: leaderboardData } = useGetCommunityLeaderboard(params.id);
+  usePointsUpdates();
+
   const [open, setOpen] = useState<boolean>(false);
 
   const currentCommunity = useMemo(() => {
@@ -30,6 +38,7 @@ const Community = () => {
       (entry) => entry.community?.id === params.id,
     );
   }, [communitiesData?.data.communities, params.id]);
+
   const isCommunityOwner =
     meData?.data.user?.id === currentCommunity?.community?.owner;
 
@@ -85,6 +94,13 @@ const Community = () => {
           communityId={currentCommunity?.community?.id ?? ""}
         />
       )}
+      <div className="flex flex-row gap-6 px-[10%] py-6">
+        {leaderboardData ? (
+          <Leaderboard
+            members={leaderboardData?.data.communityLeaderboard?.members ?? []}
+          />
+        ) : null}
+      </div>
     </div>
   );
 };

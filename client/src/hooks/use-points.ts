@@ -29,7 +29,7 @@ export const usePointsUpdates = () => {
   useEffect(() => {
     if (message?.message.status === "UPDATED") {
       queryClient.invalidateQueries({
-        queryKey: ["communities", "communities-preview"],
+        queryKey: ["communities", "community-leaderboard"],
       });
     }
   }, [message?.message.status, message?.message.updatedAt, queryClient]);

@@ -757,15 +757,15 @@ export const CommunitiesApiAxiosParamCreator = function (configuration?: Configu
         },
         /**
          * 
-         * @summary Get the leaderboard for a specified community
+         * @summary Join the specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1CommunitiesCommunityIdGet: async (communityId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        v1CommunitiesCommunityIdJoinPost: async (communityId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'communityId' is not null or undefined
-            assertParamExists('v1CommunitiesCommunityIdGet', 'communityId', communityId)
-            const localVarPath = `/v1/communities/{community_id}`
+            assertParamExists('v1CommunitiesCommunityIdJoinPost', 'communityId', communityId)
+            const localVarPath = `/v1/communities/{community_id}/join`
                 .replace(`{${"community_id"}}`, encodeURIComponent(String(communityId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -774,7 +774,7 @@ export const CommunitiesApiAxiosParamCreator = function (configuration?: Configu
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -795,15 +795,15 @@ export const CommunitiesApiAxiosParamCreator = function (configuration?: Configu
         },
         /**
          * 
-         * @summary Join the specified community
+         * @summary Get the leaderboard for a specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1CommunitiesCommunityIdJoinPost: async (communityId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        v1CommunitiesCommunityIdLeaderboardGet: async (communityId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'communityId' is not null or undefined
-            assertParamExists('v1CommunitiesCommunityIdJoinPost', 'communityId', communityId)
-            const localVarPath = `/v1/communities/{community_id}/join`
+            assertParamExists('v1CommunitiesCommunityIdLeaderboardGet', 'communityId', communityId)
+            const localVarPath = `/v1/communities/{community_id}/leaderboard`
                 .replace(`{${"community_id"}}`, encodeURIComponent(String(communityId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -812,7 +812,7 @@ export const CommunitiesApiAxiosParamCreator = function (configuration?: Configu
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -1086,19 +1086,6 @@ export const CommunitiesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Get the leaderboard for a specified community
-         * @param {string} communityId Community ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async v1CommunitiesCommunityIdGet(communityId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpCommunityLeaderboardResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesCommunityIdGet(communityId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CommunitiesApi.v1CommunitiesCommunityIdGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary Join the specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
@@ -1108,6 +1095,19 @@ export const CommunitiesApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesCommunityIdJoinPost(communityId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CommunitiesApi.v1CommunitiesCommunityIdJoinPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get the leaderboard for a specified community
+         * @param {string} communityId Community ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async v1CommunitiesCommunityIdLeaderboardGet(communityId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpCommunityLeaderboardResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesCommunityIdLeaderboardGet(communityId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CommunitiesApi.v1CommunitiesCommunityIdLeaderboardGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1210,16 +1210,6 @@ export const CommunitiesApiFactory = function (configuration?: Configuration, ba
         },
         /**
          * 
-         * @summary Get the leaderboard for a specified community
-         * @param {string} communityId Community ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        v1CommunitiesCommunityIdGet(communityId: string, options?: any): AxiosPromise<HttpCommunityLeaderboardResponse> {
-            return localVarFp.v1CommunitiesCommunityIdGet(communityId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary Join the specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
@@ -1227,6 +1217,16 @@ export const CommunitiesApiFactory = function (configuration?: Configuration, ba
          */
         v1CommunitiesCommunityIdJoinPost(communityId: string, options?: any): AxiosPromise<HttpCommunityResponse> {
             return localVarFp.v1CommunitiesCommunityIdJoinPost(communityId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get the leaderboard for a specified community
+         * @param {string} communityId Community ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1CommunitiesCommunityIdLeaderboardGet(communityId: string, options?: any): AxiosPromise<HttpCommunityLeaderboardResponse> {
+            return localVarFp.v1CommunitiesCommunityIdLeaderboardGet(communityId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1312,18 +1312,6 @@ export class CommunitiesApi extends BaseAPI {
 
     /**
      * 
-     * @summary Get the leaderboard for a specified community
-     * @param {string} communityId Community ID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CommunitiesApi
-     */
-    public v1CommunitiesCommunityIdGet(communityId: string, options?: RawAxiosRequestConfig) {
-        return CommunitiesApiFp(this.configuration).v1CommunitiesCommunityIdGet(communityId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @summary Join the specified community
      * @param {string} communityId Community ID
      * @param {*} [options] Override http request option.
@@ -1332,6 +1320,18 @@ export class CommunitiesApi extends BaseAPI {
      */
     public v1CommunitiesCommunityIdJoinPost(communityId: string, options?: RawAxiosRequestConfig) {
         return CommunitiesApiFp(this.configuration).v1CommunitiesCommunityIdJoinPost(communityId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get the leaderboard for a specified community
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CommunitiesApi
+     */
+    public v1CommunitiesCommunityIdLeaderboardGet(communityId: string, options?: RawAxiosRequestConfig) {
+        return CommunitiesApiFp(this.configuration).v1CommunitiesCommunityIdLeaderboardGet(communityId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

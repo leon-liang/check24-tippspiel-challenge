@@ -299,7 +299,7 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 // @Produce json
 // @Success 200 {object} http.communityLeaderboardResponse
 // @Param community_id path string true "Community ID"
-// @Router /v1/communities/{community_id} [GET]
+// @Router /v1/communities/{community_id}/leaderboard [GET]
 // @Security OAuth2Implicit
 func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 	communityId := ctx.Param("community_id")
