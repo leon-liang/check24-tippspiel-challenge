@@ -3,7 +3,8 @@ import {
   useGetCommunityLeaderboard,
   usePaginateCommunityMembers,
 } from "@/hooks/api/communities.api";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { DtosMember } from "@/api-client/generated";
 
 export type Member = {
   position?: number;
@@ -20,13 +21,19 @@ export const usePaginatedMembers = (
   const { data: paginatedMembersData } =
     usePaginateCommunityMembers(paginationParams);
 
+  const [members, setMembers] = useState<DtosMember[]>([]);
+
   return useMemo(() => {
     const initialMembers =
       initialMembersData?.data.communityLeaderboard?.members ?? [];
-    const paginatedMembers =
-      paginatedMembersData?.data.communityLeaderboard?.members ?? [];
+    const newPaginatedMembers =
+      paginatedMembersData?.data.communityLeaderboard?.members || [];
 
-    const combinedMembers = [...initialMembers, ...paginatedMembers];
+    const combinedMembers = [
+      ...initialMembers,
+      ...members,
+      ...newPaginatedMembers,
+    ];
 
     const positionMap: { [position: string]: boolean } = {};
     const uniqueMembers: Member[] = combinedMembers.reduce(
@@ -40,7 +47,11 @@ export const usePaginatedMembers = (
       },
       [],
     );
+    const sortedMembers = uniqueMembers.sort(
+      (a, b) => a.position! - b.position!,
+    );
+    setMembers(sortedMembers);
 
-    return uniqueMembers.sort((a, b) => a.position! - b.position!);
+    return sortedMembers;
   }, [initialMembersData, paginatedMembersData]);
 };
