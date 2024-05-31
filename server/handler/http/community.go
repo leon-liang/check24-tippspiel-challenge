@@ -382,7 +382,7 @@ func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, response)
 }
 
-// GetMembersAtPosition godoc
+// PaginateCommunityMembers godoc
 // @Tags communities
 // @Summary Get members at the specified positions [from:from+pageSize)
 // @Produce json
@@ -393,7 +393,7 @@ func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 // @Param direction query string true "Direction" Enums(forward, backward)
 // @Router /v1/communities/{community_id}/members [GET]
 // @Security OAuth2Implicit
-func (h *Handler) GetMembersAtPosition(ctx echo.Context) error {
+func (h *Handler) PaginateCommunityMembers(ctx echo.Context) error {
 	f := ctx.QueryParam("from")
 	ps := ctx.QueryParam("pageSize")
 	direction := ctx.QueryParam("direction")
