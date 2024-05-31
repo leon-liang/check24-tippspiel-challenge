@@ -3,10 +3,7 @@
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useParams } from "next/navigation";
-import {
-  PaginateCommunityMembersParams,
-  useGetMemberByUsername,
-} from "@/hooks/api/communities.api";
+import { PaginateCommunityMembersParams } from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
   DropdownMenu,
@@ -33,7 +30,7 @@ import SearchIcon from "@/components/icons/SearchIcon";
 
 const Community = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 1500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 1000);
 
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
   const [sheetOpen, setSheetOpen] = useState<boolean>(false);
@@ -139,8 +136,8 @@ const Community = () => {
         />
       )}
       <div className="flex flex-col gap-3 px-[10%] py-6">
-        <div className="-mt-14 flex h-14 w-full items-center gap-3 rounded-md border border-gray-6 bg-colors-white-A12 pl-4 text-gray-12 shadow-md">
-          <SearchIcon width={20} height={22} />
+        <div className="-mt-14 flex h-14 w-full items-center gap-3 rounded-md border border-gray-6 bg-colors-white-A12 px-4 text-gray-12 shadow-md">
+          <SearchIcon width={22} height={22} />
           <input
             onChange={onInputChanged}
             name="search"
@@ -151,6 +148,7 @@ const Community = () => {
         </div>
         <div className="mt-6">
           <Leaderboard
+            searchTerm={debouncedSearchTerm}
             pageSize={pageSize}
             setPageSize={onPageSizeChanged}
             onRowClicked={onRowClick}

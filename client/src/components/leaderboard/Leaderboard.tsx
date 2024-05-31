@@ -18,6 +18,7 @@ import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import { Select } from "@/components/select/Select";
 
 interface LeaderboardProps {
+  searchTerm?: string;
   members: Member[];
   pageSize: number;
   setPageSize: (pageSize: number) => void;
@@ -30,6 +31,7 @@ interface LeaderboardProps {
 }
 
 const Leaderboard = ({
+  searchTerm,
   members,
   pageSize,
   setPageSize,
@@ -93,7 +95,8 @@ const Leaderboard = ({
                   }}
                   className={cn(
                     "cursor-pointer rounded-md border-b border-gray-6 text-center last:border-b-0",
-                    row.getValue("username") == meData?.data.user?.username
+                    row.getValue("username") === meData?.data.user?.username ||
+                      row.getValue("username") === searchTerm
                       ? "bg-colors-purple-2"
                       : "",
                   )}
