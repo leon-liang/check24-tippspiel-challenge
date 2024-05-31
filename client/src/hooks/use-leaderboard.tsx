@@ -35,7 +35,9 @@ export const useLeaderboardColumns = () => {
         header: "",
         cell: (col) =>
           col.getValue() ? (
-            <DotIcon width={20} height={20} stroke={colors.indigo["9"]} />
+            <div className="flex w-full justify-center">
+              <DotIcon width={20} height={20} stroke={colors.indigo["9"]} />
+            </div>
           ) : null,
         size: 30,
       },
