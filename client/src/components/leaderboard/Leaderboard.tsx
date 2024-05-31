@@ -48,7 +48,7 @@ const Leaderboard = ({
   const { data: meData } = useGetMe();
 
   return (
-    <div className="w-full rounded-md border border-gray-6 bg-colors-white-A12">
+    <div className="min-h-[120px] w-full rounded-md border border-gray-6 bg-colors-white-A12">
       <div className="flex flex-row items-center gap-2 rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
         <h1 className="p-1 font-mono text-sm">Leaderboard</h1>
       </div>
