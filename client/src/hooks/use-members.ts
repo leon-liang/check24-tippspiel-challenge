@@ -1,6 +1,7 @@
 import {
   PaginateCommunityMembersParams,
   useGetCommunityLeaderboard,
+  useGetMemberByUsername,
   usePaginateCommunityMembers,
   usePinnedUsers,
 } from "@/hooks/api/communities.api";
@@ -19,15 +20,22 @@ export type Member = {
 
 export const usePaginatedMembers = (
   communityId: string,
+  searchTerm: string,
   paginationParams: PaginateCommunityMembersParams,
   pageSize: number,
 ) => {
   const message = useSubscribePointsUpdates();
   const { data: initialMembersData } = useGetCommunityLeaderboard(communityId);
-  const { data: paginatedMembersData, refetch } = usePaginateCommunityMembers({
-    ...paginationParams,
-    pageSize,
-  });
+  const { data: paginatedMembersData, refetch: refetchMembers } =
+    usePaginateCommunityMembers({
+      ...paginationParams,
+      pageSize,
+    });
+
+  const { data: searchData, refetch: refetchSearch } = useGetMemberByUsername(
+    communityId,
+    searchTerm,
+  );
   const { data: pinnedUsersData } = usePinnedUsers(communityId);
 
   const [members, setMembers] = useState<DtosMember[]>([]);
@@ -35,7 +43,8 @@ export const usePaginatedMembers = (
   useEffect(() => {
     if (message?.message.status === "UPDATED") {
       setMembers([]);
-      refetch();
+      refetchMembers();
+      refetchSearch();
     }
   }, [message?.message.status, message?.message.updatedAt]);
 
@@ -49,11 +58,14 @@ export const usePaginatedMembers = (
       initialMembersData?.data.communityLeaderboard?.members ?? [];
 
     const newPaginatedMembers =
-      paginatedMembersData?.data.communityLeaderboard?.members || [];
+      paginatedMembersData?.data.communityLeaderboard?.members ?? [];
+
+    const searchMembers = searchData?.data.communityLeaderboard?.members ?? [];
 
     const combinedMembers = [
       ...initialMembers,
       ...newPaginatedMembers,
+      ...searchMembers,
       ...members,
     ];
 
@@ -79,6 +91,10 @@ export const usePaginatedMembers = (
     }));
 
     setMembers(updatedMembers);
-    return { members: updatedMembers, refetch };
-  }, [initialMembersData, paginatedMembersData, pinnedUsersData]);
+    return {
+      members: updatedMembers,
+      refetchMembers: refetchMembers,
+      refetchSearch: refetchSearch,
+    };
+  }, [initialMembersData, paginatedMembersData, pinnedUsersData, searchData]);
 };

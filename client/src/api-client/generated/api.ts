@@ -943,6 +943,48 @@ export const CommunitiesApiAxiosParamCreator = function (configuration?: Configu
         },
         /**
          * 
+         * @summary Get user with specified username
+         * @param {string} communityId Community ID
+         * @param {string} username Username
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1CommunitiesCommunityIdMembersUsernameGet: async (communityId: string, username: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'communityId' is not null or undefined
+            assertParamExists('v1CommunitiesCommunityIdMembersUsernameGet', 'communityId', communityId)
+            // verify required parameter 'username' is not null or undefined
+            assertParamExists('v1CommunitiesCommunityIdMembersUsernameGet', 'username', username)
+            const localVarPath = `/v1/communities/{community_id}/members/{username}`
+                .replace(`{${"community_id"}}`, encodeURIComponent(String(communityId)))
+                .replace(`{${"username"}}`, encodeURIComponent(String(username)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth2Implicit required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2Implicit", [], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all pinned users for the specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
@@ -1251,6 +1293,20 @@ export const CommunitiesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get user with specified username
+         * @param {string} communityId Community ID
+         * @param {string} username Username
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async v1CommunitiesCommunityIdMembersUsernameGet(communityId: string, username: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpCommunityLeaderboardResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesCommunityIdMembersUsernameGet(communityId, username, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CommunitiesApi.v1CommunitiesCommunityIdMembersUsernameGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Get all pinned users for the specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
@@ -1392,6 +1448,17 @@ export const CommunitiesApiFactory = function (configuration?: Configuration, ba
         },
         /**
          * 
+         * @summary Get user with specified username
+         * @param {string} communityId Community ID
+         * @param {string} username Username
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1CommunitiesCommunityIdMembersUsernameGet(communityId: string, username: string, options?: any): AxiosPromise<HttpCommunityLeaderboardResponse> {
+            return localVarFp.v1CommunitiesCommunityIdMembersUsernameGet(communityId, username, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get all pinned users for the specified community
          * @param {string} communityId Community ID
          * @param {*} [options] Override http request option.
@@ -1521,6 +1588,19 @@ export class CommunitiesApi extends BaseAPI {
      */
     public v1CommunitiesCommunityIdMembersGet(communityId: string, from: number, pageSize: number, direction: V1CommunitiesCommunityIdMembersGetDirectionEnum, options?: RawAxiosRequestConfig) {
         return CommunitiesApiFp(this.configuration).v1CommunitiesCommunityIdMembersGet(communityId, from, pageSize, direction, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get user with specified username
+     * @param {string} communityId Community ID
+     * @param {string} username Username
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CommunitiesApi
+     */
+    public v1CommunitiesCommunityIdMembersUsernameGet(communityId: string, username: string, options?: RawAxiosRequestConfig) {
+        return CommunitiesApiFp(this.configuration).v1CommunitiesCommunityIdMembersUsernameGet(communityId, username, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2119,48 +2199,6 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
-         * @summary Get user with specified username
-         * @param {string} communityId Community ID
-         * @param {string} username Username
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        v1CommunitiesCommunityIdMembersUsernameGet: async (communityId: string, username: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'communityId' is not null or undefined
-            assertParamExists('v1CommunitiesCommunityIdMembersUsernameGet', 'communityId', communityId)
-            // verify required parameter 'username' is not null or undefined
-            assertParamExists('v1CommunitiesCommunityIdMembersUsernameGet', 'username', username)
-            const localVarPath = `/v1/communities/{community_id}/members/{username}`
-                .replace(`{${"community_id"}}`, encodeURIComponent(String(communityId)))
-                .replace(`{${"username"}}`, encodeURIComponent(String(username)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication OAuth2Implicit required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2Implicit", [], configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @summary Get current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2205,20 +2243,6 @@ export const UsersApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Get user with specified username
-         * @param {string} communityId Community ID
-         * @param {string} username Username
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async v1CommunitiesCommunityIdMembersUsernameGet(communityId: string, username: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpCommunityLeaderboardResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesCommunityIdMembersUsernameGet(communityId, username, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UsersApi.v1CommunitiesCommunityIdMembersUsernameGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @summary Get current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2241,17 +2265,6 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * 
-         * @summary Get user with specified username
-         * @param {string} communityId Community ID
-         * @param {string} username Username
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        v1CommunitiesCommunityIdMembersUsernameGet(communityId: string, username: string, options?: any): AxiosPromise<HttpCommunityLeaderboardResponse> {
-            return localVarFp.v1CommunitiesCommunityIdMembersUsernameGet(communityId, username, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @summary Get current user
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2269,19 +2282,6 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
  * @extends {BaseAPI}
  */
 export class UsersApi extends BaseAPI {
-    /**
-     * 
-     * @summary Get user with specified username
-     * @param {string} communityId Community ID
-     * @param {string} username Username
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UsersApi
-     */
-    public v1CommunitiesCommunityIdMembersUsernameGet(communityId: string, username: string, options?: RawAxiosRequestConfig) {
-        return UsersApiFp(this.configuration).v1CommunitiesCommunityIdMembersUsernameGet(communityId, username, options).then((request) => request(this.axios, this.basePath));
-    }
-
     /**
      * 
      * @summary Get current user

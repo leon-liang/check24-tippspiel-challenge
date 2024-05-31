@@ -400,7 +400,7 @@ paths:
       - OAuth2Implicit: []
       summary: Get members at the specified positions [from:from+pageSize)
       tags:
-      - communities
+      - Communities
   /v1/communities/{community_id}/members/{username}:
     get:
       parameters:
@@ -425,7 +425,7 @@ paths:
       - OAuth2Implicit: []
       summary: Get user with specified username
       tags:
-      - Users
+      - Communities
   /v1/communities/{community_id}/pinned_users:
     get:
       parameters:

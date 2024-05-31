@@ -330,7 +330,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "communities"
+                    "Communities"
                 ],
                 "summary": "Get members at the specified positions [from:from+pageSize)",
                 "parameters": [
@@ -388,7 +388,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Communities"
                 ],
                 "summary": "Get user with specified username",
                 "parameters": [

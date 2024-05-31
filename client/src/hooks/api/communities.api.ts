@@ -159,3 +159,18 @@ export const useRemovePinnedMember = () => {
     },
   });
 };
+
+export const useGetMemberByUsername = (
+  communityId: string,
+  username: string,
+) => {
+  return useQuery({
+    queryFn: () =>
+      communitiesApiFactory.v1CommunitiesCommunityIdMembersUsernameGet(
+        communityId,
+        username,
+      ),
+    queryKey: ["communities", "community-leaderboard", username],
+    enabled: false,
+  });
+};

@@ -383,7 +383,7 @@ func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 }
 
 // PaginateCommunityMembers godoc
-// @Tags communities
+// @Tags Communities
 // @Summary Get members at the specified positions [from:from+pageSize)
 // @Produce json
 // @Success 200 {object} http.communityLeaderboardResponse
@@ -451,7 +451,7 @@ func (h *Handler) PaginateCommunityMembers(ctx echo.Context) error {
 }
 
 // GetUserByUsername godoc
-// @Tags Users
+// @Tags Communities
 // @Summary Get user with specified username
 // @Produce json
 // @Param community_id path string true "Community ID"

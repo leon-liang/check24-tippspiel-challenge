@@ -1,8 +1,12 @@
 "use client";
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
+import { useDebounce } from "@uidotdev/usehooks";
 import { useParams } from "next/navigation";
-import { PaginateCommunityMembersParams } from "@/hooks/api/communities.api";
+import {
+  PaginateCommunityMembersParams,
+  useGetMemberByUsername,
+} from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
   DropdownMenu,
@@ -28,6 +32,9 @@ import PinUser from "@/components/pin-user/PinUser";
 import SearchIcon from "@/components/icons/SearchIcon";
 
 const Community = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 1500);
+
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
   const [sheetOpen, setSheetOpen] = useState<boolean>(false);
   const [selectedMember, setSelectedMember] = useState<Member>();
@@ -41,8 +48,9 @@ const Community = () => {
   const currentCommunity = useGetCurrentCommunity(params.id);
   const isCommunityOwner = useIsCommunityOwner(params.id);
 
-  const { members, refetch } = usePaginatedMembers(
+  const { members, refetchMembers, refetchSearch } = usePaginatedMembers(
     params.id,
+    debouncedSearchTerm,
     paginationParams as PaginateCommunityMembersParams,
     pageSize,
   );
@@ -50,11 +58,18 @@ const Community = () => {
   usePointsUpdates();
 
   useEffect(() => {
-    refetch();
-  }, [paginationParams]);
+    refetchMembers();
+    if (debouncedSearchTerm !== "") {
+      refetchSearch();
+    }
+  }, [paginationParams, debouncedSearchTerm]);
 
   if (!currentCommunity) {
     return null;
+  }
+
+  function onInputChanged(e: React.FormEvent<HTMLInputElement>) {
+    setSearchTerm(e.currentTarget.value);
   }
 
   function onPageSizeChanged(pageSize: number) {
@@ -127,6 +142,8 @@ const Community = () => {
         <div className="-mt-14 flex h-14 w-full items-center gap-3 rounded-md border border-gray-6 bg-colors-white-A12 pl-4 text-gray-12 shadow-md">
           <SearchIcon width={20} height={22} />
           <input
+            onChange={onInputChanged}
+            name="search"
             className="h-full w-full rounded-md outline-0"
             placeholder="Search"
             type="text"
