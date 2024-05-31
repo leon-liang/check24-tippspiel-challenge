@@ -3,7 +3,7 @@
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { DateTime } from "luxon";
 import SubmitBet from "@/components/submit-bet/SubmitBet";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useGetUserCommunitiesPreview } from "@/hooks/api/communities.api";
 import CommunityPreview from "@/components/community-preview/CommunityPreview";
 import {
@@ -22,6 +22,18 @@ const Dashboard = () => {
   const matches = useUpcomingMatches(currentDate);
   useMatchUpdates();
   usePointsUpdates();
+
+  const userCommunities = useMemo(() => {
+    return data?.data.communityLeaderboard?.filter(
+      (preview) => preview.communityLeaderboard?.name !== "CHECK24 Global",
+    );
+  }, [data]);
+
+  const globalStandings = useMemo(() => {
+    return data?.data.communityLeaderboard?.filter(
+      (preview) => preview.communityLeaderboard?.name === "CHECK24 Global",
+    );
+  }, [data]);
 
   return (
     <>
@@ -53,7 +65,7 @@ const Dashboard = () => {
             </div>
             <TabsContent value="user-communities">
               <div className="mt-6 flex flex-col gap-3">
-                {data?.data.communityLeaderboard?.map((preview, index) => {
+                {userCommunities?.map((preview, index) => {
                   return (
                     <CommunityPreview
                       key={index}
@@ -66,7 +78,18 @@ const Dashboard = () => {
               </div>
             </TabsContent>
             <TabsContent value="global-standings">
-              <div className="mt-6 flex flex-col gap-6"></div>
+              <div className="mt-6 flex flex-col gap-6">
+                {globalStandings?.map((preview, index) => {
+                  return (
+                    <CommunityPreview
+                      key={index}
+                      communityName={preview.communityLeaderboard?.name ?? ""}
+                      communityId={preview.communityLeaderboard?.id ?? ""}
+                      members={preview.communityLeaderboard?.members ?? []}
+                    />
+                  );
+                })}
+              </div>
             </TabsContent>
           </Tabs>
         </div>
