@@ -70,12 +70,7 @@ const Matches = () => {
             <CalculatePoints onClick={onCalculatePointsClicked} />
           </div>
         ) : null}
-        <Table
-          data={matches}
-          columns={matchColumns}
-          rowsPerPage={10}
-          onRowClick={onRowClick}
-        />
+        <Table data={matches} columns={matchColumns} onRowClick={onRowClick} />
       </div>
       <UpdateMatch open={open} setOpen={setOpen} match={selectedMatch} />
     </>
