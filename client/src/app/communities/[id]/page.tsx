@@ -45,6 +45,10 @@ const Community = () => {
 
   usePointsUpdates();
 
+  if (!currentCommunity) {
+    return null;
+  }
+
   function onPageSizeChanged(pageSize: number) {
     setPaginationParams((prevState) => {
       return {
