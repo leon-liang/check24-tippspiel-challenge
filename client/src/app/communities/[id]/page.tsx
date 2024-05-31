@@ -25,6 +25,7 @@ import {
 } from "@/hooks/use-communities";
 import { Member, usePaginatedMembers } from "@/hooks/use-members";
 import PinUser from "@/components/pin-user/PinUser";
+import SearchIcon from "@/components/icons/SearchIcon";
 
 const Community = () => {
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
@@ -126,14 +127,24 @@ const Community = () => {
         />
       )}
       <div className="flex flex-col gap-3 px-[10%] py-6">
-        <Leaderboard
-          pageSize={paginationParams?.pageSize ?? 10}
-          setPageSize={onPageSizeChanged}
-          onRowClicked={onRowClick}
-          onBackClicked={onPaginate}
-          onForwardClicked={onPaginate}
-          members={members ?? []}
-        />
+        <div className="-mt-14 flex h-14 w-full items-center gap-3 rounded-md border border-gray-6 bg-colors-white-A12 pl-4 text-gray-11 shadow-md">
+          <SearchIcon width={20} height={22} />
+          <input
+            className="h-full w-full rounded-md outline-0"
+            placeholder="Search"
+            type="text"
+          />
+        </div>
+        <div className="mt-6">
+          <Leaderboard
+            pageSize={paginationParams?.pageSize ?? 10}
+            setPageSize={onPageSizeChanged}
+            onRowClicked={onRowClick}
+            onBackClicked={onPaginate}
+            onForwardClicked={onPaginate}
+            members={members ?? []}
+          />
+        </div>
         <PinUser
           member={selectedMember}
           open={sheetOpen}
