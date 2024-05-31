@@ -2,10 +2,7 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { useParams } from "next/navigation";
-import {
-  PaginateCommunityMembersParams,
-  usePinnedUsers,
-} from "@/hooks/api/communities.api";
+import { PaginateCommunityMembersParams } from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
   DropdownMenu,
@@ -38,7 +35,6 @@ const Community = () => {
     useState<PaginateCommunityMembersParams>();
   const params = useParams<{ id: string }>();
 
-  const { data: pinnedUsersData } = usePinnedUsers(params.id);
   const currentCommunity = useGetCurrentCommunity(params.id);
   const isCommunityOwner = useIsCommunityOwner(params.id);
 
@@ -112,12 +108,7 @@ const Community = () => {
           communityId={currentCommunity?.community?.id ?? ""}
         />
       )}
-      <div className="flex flex-col gap-4 px-[10%] py-6">
-        <div className="flex flex-row gap-4">
-          {pinnedUsersData?.data.users?.map((user, index) => (
-            <p key={index}>{user.user?.username}</p>
-          ))}
-        </div>
+      <div className="flex flex-col gap-3 px-[10%] py-6">
         <Leaderboard
           onRowClick={onRowClick}
           onBackClicked={onPaginate}

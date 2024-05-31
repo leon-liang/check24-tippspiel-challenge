@@ -2,6 +2,7 @@ import {
   PaginateCommunityMembersParams,
   useGetCommunityLeaderboard,
   usePaginateCommunityMembers,
+  usePinnedUsers,
 } from "@/hooks/api/communities.api";
 import { useEffect, useMemo, useState } from "react";
 import { DtosMember } from "@/api-client/generated";
@@ -13,6 +14,7 @@ export type Member = {
   rank?: number;
   username?: string;
   points?: number;
+  pinned?: boolean;
 };
 
 export const usePaginatedMembers = (
@@ -23,6 +25,7 @@ export const usePaginatedMembers = (
   const { data: initialMembersData } = useGetCommunityLeaderboard(communityId);
   const { data: paginatedMembersData } =
     usePaginateCommunityMembers(paginationParams);
+  const { data: pinnedUsersData } = usePinnedUsers(communityId);
 
   const [members, setMembers] = useState<DtosMember[]>([]);
 
@@ -33,8 +36,14 @@ export const usePaginatedMembers = (
   }, [message?.message.status, message?.message.updatedAt]);
 
   return useMemo(() => {
+    const pinnedMembers = pinnedUsersData?.data.users;
+    const pinnedMemberIds = new Set(
+      pinnedMembers?.map((member) => member.user?.id),
+    );
+
     const initialMembers =
       initialMembersData?.data.communityLeaderboard?.members ?? [];
+
     const newPaginatedMembers =
       paginatedMembersData?.data.communityLeaderboard?.members || [];
 
@@ -59,8 +68,13 @@ export const usePaginatedMembers = (
     const sortedMembers = uniqueMembers.sort(
       (a, b) => a.position! - b.position!,
     );
-    setMembers(sortedMembers);
 
-    return sortedMembers;
-  }, [initialMembersData, paginatedMembersData]);
+    const updatedMembers = sortedMembers.map((member) => ({
+      ...member,
+      pinned: pinnedMemberIds.has(member.id),
+    }));
+
+    setMembers(updatedMembers);
+    return updatedMembers;
+  }, [initialMembersData, paginatedMembersData, pinnedUsersData]);
 };

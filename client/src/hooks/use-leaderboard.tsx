@@ -1,6 +1,10 @@
 import { useMemo } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import DotIcon from "@/components/icons/DotIcon";
+import { colors } from "../../tailwind.config";
 
 export type Member = {
+  pinned?: boolean;
   position?: number;
   rank?: number;
   username?: string;
@@ -12,6 +16,7 @@ export const useLeaderboard = (members: Member[]) => {
     () =>
       members.map((member) => {
         return {
+          pinned: member.pinned,
           position: member.position,
           rank: member.rank,
           username: member.username,
@@ -23,8 +28,17 @@ export const useLeaderboard = (members: Member[]) => {
 };
 
 export const useLeaderboardColumns = () => {
-  return useMemo(() => {
+  return useMemo<ColumnDef<Member>[]>(() => {
     return [
+      {
+        accessorKey: "pinned",
+        header: "",
+        cell: (col) =>
+          col.getValue() ? (
+            <DotIcon width={20} height={20} stroke={colors.indigo["9"]} />
+          ) : null,
+        size: 30,
+      },
       {
         accessorKey: "position",
         header: "Position",
@@ -32,6 +46,7 @@ export const useLeaderboardColumns = () => {
       {
         accessorKey: "rank",
         header: "Rank",
+        size: 120,
       },
       {
         accessorKey: "username",

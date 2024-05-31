@@ -54,12 +54,15 @@ const Leaderboard = ({
       <div className="flex flex-row items-center gap-2 rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
         <h1 className="p-1 font-mono text-sm">Leaderboard</h1>
       </div>
-      <table className="w-full">
+      <table style={{ tableLayout: "fixed" }} className="w-full">
         <thead className="border-gray-6 text-gray-11">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr className="border-b border-gray-6" key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
+                  style={{
+                    width: `${header.getSize()}px`,
+                  }}
                   className="rounded-md border-b border-gray-6 pb-1 pt-6 text-sm font-normal text-gray-11"
                   key={header.id}
                   colSpan={header.colSpan}
@@ -92,7 +95,8 @@ const Leaderboard = ({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
-                      className="rounded-md py-1.5 text-gray-11 last:border-r-0"
+                      style={{ width: `${cell.column.getSize()}px` }}
+                      className="rounded-md px-3 py-1.5 text-gray-11 last:border-r-0"
                       key={cell.id}
                     >
                       {flexRender(
@@ -119,7 +123,7 @@ const Leaderboard = ({
                       }
                       className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3"
                     >
-                      <td className="text-center" colSpan={3}>
+                      <td className="text-center" colSpan={4}>
                         <ChevronDownIcon
                           height={18}
                           width={18}
@@ -140,7 +144,7 @@ const Leaderboard = ({
                       }}
                       className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3"
                     >
-                      <td className="text-center" colSpan={3}>
+                      <td className="text-center" colSpan={4}>
                         <ChevronUpIcon
                           height={18}
                           width={18}
