@@ -31,7 +31,6 @@ export const usePaginatedMembers = (
       ...paginationParams,
       pageSize,
     });
-
   const { data: searchData, refetch: refetchSearch } = useGetMemberByUsername(
     communityId,
     searchTerm,

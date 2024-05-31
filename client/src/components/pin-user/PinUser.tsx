@@ -58,9 +58,7 @@ const PinUser = ({ open, setOpen, member }: PinUserProps) => {
         <SheetHeader className="flex flex-col gap-8">
           <SheetTitle>User Info</SheetTitle>
           <div className="flex flex-col gap-6 text-sm text-gray-11">
-            <p>
-              Find all information about a user, including their bets below.
-            </p>
+            <p>Find all information about a user below.</p>
           </div>
         </SheetHeader>
         <Form schema={FormSchema} defaultValues={defaultValues}>
@@ -81,7 +79,7 @@ const PinUser = ({ open, setOpen, member }: PinUserProps) => {
           <hr className="border-gray-6" />
           <Switch
             name="pinned"
-            displayName="Pin user"
+            displayName="Pin User"
             checked={pinnedUsersData?.data.users?.some(
               (user) => user.user?.username === member?.username,
             )}
