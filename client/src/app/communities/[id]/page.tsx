@@ -14,7 +14,7 @@ import {
 } from "@/components/dropdown-menu/DropdownMenu";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DeleteCommunity from "@/components/delete-community/DeleteCommunity";
 import LeaveCommunity from "@/components/leave-community/LeaveCommunity";
 import Leaderboard from "@/components/leaderboard/Leaderboard";
@@ -33,42 +33,39 @@ const Community = () => {
   const [selectedMember, setSelectedMember] = useState<Member>();
 
   const [paginationParams, setPaginationParams] =
-    useState<PaginateCommunityMembersParams>();
+    useState<Omit<PaginateCommunityMembersParams, "pageSize">>();
+  const [pageSize, setPageSize] = useState<number>(10);
+
   const params = useParams<{ id: string }>();
 
   const currentCommunity = useGetCurrentCommunity(params.id);
   const isCommunityOwner = useIsCommunityOwner(params.id);
 
-  const members = usePaginatedMembers(
+  const { members, refetch } = usePaginatedMembers(
     params.id,
     paginationParams as PaginateCommunityMembersParams,
+    pageSize,
   );
 
   usePointsUpdates();
+
+  useEffect(() => {
+    refetch();
+  }, [paginationParams]);
 
   if (!currentCommunity) {
     return null;
   }
 
   function onPageSizeChanged(pageSize: number) {
-    setPaginationParams((prevState) => {
-      return {
-        communityId: params.id,
-        from: prevState?.from ?? 0,
-        pageSize: pageSize,
-        direction: prevState?.direction ?? "forward",
-      };
-    });
+    setPageSize(pageSize);
   }
 
   function onPaginate(position: number, direction: "forward" | "backward") {
-    setPaginationParams((prevState) => {
-      return {
-        communityId: params.id,
-        from: position,
-        pageSize: prevState?.pageSize ?? 10,
-        direction: direction,
-      };
+    setPaginationParams({
+      communityId: params.id,
+      from: position,
+      direction: direction,
     });
   }
 
@@ -137,7 +134,7 @@ const Community = () => {
         </div>
         <div className="mt-6">
           <Leaderboard
-            pageSize={paginationParams?.pageSize ?? 10}
+            pageSize={pageSize}
             setPageSize={onPageSizeChanged}
             onRowClicked={onRowClick}
             onBackClicked={onPaginate}

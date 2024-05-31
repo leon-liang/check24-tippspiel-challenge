@@ -104,10 +104,7 @@ export const usePaginateCommunityMembers = (
       "community-members",
       params?.communityId,
     ],
-    enabled:
-      params?.from !== undefined &&
-      params?.pageSize !== undefined &&
-      params?.direction !== undefined,
+    enabled: false,
   });
 };
 

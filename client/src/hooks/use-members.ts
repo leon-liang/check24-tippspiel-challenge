@@ -20,11 +20,14 @@ export type Member = {
 export const usePaginatedMembers = (
   communityId: string,
   paginationParams: PaginateCommunityMembersParams,
+  pageSize: number,
 ) => {
   const message = useSubscribePointsUpdates();
   const { data: initialMembersData } = useGetCommunityLeaderboard(communityId);
-  const { data: paginatedMembersData } =
-    usePaginateCommunityMembers(paginationParams);
+  const { data: paginatedMembersData, refetch } = usePaginateCommunityMembers({
+    ...paginationParams,
+    pageSize,
+  });
   const { data: pinnedUsersData } = usePinnedUsers(communityId);
 
   const [members, setMembers] = useState<DtosMember[]>([]);
@@ -32,6 +35,7 @@ export const usePaginatedMembers = (
   useEffect(() => {
     if (message?.message.status === "UPDATED") {
       setMembers([]);
+      refetch();
     }
   }, [message?.message.status, message?.message.updatedAt]);
 
@@ -75,6 +79,6 @@ export const usePaginatedMembers = (
     }));
 
     setMembers(updatedMembers);
-    return updatedMembers;
+    return { members: updatedMembers, refetch };
   }, [initialMembersData, paginatedMembersData, pinnedUsersData]);
 };
