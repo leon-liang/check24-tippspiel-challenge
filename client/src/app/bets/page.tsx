@@ -32,6 +32,7 @@ const Bets = () => {
         <BannerTitle>
           <h1>Your Bets</h1>
           <Select
+            variant="md"
             value={selectedRound}
             items={rounds.map((round) => round.name)}
             onValueChange={(value) => {

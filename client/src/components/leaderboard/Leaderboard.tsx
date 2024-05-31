@@ -15,10 +15,13 @@ import {
 import { useGetMe } from "@/hooks/api/users.api";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
+import { Select } from "@/components/select/Select";
 
 interface LeaderboardProps {
   members: Member[];
-  onRowClick: (selectedPosition: number) => void;
+  pageSize: number;
+  setPageSize: (pageSize: number) => void;
+  onRowClicked: (selectedPosition: number) => void;
   onBackClicked: (position: number, direction: "forward" | "backward") => void;
   onForwardClicked: (
     position: number,
@@ -28,7 +31,9 @@ interface LeaderboardProps {
 
 const Leaderboard = ({
   members,
-  onRowClick,
+  pageSize,
+  setPageSize,
+  onRowClicked,
   onBackClicked,
   onForwardClicked,
 }: LeaderboardProps) => {
@@ -54,7 +59,7 @@ const Leaderboard = ({
       <div className="flex flex-row items-center gap-2 rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
         <h1 className="p-1 font-mono text-sm">Leaderboard</h1>
       </div>
-      <table style={{ tableLayout: "fixed" }} className="w-full">
+      <table className="w-full table-fixed border-b">
         <thead className="border-gray-6 text-gray-11">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr className="border-b border-gray-6" key={headerGroup.id}>
@@ -84,7 +89,7 @@ const Leaderboard = ({
               <React.Fragment key={row.id}>
                 <tr
                   onClick={() => {
-                    onRowClick(row.getValue("position"));
+                    onRowClicked(row.getValue("position"));
                   }}
                   className={cn(
                     "cursor-pointer rounded-md border-b border-gray-6 text-center last:border-b-0",
@@ -160,6 +165,17 @@ const Leaderboard = ({
           })}
         </tbody>
       </table>
+      <div className="flex items-center justify-end gap-3 px-4 py-1 text-sm">
+        <p>Page Size:</p>
+        <Select
+          variant="xs"
+          value={String(pageSize)}
+          items={["1", "5", "10", "20", "50", "100"]}
+          onValueChange={(value) => {
+            setPageSize(parseInt(value));
+          }}
+        />
+      </div>
     </div>
   );
 };

@@ -45,12 +45,25 @@ const Community = () => {
 
   usePointsUpdates();
 
+  function onPageSizeChanged(pageSize: number) {
+    setPaginationParams((prevState) => {
+      return {
+        communityId: params.id,
+        from: prevState?.from ?? 0,
+        pageSize: pageSize,
+        direction: prevState?.direction ?? "forward",
+      };
+    });
+  }
+
   function onPaginate(position: number, direction: "forward" | "backward") {
-    setPaginationParams({
-      communityId: params.id,
-      from: position,
-      pageSize: 10,
-      direction: direction,
+    setPaginationParams((prevState) => {
+      return {
+        communityId: params.id,
+        from: position,
+        pageSize: prevState?.pageSize ?? 10,
+        direction: direction,
+      };
     });
   }
 
@@ -110,7 +123,9 @@ const Community = () => {
       )}
       <div className="flex flex-col gap-3 px-[10%] py-6">
         <Leaderboard
-          onRowClick={onRowClick}
+          pageSize={paginationParams?.pageSize ?? 10}
+          setPageSize={onPageSizeChanged}
+          onRowClicked={onRowClick}
           onBackClicked={onPaginate}
           onForwardClicked={onPaginate}
           members={members ?? []}
