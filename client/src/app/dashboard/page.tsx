@@ -17,7 +17,7 @@ import { usePointsUpdates } from "@/hooks/use-points";
 
 const Dashboard = () => {
   const { data } = useGetUserCommunitiesPreview();
-  const [selectedTab, setSelectedTab] = useState("user-communities");
+  const [selectedTab, setSelectedTab] = useState("global-standings");
   const currentDate = DateTime.now();
   const matches = useUpcomingMatches(currentDate);
   useMatchUpdates();
@@ -55,17 +55,17 @@ const Dashboard = () => {
           <Tabs value={selectedTab} onValueChange={setSelectedTab}>
             <div className="overflow-auto">
               <TabsList>
-                <TabsTrigger value="user-communities">
-                  Your Communities
-                </TabsTrigger>
                 <TabsTrigger value="global-standings">
                   Global Standings
                 </TabsTrigger>
+                <TabsTrigger value="user-communities">
+                  Your Communities
+                </TabsTrigger>
               </TabsList>
             </div>
-            <TabsContent value="user-communities">
-              <div className="mt-6 flex flex-col gap-3">
-                {userCommunities?.map((preview, index) => {
+            <TabsContent value="global-standings">
+              <div className="mt-6 flex flex-col gap-6">
+                {globalStandings?.map((preview, index) => {
                   return (
                     <CommunityPreview
                       key={index}
@@ -77,9 +77,9 @@ const Dashboard = () => {
                 })}
               </div>
             </TabsContent>
-            <TabsContent value="global-standings">
-              <div className="mt-6 flex flex-col gap-6">
-                {globalStandings?.map((preview, index) => {
+            <TabsContent value="user-communities">
+              <div className="mt-6 flex flex-col gap-3">
+                {userCommunities?.map((preview, index) => {
                   return (
                     <CommunityPreview
                       key={index}
