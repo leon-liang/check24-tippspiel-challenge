@@ -1,7 +1,5 @@
-import React, { PropsWithChildren } from "react";
-import * as SwitchPrimitive from "@radix-ui/react-switch";
+import React, { ForwardedRef, forwardRef, PropsWithChildren } from "react";
 import {
-  Controller,
   DefaultValues,
   FieldValues,
   FormProvider,
@@ -14,16 +12,19 @@ import { z } from "zod";
 
 interface FormProps<TFormValues> {
   schema: z.Schema;
-  onSubmit: (data: TFormValues) => Promise<void>;
+  onSubmit?: (data: TFormValues) => Promise<void>;
   defaultValues?: DefaultValues<TFormValues>;
 }
 
-const Form = <TFormValues extends FieldValues>({
-  schema,
-  onSubmit,
-  children,
-  defaultValues,
-}: PropsWithChildren<FormProps<TFormValues>>) => {
+const FormComponent = <TFormValues extends FieldValues>(
+  {
+    schema,
+    onSubmit,
+    children,
+    defaultValues,
+  }: PropsWithChildren<FormProps<TFormValues>>,
+  ref: ForwardedRef<HTMLFormElement>,
+) => {
   const methods = useForm<TFormValues>({
     defaultValues,
     resolver: zodResolver(schema),
@@ -32,12 +33,15 @@ const Form = <TFormValues extends FieldValues>({
   const submitHandler: SubmitHandler<TFormValues> = async (
     data: z.infer<typeof schema>,
   ) => {
-    await onSubmit(data);
+    if (onSubmit) {
+      await onSubmit(data);
+    }
   };
 
   return (
     <FormProvider {...methods}>
       <form
+        ref={ref}
         className="flex flex-col gap-8"
         onSubmit={methods.handleSubmit(submitHandler)}
       >
@@ -47,6 +51,12 @@ const Form = <TFormValues extends FieldValues>({
   );
 };
 
+const Form = forwardRef(FormComponent) as <TFormValues extends FieldValues>(
+  pros: PropsWithChildren<FormProps<TFormValues>> & {
+    ref?: ForwardedRef<HTMLFormElement>;
+  },
+) => ReturnType<typeof FormComponent>;
+
 export default Form;
 
 interface FormInputProps {
@@ -54,6 +64,7 @@ interface FormInputProps {
   displayName: string;
   type: "text" | "number";
   required?: boolean;
+  disabled?: boolean;
 }
 
 export const Input = ({
@@ -61,6 +72,7 @@ export const Input = ({
   displayName,
   type,
   required = false,
+  disabled = false,
 }: FormInputProps) => {
   const {
     register,
@@ -81,40 +93,8 @@ export const Input = ({
             type === "number" ? (v === "" ? undefined : parseInt(v, 10)) : v,
           required: required,
         })}
-        disabled={isSubmitting}
+        disabled={disabled || isSubmitting}
       />
-    </fieldset>
-  );
-};
-
-interface SwitchProps {
-  name: string;
-  displayName: string;
-}
-
-export const Switch = ({ name, displayName }: SwitchProps) => {
-  const { control } = useFormContext();
-
-  return (
-    <fieldset className="flex flex-row items-center gap-4">
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => (
-          <SwitchPrimitive.Root
-            onCheckedChange={field.onChange}
-            checked={field.value}
-            className="relative h-[25px] w-[42px] cursor-pointer rounded-full bg-colors-black-A3 outline-none data-[state=checked]:bg-colors-green-10"
-            id={name}
-            {...field}
-          >
-            <SwitchPrimitive.Thumb className="block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-colors-white-A12 shadow-[0_2px_2px] shadow-black-A4 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-          </SwitchPrimitive.Root>
-        )}
-      />
-      <label className="text-left text-sm text-gray-11" htmlFor={name}>
-        {displayName}
-      </label>
     </fieldset>
   );
 };

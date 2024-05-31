@@ -377,6 +377,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/communities/{community_id}/pinned_users": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Get all pinned users for the specified community",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.usersResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/communities/{community_id}/pinned_users/{user_id}": {
             "put": {
                 "security": [
@@ -892,6 +925,17 @@ const docTemplate = `{
                         "username": {
                             "type": "string"
                         }
+                    }
+                }
+            }
+        },
+        "http.usersResponse": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.userResponse"
                     }
                 }
             }

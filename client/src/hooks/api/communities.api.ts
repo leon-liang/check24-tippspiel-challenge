@@ -110,3 +110,55 @@ export const usePaginateCommunityMembers = (
       params?.direction !== undefined,
   });
 };
+
+export const usePinnedUsers = (communityId: string) => {
+  return useQuery({
+    queryFn: () =>
+      communitiesApiFactory.v1CommunitiesCommunityIdPinnedUsersGet(communityId),
+    queryKey: ["pinned-users"],
+  });
+};
+
+export const useAddPinnedMember = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      communityId,
+      userId,
+    }: {
+      communityId: string;
+      userId: string;
+    }) => {
+      return communitiesApiFactory.v1CommunitiesCommunityIdPinnedUsersUserIdPut(
+        communityId,
+        userId,
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["pinned-users"] });
+    },
+  });
+};
+
+export const useRemovePinnedMember = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      communityId,
+      userId,
+    }: {
+      communityId: string;
+      userId: string;
+    }) => {
+      return communitiesApiFactory.v1CommunitiesCommunityIdPinnedUsersUserIdDelete(
+        communityId,
+        userId,
+      );
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["pinned-users"] });
+    },
+  });
+};

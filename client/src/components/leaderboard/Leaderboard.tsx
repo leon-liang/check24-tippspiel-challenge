@@ -18,6 +18,7 @@ import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 
 interface LeaderboardProps {
   members: Member[];
+  onRowClick: (selectedPosition: number) => void;
   onBackClicked: (position: number, direction: "forward" | "backward") => void;
   onForwardClicked: (
     position: number,
@@ -27,6 +28,7 @@ interface LeaderboardProps {
 
 const Leaderboard = ({
   members,
+  onRowClick,
   onBackClicked,
   onForwardClicked,
 }: LeaderboardProps) => {
@@ -78,6 +80,9 @@ const Leaderboard = ({
             return (
               <React.Fragment key={row.id}>
                 <tr
+                  onClick={() => {
+                    onRowClick(row.getValue("position"));
+                  }}
                   className={cn(
                     "cursor-pointer rounded-md border-b border-gray-6 text-center last:border-b-0",
                     row.getValue("username") == meData?.data.user?.username

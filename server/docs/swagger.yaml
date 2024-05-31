@@ -181,6 +181,13 @@ definitions:
             type: string
         type: object
     type: object
+  http.usersResponse:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/http.userResponse'
+        type: array
+    type: object
 info:
   contact: {}
   title: Check24 Tippspiel Challenge
@@ -394,6 +401,26 @@ paths:
       summary: Get members at the specified positions [from:from+pageSize)
       tags:
       - communities
+  /v1/communities/{community_id}/pinned_users:
+    get:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.usersResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Get all pinned users for the specified community
+      tags:
+      - Communities
   /v1/communities/{community_id}/pinned_users/{user_id}:
     delete:
       parameters:

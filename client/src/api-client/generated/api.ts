@@ -523,6 +523,19 @@ export interface HttpUserResponseUser {
      */
     'username'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface HttpUsersResponse
+ */
+export interface HttpUsersResponse {
+    /**
+     * 
+     * @type {Array<HttpUserResponse>}
+     * @memberof HttpUsersResponse
+     */
+    'users'?: Array<HttpUserResponse>;
+}
 
 /**
  * BetsApi - axios parameter creator
@@ -930,6 +943,44 @@ export const CommunitiesApiAxiosParamCreator = function (configuration?: Configu
         },
         /**
          * 
+         * @summary Get all pinned users for the specified community
+         * @param {string} communityId Community ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1CommunitiesCommunityIdPinnedUsersGet: async (communityId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'communityId' is not null or undefined
+            assertParamExists('v1CommunitiesCommunityIdPinnedUsersGet', 'communityId', communityId)
+            const localVarPath = `/v1/communities/{community_id}/pinned_users`
+                .replace(`{${"community_id"}}`, encodeURIComponent(String(communityId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth2Implicit required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth2Implicit", [], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Remove specified user from the pinned users for a given community
          * @param {string} communityId Community ID
          * @param {string} userId User ID
@@ -1200,6 +1251,19 @@ export const CommunitiesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get all pinned users for the specified community
+         * @param {string} communityId Community ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async v1CommunitiesCommunityIdPinnedUsersGet(communityId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HttpUsersResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.v1CommunitiesCommunityIdPinnedUsersGet(communityId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CommunitiesApi.v1CommunitiesCommunityIdPinnedUsersGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Remove specified user from the pinned users for a given community
          * @param {string} communityId Community ID
          * @param {string} userId User ID
@@ -1328,6 +1392,16 @@ export const CommunitiesApiFactory = function (configuration?: Configuration, ba
         },
         /**
          * 
+         * @summary Get all pinned users for the specified community
+         * @param {string} communityId Community ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1CommunitiesCommunityIdPinnedUsersGet(communityId: string, options?: any): AxiosPromise<HttpUsersResponse> {
+            return localVarFp.v1CommunitiesCommunityIdPinnedUsersGet(communityId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Remove specified user from the pinned users for a given community
          * @param {string} communityId Community ID
          * @param {string} userId User ID
@@ -1447,6 +1521,18 @@ export class CommunitiesApi extends BaseAPI {
      */
     public v1CommunitiesCommunityIdMembersGet(communityId: string, from: number, pageSize: number, direction: V1CommunitiesCommunityIdMembersGetDirectionEnum, options?: RawAxiosRequestConfig) {
         return CommunitiesApiFp(this.configuration).v1CommunitiesCommunityIdMembersGet(communityId, from, pageSize, direction, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all pinned users for the specified community
+     * @param {string} communityId Community ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CommunitiesApi
+     */
+    public v1CommunitiesCommunityIdPinnedUsersGet(communityId: string, options?: RawAxiosRequestConfig) {
+        return CommunitiesApiFp(this.configuration).v1CommunitiesCommunityIdPinnedUsersGet(communityId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

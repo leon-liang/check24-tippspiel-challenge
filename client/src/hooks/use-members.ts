@@ -8,6 +8,7 @@ import { DtosMember } from "@/api-client/generated";
 import { useSubscribePointsUpdates } from "@/hooks/api/points.api";
 
 export type Member = {
+  id?: string;
   position?: number;
   rank?: number;
   username?: string;

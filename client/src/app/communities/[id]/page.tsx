@@ -2,7 +2,10 @@
 
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { useParams } from "next/navigation";
-import { PaginateCommunityMembersParams } from "@/hooks/api/communities.api";
+import {
+  PaginateCommunityMembersParams,
+  usePinnedUsers,
+} from "@/hooks/api/communities.api";
 import CopyToClipboard from "@/components/copy-to-clipboard/CopyToClipboard";
 import {
   DropdownMenu,
@@ -14,7 +17,7 @@ import {
 } from "@/components/dropdown-menu/DropdownMenu";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
-import { useState } from "react";
+import React, { useState } from "react";
 import DeleteCommunity from "@/components/delete-community/DeleteCommunity";
 import LeaveCommunity from "@/components/leave-community/LeaveCommunity";
 import Leaderboard from "@/components/leaderboard/Leaderboard";
@@ -23,14 +26,19 @@ import {
   useGetCurrentCommunity,
   useIsCommunityOwner,
 } from "@/hooks/use-communities";
-import { usePaginatedMembers } from "@/hooks/use-members";
+import { Member, usePaginatedMembers } from "@/hooks/use-members";
+import PinUser from "@/components/pin-user/PinUser";
 
 const Community = () => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
+  const [sheetOpen, setSheetOpen] = useState<boolean>(false);
+  const [selectedMember, setSelectedMember] = useState<Member>();
+
   const [paginationParams, setPaginationParams] =
     useState<PaginateCommunityMembersParams>();
   const params = useParams<{ id: string }>();
 
+  const { data: pinnedUsersData } = usePinnedUsers(params.id);
   const currentCommunity = useGetCurrentCommunity(params.id);
   const isCommunityOwner = useIsCommunityOwner(params.id);
 
@@ -50,6 +58,12 @@ const Community = () => {
     });
   }
 
+  function onRowClick(position: number) {
+    const member = members.find((member) => member.position === position);
+    setSelectedMember(member);
+    setSheetOpen(true);
+  }
+
   return (
     <div className="relative">
       <div className="absolute right-5 top-5"></div>
@@ -65,7 +79,7 @@ const Community = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel>More Options</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setOpen(true)}>
+              <DropdownMenuItem onClick={() => setTooltipOpen(true)}>
                 <LogoutIcon width={22} height={22} className="mr-2" />
                 {isCommunityOwner ? "Delete Community" : "Leave Community"}
               </DropdownMenuItem>
@@ -87,22 +101,33 @@ const Community = () => {
       </Banner>
       {isCommunityOwner ? (
         <DeleteCommunity
-          open={open}
-          setOpen={setOpen}
+          open={tooltipOpen}
+          setOpen={setTooltipOpen}
           communityId={currentCommunity?.community?.id ?? ""}
         />
       ) : (
         <LeaveCommunity
-          open={open}
-          setOpen={setOpen}
+          open={tooltipOpen}
+          setOpen={setTooltipOpen}
           communityId={currentCommunity?.community?.id ?? ""}
         />
       )}
-      <div className="flex flex-row gap-6 px-[10%] py-6">
+      <div className="flex flex-col gap-4 px-[10%] py-6">
+        <div className="flex flex-row gap-4">
+          {pinnedUsersData?.data.users?.map((user, index) => (
+            <p key={index}>{user.user?.username}</p>
+          ))}
+        </div>
         <Leaderboard
+          onRowClick={onRowClick}
           onBackClicked={onPaginate}
           onForwardClicked={onPaginate}
           members={members ?? []}
+        />
+        <PinUser
+          member={selectedMember}
+          open={sheetOpen}
+          setOpen={setSheetOpen}
         />
       </div>
     </div>

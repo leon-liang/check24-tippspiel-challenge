@@ -44,7 +44,7 @@ type usersResponse struct {
 	Users []userResponse `json:"users"`
 }
 
-func newUsersResponse(users []*model.User) *usersResponse {
+func newUsersResponse(users []model.User) *usersResponse {
 	r := new(usersResponse)
 	ur := userResponse{}
 
