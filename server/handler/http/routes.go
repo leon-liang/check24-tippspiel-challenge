@@ -17,6 +17,7 @@ func (h *Handler) Register(v1 *echo.Group) {
 	communities.PUT("/:community_id/leave", h.LeaveCommunity)
 	communities.GET("/:community_id/leaderboard", h.GetCommunityLeaderboard)
 	communities.GET("/:community_id/members", h.PaginateCommunityMembers)
+	communities.GET("/:community_id/members/:username", h.GetUserByUsername)
 	communities.GET("/preview", h.GetUserCommunitiesPreview)
 	communities.GET("/:community_id/pinned_users", h.GetPinnedUsers)
 	communities.PUT("/:community_id/pinned_users/:user_id", h.AddPinnedUser)

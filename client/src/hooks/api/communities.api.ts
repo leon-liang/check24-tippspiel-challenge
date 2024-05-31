@@ -103,7 +103,6 @@ export const usePaginateCommunityMembers = (
       "community-leaderboard",
       "community-members",
       params?.communityId,
-      params?.from,
     ],
     enabled:
       params?.from !== undefined &&

@@ -127,7 +127,7 @@ const Community = () => {
         />
       )}
       <div className="flex flex-col gap-3 px-[10%] py-6">
-        <div className="-mt-14 flex h-14 w-full items-center gap-3 rounded-md border border-gray-6 bg-colors-white-A12 pl-4 text-gray-11 shadow-md">
+        <div className="-mt-14 flex h-14 w-full items-center gap-3 rounded-md border border-gray-6 bg-colors-white-A12 pl-4 text-gray-12 shadow-md">
           <SearchIcon width={20} height={22} />
           <input
             className="h-full w-full rounded-md outline-0"

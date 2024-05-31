@@ -377,6 +377,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/communities/{community_id}/members/{username}": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user with specified username",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.communityLeaderboardResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/communities/{community_id}/pinned_users": {
             "get": {
                 "security": [

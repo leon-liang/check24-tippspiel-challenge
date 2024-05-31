@@ -449,3 +449,53 @@ func (h *Handler) PaginateCommunityMembers(ctx echo.Context) error {
 	response := newCommunityLeaderboardResponse(community, members)
 	return ctx.JSON(http.StatusOK, response)
 }
+
+// GetUserByUsername godoc
+// @Tags Users
+// @Summary Get user with specified username
+// @Produce json
+// @Param community_id path string true "Community ID"
+// @Param username path string true "Username"
+// @Success 200 {object} http.communityLeaderboardResponse
+// @Router /v1/communities/{community_id}/members/{username} [GET]
+// @Security OAuth2Implicit
+func (h *Handler) GetUserByUsername(ctx echo.Context) error {
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	communityId := ctx.Param("community_id")
+	username := ctx.Param("username")
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// check that current user is a member of the community
+	isMember, err := h.CommunityStore.IsMember(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusOK, utils.NewError(err))
+	}
+
+	if !isMember {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
+	member, err := h.CommunityStore.GetMembersWithUsername(community, username)
+	if err != nil {
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+	}
+
+	members := make([]*dtos.Member, 0)
+	if member.Username != "" {
+		members = append(members, member)
+	}
+
+	response := newCommunityLeaderboardResponse(community, members)
+	return ctx.JSON(http.StatusOK, response)
+}

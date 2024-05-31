@@ -401,6 +401,31 @@ paths:
       summary: Get members at the specified positions [from:from+pageSize)
       tags:
       - communities
+  /v1/communities/{community_id}/members/{username}:
+    get:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.communityLeaderboardResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Get user with specified username
+      tags:
+      - Users
   /v1/communities/{community_id}/pinned_users:
     get:
       parameters:
