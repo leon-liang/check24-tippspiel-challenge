@@ -142,12 +142,18 @@ func GetCurrentUser(us *store.UserStore, cs *store.CommunityStore) echo.Middlewa
 				return echo.ErrInternalServerError
 			}
 
-			global := model.Community{
+			c := model.Community{
 				Name:  "CHECK24 Global",
 				Owner: admin.ID,
 			}
 
-			if err := cs.Join(&newUser, &global); err != nil {
+			global, err := cs.Find(&c)
+			if err != nil {
+				fmt.Println(err)
+				return echo.ErrInternalServerError
+			}
+
+			if err := cs.Join(&newUser, global); err != nil {
 				fmt.Println(err)
 				return echo.ErrInternalServerError
 			}

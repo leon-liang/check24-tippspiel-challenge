@@ -30,9 +30,18 @@ func (cs *CommunityStore) IsEmpty() (bool, error) {
 	if err := cs.db.Raw(query).Scan(&isEmpty).Error; err != nil {
 		return false, err
 	}
-
 	return !isEmpty, nil
+}
 
+func (cs *CommunityStore) Find(community *model.Community) (*model.Community, error) {
+	var c model.Community
+	if err := cs.db.Where(community).Find(&c).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &c, nil
 }
 
 func (cs *CommunityStore) Create(community *model.Community) (err error) {
