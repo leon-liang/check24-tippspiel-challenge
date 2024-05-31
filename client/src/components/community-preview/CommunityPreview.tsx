@@ -2,7 +2,6 @@ import { useRouter } from "next/navigation";
 import {
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import React from "react";
@@ -35,7 +34,6 @@ const CommunityPreview = ({
   const table = useReactTable({
     data,
     columns: leaderboardColumns,
-    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
     state: {
       columnVisibility: {

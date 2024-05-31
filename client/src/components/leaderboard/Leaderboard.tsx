@@ -2,7 +2,6 @@ import React from "react";
 import {
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import cn from "classnames";
@@ -45,7 +44,6 @@ const Leaderboard = ({
   const table = useReactTable({
     data,
     columns: leaderboardColumns,
-    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
     state: {
       columnVisibility: {
