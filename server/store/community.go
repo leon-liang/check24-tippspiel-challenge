@@ -18,6 +18,23 @@ func NewCommunityStore(db *gorm.DB) *CommunityStore {
 	}
 }
 
+func (cs *CommunityStore) IsEmpty() (bool, error) {
+	var isEmpty bool
+	query := `
+		SELECT EXISTS (
+			SELECT 1
+			FROM communities
+		)
+	`
+
+	if err := cs.db.Raw(query).Scan(&isEmpty).Error; err != nil {
+		return false, err
+	}
+
+	return !isEmpty, nil
+
+}
+
 func (cs *CommunityStore) Create(community *model.Community) (err error) {
 	return cs.db.Create(community).Error
 }

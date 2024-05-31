@@ -84,7 +84,7 @@ func ValidatePermissions(requiredPermissions []string) echo.MiddlewareFunc {
 	}
 }
 
-func GetCurrentUser(us *store.UserStore) echo.MiddlewareFunc {
+func GetCurrentUser(us *store.UserStore, cs *store.CommunityStore) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			token := ctx.Request().Header.Get("Authorization")
@@ -132,6 +132,22 @@ func GetCurrentUser(us *store.UserStore) echo.MiddlewareFunc {
 			}
 
 			if err := us.Create(&newUser); err != nil {
+				fmt.Println(err)
+				return echo.ErrInternalServerError
+			}
+
+			admin, err := us.GetByUsername("admin")
+			if err != nil {
+				fmt.Println(err)
+				return echo.ErrInternalServerError
+			}
+
+			global := model.Community{
+				Name:  "CHECK24 Global",
+				Owner: admin.ID,
+			}
+
+			if err := cs.Join(&newUser, &global); err != nil {
 				fmt.Println(err)
 				return echo.ErrInternalServerError
 			}
