@@ -7,6 +7,36 @@ import (
 	"net/http"
 )
 
+// GetPinnedUsers godoc
+// @Tags Communities
+// @Summary Get all pinned users for the specified community
+// @Produce json
+// @Success 200 {object} http.usersResponse
+// @Param community_id path string true "Community ID"
+// @Router /v1/communities/{community_id}/pinned_users [GET]
+// @Security OAuth2Implicit
+func (h *Handler) GetPinnedUsers(ctx echo.Context) error {
+	communityId := ctx.Param("community_id")
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	users, err := h.UserCommunityStore.GetPinnedUsers(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	response := newUsersResponse(users)
+	return ctx.JSON(http.StatusOK, &response)
+}
+
 // AddPinnedUser godoc
 // @Tags Communities
 // @Summary Add specified user to the pinned users for a given community

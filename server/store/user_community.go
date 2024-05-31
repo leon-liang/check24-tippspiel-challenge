@@ -16,6 +16,21 @@ func NewUserCommunityStore(db *gorm.DB) *UserCommunityStore {
 	}
 }
 
+func (ucs *UserCommunityStore) GetPinnedUsers(currentUser *model.User, community *model.Community) ([]model.User, error) {
+	var userCommunity model.UserCommunity
+	userCommunity.UserID = currentUser.ID
+	userCommunity.CommunityID = community.ID
+
+	if err := ucs.db.Preload("PinnedUsers").Find(&userCommunity).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return userCommunity.PinnedUsers, nil
+}
+
 func (ucs *UserCommunityStore) AddPinnedUser(currentUser *model.User, user *model.User, community *model.Community) error {
 	var userCommunity model.UserCommunity
 	userCommunity.UserID = currentUser.ID

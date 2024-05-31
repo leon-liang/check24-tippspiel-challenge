@@ -18,6 +18,32 @@ func NewCommunityStore(db *gorm.DB) *CommunityStore {
 	}
 }
 
+func (cs *CommunityStore) IsEmpty() (bool, error) {
+	var isEmpty bool
+	query := `
+		SELECT EXISTS (
+			SELECT 1
+			FROM communities
+		)
+	`
+
+	if err := cs.db.Raw(query).Scan(&isEmpty).Error; err != nil {
+		return false, err
+	}
+	return !isEmpty, nil
+}
+
+func (cs *CommunityStore) Find(community *model.Community) (*model.Community, error) {
+	var c model.Community
+	if err := cs.db.Where(community).Find(&c).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &c, nil
+}
+
 func (cs *CommunityStore) Create(community *model.Community) (err error) {
 	return cs.db.Create(community).Error
 }
@@ -273,4 +299,39 @@ func (cs *CommunityStore) GetMembersAtPosition(community *model.Community, from 
 	}
 
 	return members, nil
+}
+
+func (cs *CommunityStore) GetMembersWithUsername(community *model.Community, username string) (*dtos.Member, error) {
+	var member dtos.Member
+
+	query := `
+		WITH members AS (
+			SELECT u.*
+			FROM users u
+			INNER JOIN community_members cm
+			ON u.id = cm.user_id
+			WHERE cm.community_id = ?
+			
+			UNION
+		
+			SELECT u.*
+			FROM users u
+			INNER JOIN communities c
+			ON u.id = c.owner
+			WHERE c.id = ?
+		),
+		ranked_members AS (
+			SELECT m.*, 
+			ROW_NUMBER() OVER (ORDER BY m.points DESC, created_at ASC) AS position,
+    		DENSE_RANK() OVER (ORDER BY m.points DESC) AS rank
+			FROM members m
+		)
+		SELECT * FROM ranked_members
+		WHERE username = ?;`
+
+	if err := cs.db.Raw(query, community.ID, community.ID, username).Scan(&member).Error; err != nil {
+		return nil, err
+	}
+
+	return &member, nil
 }

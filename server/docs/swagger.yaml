@@ -68,16 +68,19 @@ definitions:
             type: string
         type: object
     type: object
-  http.communityPreviewResponse:
+  http.communityLeaderboardResponse:
     properties:
-      id:
-        type: string
-      members:
-        items:
-          $ref: '#/definitions/dtos.Member'
-        type: array
-      name:
-        type: string
+      communityLeaderboard:
+        properties:
+          id:
+            type: string
+          members:
+            items:
+              $ref: '#/definitions/dtos.Member'
+            type: array
+          name:
+            type: string
+        type: object
     type: object
   http.communityResponse:
     properties:
@@ -153,11 +156,11 @@ definitions:
       message:
         type: string
     type: object
-  http.userCommunitiesPreviewResponse:
+  http.userCommunitiesLeaderboardResponse:
     properties:
-      communityPreviews:
+      communityLeaderboard:
         items:
-          $ref: '#/definitions/http.communityPreviewResponse'
+          $ref: '#/definitions/http.communityLeaderboardResponse'
         type: array
     type: object
   http.userResponse:
@@ -177,6 +180,13 @@ definitions:
           username:
             type: string
         type: object
+    type: object
+  http.usersResponse:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/http.userResponse'
+        type: array
     type: object
 info:
   contact: {}
@@ -293,25 +303,6 @@ paths:
       summary: Delete the specified community
       tags:
       - Communities
-    get:
-      parameters:
-      - description: Community ID
-        in: path
-        name: community_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/http.communityResponse'
-      security:
-      - OAuth2Implicit: []
-      summary: Retrieve a community with the given id
-      tags:
-      - Communities
   /v1/communities/{community_id}/join:
     post:
       parameters:
@@ -332,6 +323,26 @@ paths:
       summary: Join the specified community
       tags:
       - Communities
+  /v1/communities/{community_id}/leaderboard:
+    get:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.communityLeaderboardResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Get the leaderboard for a specified community
+      tags:
+      - Communities
   /v1/communities/{community_id}/leave:
     put:
       parameters:
@@ -350,6 +361,89 @@ paths:
       security:
       - OAuth2Implicit: []
       summary: Leave the specified community
+      tags:
+      - Communities
+  /v1/communities/{community_id}/members:
+    get:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      - description: From
+        in: query
+        name: from
+        required: true
+        type: integer
+      - description: Page Size
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - description: Direction
+        enum:
+        - forward
+        - backward
+        in: query
+        name: direction
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.communityLeaderboardResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Get members at the specified positions [from:from+pageSize)
+      tags:
+      - Communities
+  /v1/communities/{community_id}/members/{username}:
+    get:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.communityLeaderboardResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Get user with specified username
+      tags:
+      - Communities
+  /v1/communities/{community_id}/pinned_users:
+    get:
+      parameters:
+      - description: Community ID
+        in: path
+        name: community_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.usersResponse'
+      security:
+      - OAuth2Implicit: []
+      summary: Get all pinned users for the specified community
       tags:
       - Communities
   /v1/communities/{community_id}/pinned_users/{user_id}:
@@ -409,7 +503,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/http.userCommunitiesPreviewResponse'
+            $ref: '#/definitions/http.userCommunitiesLeaderboardResponse'
       security:
       - OAuth2Implicit: []
       summary: Get preview of a user's communities

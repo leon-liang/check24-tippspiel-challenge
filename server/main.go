@@ -76,9 +76,11 @@ func main() {
 	defer sw.WorkerPool.Stop()
 
 	// Setup Seeder
-	seedsHandler := seeds.NewHandler(*ms, *ts, *js)
+	seedsHandler := seeds.NewHandler(*ms, *ts, *cs, *us, *js)
+	seedsHandler.SeedUsers()
 	seedsHandler.SeedTeams()
 	seedsHandler.SeedMatches()
+	seedsHandler.SeedCommunities()
 	seedsHandler.SeedJobs()
 
 	// Setup Websocket
@@ -102,7 +104,7 @@ func main() {
 
 	keycloakClient := keycloak.New()
 	v1.Use(authMiddleware.ValidateToken(keycloakClient))
-	v1.Use(authMiddleware.GetCurrentUser(us))
+	v1.Use(authMiddleware.GetCurrentUser(us, cs))
 	v1.Use(authMiddleware.ValidatePermissions([]string{}))
 
 	httpHandler.Register(v1)

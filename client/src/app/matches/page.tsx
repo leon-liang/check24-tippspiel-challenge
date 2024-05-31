@@ -7,7 +7,7 @@ import Table, { Column } from "@/components/table/Table";
 import React, { useState } from "react";
 import { useMatches } from "@/hooks/use-matches";
 import UpdateMatch from "@/components/update-match/UpdateMatch";
-import useMatchColumns from "@/hooks/use-match-columns";
+import { useMatchColumns } from "@/hooks/use-matches";
 import { useCalculatePoints } from "@/hooks/api/points.api";
 import { useIsPointsOutOfDate } from "@/hooks/use-points";
 import CalculatePoints from "@/components/calculate-points/CalculatePoints";
@@ -70,12 +70,7 @@ const Matches = () => {
             <CalculatePoints onClick={onCalculatePointsClicked} />
           </div>
         ) : null}
-        <Table
-          data={matches}
-          columns={matchColumns}
-          rowsPerPage={10}
-          onRowClick={onRowClick}
-        />
+        <Table data={matches} columns={matchColumns} onRowClick={onRowClick} />
       </div>
       <UpdateMatch open={open} setOpen={setOpen} match={selectedMatch} />
     </>

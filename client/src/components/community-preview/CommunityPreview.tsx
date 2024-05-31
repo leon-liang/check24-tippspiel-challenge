@@ -5,18 +5,16 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useMemo } from "react";
+import React from "react";
 import cn from "classnames";
 import { useGetMe } from "@/hooks/api/users.api";
 import EllipsisHorizontalIcon from "@/components/icons/EllipsisHorizontalIcon";
 import { colors } from "../../../tailwind.config";
-
-type Member = {
-  position?: number;
-  rank?: number;
-  username?: string;
-  points?: number;
-};
+import {
+  Member,
+  useLeaderboard,
+  useLeaderboardColumns,
+} from "@/hooks/use-leaderboard";
 
 interface CommunityPreviewProps {
   communityId: string;
@@ -31,37 +29,8 @@ const CommunityPreview = ({
 }: CommunityPreviewProps) => {
   const router = useRouter();
 
-  const leaderboardColumns = [
-    {
-      accessorKey: "position",
-      header: "Position",
-    },
-    {
-      accessorKey: "rank",
-      header: "Rank",
-    },
-    {
-      accessorKey: "username",
-      header: "Username",
-    },
-    {
-      accessorKey: "points",
-      header: "Points",
-    },
-  ];
-
-  let data = useMemo(
-    () =>
-      members.map((member) => {
-        return {
-          position: member.position,
-          rank: member.rank,
-          username: member.username,
-          points: member.points,
-        };
-      }),
-    [members],
-  );
+  const data = useLeaderboard(members);
+  const leaderboardColumns = useLeaderboardColumns();
 
   const table = useReactTable({
     data,
@@ -82,7 +51,7 @@ const CommunityPreview = ({
       onClick={() => {
         router.push(`/communities/${communityId}`);
       }}
-      className="w-full cursor-pointer rounded-md border border-gray-6 bg-colors-white-A12 hover:shadow-lg"
+      className="w-full cursor-pointer rounded-md border border-gray-6 bg-colors-white-A12 transition duration-200 hover:shadow-lg"
     >
       <div className="flex flex-row items-center gap-2 rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
         <h1 className="p-1 font-mono text-sm">{communityName}</h1>

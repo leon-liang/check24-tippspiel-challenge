@@ -7,17 +7,17 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import { colors } from "../../../tailwind.config";
 import ChevronFirstIcon from "@/components/icons/ChevronFirstIcon";
 import ChevronLastIcon from "@/components/icons/ChevronLastIcon";
+import { Select } from "@/components/select/Select";
 
 interface TableProps<TData, TValue> {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
-  rowsPerPage: number;
   onRowClick: (selectedIndex: number) => void;
   currentPage?: number;
   setCurrentPage?: (page: number) => void;
@@ -26,26 +26,29 @@ interface TableProps<TData, TValue> {
 const Table = <TData, TValue>({
   columns,
   data,
-  rowsPerPage,
   onRowClick,
-  currentPage,
   setCurrentPage,
 }: TableProps<TData, TValue>) => {
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
   const table = useReactTable({
     data,
     columns,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    initialState: {
-      pagination: {
-        pageSize: rowsPerPage,
-        pageIndex: currentPage ?? 0,
-      },
+    onPaginationChange: setPagination,
+    state: {
+      pagination,
     },
     autoResetPageIndex: false,
   });
 
-  const currentPageIndex = table.getState().pagination.pageIndex;
+  const currentPageIndex = useMemo(() => {
+    return table.getState().pagination.pageIndex;
+  }, [table]);
 
   useEffect(() => {
     if (setCurrentPage) {
@@ -101,28 +104,62 @@ const Table = <TData, TValue>({
           ))}
         </tbody>
       </table>
-      <div className="flex items-center justify-end gap-2 px-4 py-1 text-sm">
-        <button onClick={() => table.firstPage()}>
-          <ChevronFirstIcon width={20} height={20} stroke={colors.gray["11"]} />
-        </button>
-        <button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ChevronLeftIcon width={20} height={20} stroke={colors.gray["11"]} />
-        </button>
-        <p className="text-sm">
-          {`Page ${table.getState().pagination.pageIndex + 1} of ${table.getPageCount()}`}
-        </p>
-        <button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ChevronRightIcon width={20} height={20} stroke={colors.gray["11"]} />
-        </button>
-        <button onClick={() => table.lastPage()}>
-          <ChevronLastIcon width={20} height={20} stroke={colors.gray["11"]} />
-        </button>
+      <div className="flex items-center justify-end gap-6 px-4 py-1 text-sm">
+        <div className="flex flex-row items-center gap-2">
+          <p>Page Size:</p>
+          <Select
+            variant="xs"
+            value={String(pagination.pageSize)}
+            items={["5", "10", "20", "50"]}
+            onValueChange={(value) => {
+              setPagination((prevState) => {
+                return {
+                  pageIndex: prevState.pageIndex,
+                  pageSize: parseInt(value),
+                };
+              });
+            }}
+          />
+        </div>
+        <div className="flex gap-1">
+          <button onClick={() => table.firstPage()}>
+            <ChevronFirstIcon
+              width={20}
+              height={20}
+              stroke={colors.gray["11"]}
+            />
+          </button>
+          <button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ChevronLeftIcon
+              width={20}
+              height={20}
+              stroke={colors.gray["11"]}
+            />
+          </button>
+          <p className="text-sm">
+            {`Page ${table.getState().pagination.pageIndex + 1} of ${table.getPageCount()}`}
+          </p>
+          <button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <ChevronRightIcon
+              width={20}
+              height={20}
+              stroke={colors.gray["11"]}
+            />
+          </button>
+          <button onClick={() => table.lastPage()}>
+            <ChevronLastIcon
+              width={20}
+              height={20}
+              stroke={colors.gray["11"]}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

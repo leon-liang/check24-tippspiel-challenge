@@ -1,11 +1,15 @@
 package http
 
 import (
+	"cmp"
 	"errors"
 	"github.com/labstack/echo/v4"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/dtos"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/utils"
 	"net/http"
+	"slices"
+	"strconv"
 )
 
 // CreateCommunity godoc
@@ -45,26 +49,6 @@ func (h *Handler) CreateCommunity(ctx echo.Context) error {
 	}
 
 	response := newCommunityResponse(&c)
-	return ctx.JSON(http.StatusOK, &response)
-}
-
-// GetCommunity godoc
-// @Tags Communities
-// @Summary Retrieve a community with the given id
-// @Produce json
-// @Success 200 {object} http.communityResponse
-// @Param community_id path string true "Community ID"
-// @Router /v1/communities/{community_id} [GET]
-// @Security OAuth2Implicit
-func (h *Handler) GetCommunity(ctx echo.Context) error {
-	communityId := ctx.Param("community_id")
-
-	community, err := h.CommunityStore.GetCommunityById(communityId)
-	if err != nil {
-		return ctx.JSON(http.StatusNotFound, utils.NewError(err))
-	}
-
-	response := newCommunityResponse(community)
 	return ctx.JSON(http.StatusOK, &response)
 }
 
@@ -209,7 +193,7 @@ func (h *Handler) DeleteCommunity(ctx echo.Context) error {
 // @Tags Communities
 // @Summary Get preview of a user's communities
 // @Produce json
-// @Success 200 {object} http.userCommunitiesPreviewResponse
+// @Success 200 {object} http.userCommunitiesLeaderboardResponse
 // @Router /v1/communities/preview [GET]
 // @Security OAuth2Implicit
 func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
@@ -220,7 +204,7 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	communityPreviews := make([]*communityPreviewResponse, 0)
+	communityPreviews := make([]*communityLeaderboardResponse, 0)
 
 	for _, community := range communities {
 		// If there are <= 7 users in the community return all members
@@ -235,7 +219,7 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 				return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 			}
 
-			communityPreview := newCommunityPreviewResponse(&community, members)
+			communityPreview := newCommunityLeaderboardResponse(&community, members)
 			communityPreviews = append(communityPreviews, communityPreview)
 			continue
 		}
@@ -259,7 +243,7 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 			}
 
 			members := append(topSix, last...)
-			communityPreview := newCommunityPreviewResponse(&community, members)
+			communityPreview := newCommunityLeaderboardResponse(&community, members)
 			communityPreviews = append(communityPreviews, communityPreview)
 			continue
 		}
@@ -277,7 +261,7 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 			}
 
 			members := append(topThree, lastFour...)
-			communityPreview := newCommunityPreviewResponse(&community, members)
+			communityPreview := newCommunityLeaderboardResponse(&community, members)
 			communityPreviews = append(communityPreviews, communityPreview)
 			continue
 		}
@@ -302,10 +286,216 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 		members := append(topThree, adjacentToUser...)
 		members = append(members, last...)
 
-		communityPreview := newCommunityPreviewResponse(&community, members)
+		communityPreview := newCommunityLeaderboardResponse(&community, members)
 		communityPreviews = append(communityPreviews, communityPreview)
 	}
 
-	response := newUserCommunityPreviewResponse(communityPreviews)
+	response := newUserCommunitiesLeaderboardResponse(communityPreviews)
+	return ctx.JSON(http.StatusOK, response)
+}
+
+// GetCommunityLeaderboard godoc
+// @Tags Communities
+// @Summary Get the leaderboard for a specified community
+// @Produce json
+// @Success 200 {object} http.communityLeaderboardResponse
+// @Param community_id path string true "Community ID"
+// @Router /v1/communities/{community_id}/leaderboard [GET]
+// @Security OAuth2Implicit
+func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
+	communityId := ctx.Param("community_id")
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// check that current user is a member of the community
+	isMember, err := h.CommunityStore.IsMember(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusOK, utils.NewError(err))
+	}
+
+	if !isMember {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
+	// get top 3 positions
+	topThree, err := h.CommunityStore.GetMembersAtPosition(community, 1, 3)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	// get all pinned users
+	pinnedMembers := make([]*dtos.Member, 0)
+	pinnedUsers, err := h.UserCommunityStore.GetPinnedUsers(currentUser, community)
+
+	for _, user := range pinnedUsers {
+		pos, err := h.CommunityStore.GetUserPosition(&user, community)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+
+		members, err := h.CommunityStore.GetMembersAtPosition(community, pos, pos)
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+
+		pinnedMembers = append(pinnedMembers, members...)
+	}
+
+	// get position of the current user
+	pos, err := h.CommunityStore.GetUserPosition(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	member, err := h.CommunityStore.GetMembersAtPosition(community, pos, pos)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	// get last user
+	count, err := h.CommunityStore.GetCommunityMembersCount(community)
+	last, err := h.CommunityStore.GetMembersAtPosition(community, count, count)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	members := append(topThree, pinnedMembers...)
+	members = append(members, member...)
+	members = append(members, last...)
+
+	// remove duplicates and sort members
+	members = utils.Unique(members)
+
+	slices.SortFunc(members, func(a, b *dtos.Member) int {
+		return cmp.Compare(a.Position, b.Position)
+	})
+
+	response := newCommunityLeaderboardResponse(community, members)
+	return ctx.JSON(http.StatusOK, response)
+}
+
+// PaginateCommunityMembers godoc
+// @Tags Communities
+// @Summary Get members at the specified positions [from:from+pageSize)
+// @Produce json
+// @Success 200 {object} http.communityLeaderboardResponse
+// @Param community_id path string true "Community ID"
+// @Param from query int true "From"
+// @Param pageSize query int true "Page Size"
+// @Param direction query string true "Direction" Enums(forward, backward)
+// @Router /v1/communities/{community_id}/members [GET]
+// @Security OAuth2Implicit
+func (h *Handler) PaginateCommunityMembers(ctx echo.Context) error {
+	f := ctx.QueryParam("from")
+	ps := ctx.QueryParam("pageSize")
+	direction := ctx.QueryParam("direction")
+
+	pageSize, err := strconv.Atoi(ps)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewValidatorError(err))
+	}
+
+	from, err := strconv.Atoi(f)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewValidatorError(err))
+	}
+
+	communityId := ctx.Param("community_id")
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// check that current user is a member of the community
+	isMember, err := h.CommunityStore.IsMember(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusOK, utils.NewError(err))
+	}
+
+	if !isMember {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
+	var start int
+	var end int
+	if direction == "forward" {
+		start = from
+		end = from + (pageSize - 1)
+	} else {
+		start = from - (pageSize - 1)
+		end = from
+	}
+
+	members, err := h.CommunityStore.GetMembersAtPosition(community, start, end)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	response := newCommunityLeaderboardResponse(community, members)
+	return ctx.JSON(http.StatusOK, response)
+}
+
+// GetUserByUsername godoc
+// @Tags Communities
+// @Summary Get user with specified username
+// @Produce json
+// @Param community_id path string true "Community ID"
+// @Param username path string true "Username"
+// @Success 200 {object} http.communityLeaderboardResponse
+// @Router /v1/communities/{community_id}/members/{username} [GET]
+// @Security OAuth2Implicit
+func (h *Handler) GetUserByUsername(ctx echo.Context) error {
+	currentUser := ctx.Get("current_user").(*model.User)
+
+	communityId := ctx.Param("community_id")
+	username := ctx.Param("username")
+
+	community, err := h.CommunityStore.GetCommunityById(communityId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	if community == nil {
+		return ctx.JSON(http.StatusNotFound, utils.NotFound())
+	}
+
+	// check that current user is a member of the community
+	isMember, err := h.CommunityStore.IsMember(currentUser, community)
+	if err != nil {
+		return ctx.JSON(http.StatusOK, utils.NewError(err))
+	}
+
+	if !isMember {
+		return ctx.JSON(http.StatusForbidden, utils.AccessForbidden())
+	}
+
+	member, err := h.CommunityStore.GetMembersWithUsername(community, username)
+	if err != nil {
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+		}
+	}
+
+	members := make([]*dtos.Member, 0)
+	if member.Username != "" {
+		members = append(members, member)
+	}
+
+	response := newCommunityLeaderboardResponse(community, members)
 	return ctx.JSON(http.StatusOK, response)
 }

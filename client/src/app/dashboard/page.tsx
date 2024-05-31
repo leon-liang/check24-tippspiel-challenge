@@ -3,7 +3,7 @@
 import Banner, { BannerContent, BannerTitle } from "@/components/banner/Banner";
 import { DateTime } from "luxon";
 import SubmitBet from "@/components/submit-bet/SubmitBet";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useGetUserCommunitiesPreview } from "@/hooks/api/communities.api";
 import CommunityPreview from "@/components/community-preview/CommunityPreview";
 import {
@@ -17,11 +17,23 @@ import { usePointsUpdates } from "@/hooks/use-points";
 
 const Dashboard = () => {
   const { data } = useGetUserCommunitiesPreview();
-  const [selectedTab, setSelectedTab] = useState("user-communities");
+  const [selectedTab, setSelectedTab] = useState("global-standings");
   const currentDate = DateTime.now();
   const matches = useUpcomingMatches(currentDate);
   useMatchUpdates();
   usePointsUpdates();
+
+  const userCommunities = useMemo(() => {
+    return data?.data.communityLeaderboard?.filter(
+      (preview) => preview.communityLeaderboard?.name !== "CHECK24 Global",
+    );
+  }, [data]);
+
+  const globalStandings = useMemo(() => {
+    return data?.data.communityLeaderboard?.filter(
+      (preview) => preview.communityLeaderboard?.name === "CHECK24 Global",
+    );
+  }, [data]);
 
   return (
     <>
@@ -43,30 +55,41 @@ const Dashboard = () => {
           <Tabs value={selectedTab} onValueChange={setSelectedTab}>
             <div className="overflow-auto">
               <TabsList>
-                <TabsTrigger value="user-communities">
-                  Your Communities
-                </TabsTrigger>
                 <TabsTrigger value="global-standings">
                   Global Standings
                 </TabsTrigger>
+                <TabsTrigger value="user-communities">
+                  Your Communities
+                </TabsTrigger>
               </TabsList>
             </div>
-            <TabsContent value="user-communities">
-              <div className="mt-6 flex flex-col gap-3">
-                {data?.data.communityPreviews?.map((preview, index) => {
+            <TabsContent value="global-standings">
+              <div className="mt-6 flex flex-col gap-6">
+                {globalStandings?.map((preview, index) => {
                   return (
                     <CommunityPreview
                       key={index}
-                      communityName={preview.name ?? ""}
-                      communityId={preview.id ?? ""}
-                      members={preview.members ?? []}
+                      communityName={preview.communityLeaderboard?.name ?? ""}
+                      communityId={preview.communityLeaderboard?.id ?? ""}
+                      members={preview.communityLeaderboard?.members ?? []}
                     />
                   );
                 })}
               </div>
             </TabsContent>
-            <TabsContent value="global-standings">
-              <div className="mt-6 flex flex-col gap-6"></div>
+            <TabsContent value="user-communities">
+              <div className="mt-6 flex flex-col gap-3">
+                {userCommunities?.map((preview, index) => {
+                  return (
+                    <CommunityPreview
+                      key={index}
+                      communityName={preview.communityLeaderboard?.name ?? ""}
+                      communityId={preview.communityLeaderboard?.id ?? ""}
+                      members={preview.communityLeaderboard?.members ?? []}
+                    />
+                  );
+                })}
+              </div>
             </TabsContent>
           </Tabs>
         </div>

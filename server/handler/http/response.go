@@ -44,7 +44,7 @@ type usersResponse struct {
 	Users []userResponse `json:"users"`
 }
 
-func newUsersResponse(users []*model.User) *usersResponse {
+func newUsersResponse(users []model.User) *usersResponse {
 	r := new(usersResponse)
 	ur := userResponse{}
 
@@ -99,45 +99,48 @@ func newCommunitiesResponse(communities []model.Community) *communitiesResponse 
 	return r
 }
 
-type communityPreviewResponse struct {
-	ID      string        `json:"id"`
-	Name    string        `json:"name"`
-	Members []dtos.Member `json:"members"`
+type communityLeaderboardResponse struct {
+	CommunityLeaderboard struct {
+		ID      string        `json:"id"`
+		Name    string        `json:"name"`
+		Members []dtos.Member `json:"members"`
+	} `json:"communityLeaderboard"`
 }
 
-func newCommunityPreviewResponse(community *model.Community, members []*dtos.Member) *communityPreviewResponse {
-	r := new(communityPreviewResponse)
+func newCommunityLeaderboardResponse(community *model.Community, members []*dtos.Member) *communityLeaderboardResponse {
+	r := new(communityLeaderboardResponse)
 	m := dtos.Member{}
 
-	r.ID = community.ID
-	r.Name = community.Name
+	r.CommunityLeaderboard.ID = community.ID
+	r.CommunityLeaderboard.Name = community.Name
 
-	r.Members = make([]dtos.Member, 0)
+	r.CommunityLeaderboard.Members = make([]dtos.Member, 0)
 	for _, member := range members {
 		m.ID = member.ID
 		m.Username = member.Username
 		m.Points = member.Points
 		m.Rank = member.Rank
 		m.Position = member.Position
-		r.Members = append(r.Members, m)
+
+		r.CommunityLeaderboard.Members = append(r.CommunityLeaderboard.Members, m)
 	}
 
 	return r
 }
 
-type userCommunitiesPreviewResponse struct {
-	CommunityPreviews []communityPreviewResponse `json:"communityPreviews"`
+type userCommunitiesLeaderboardResponse struct {
+	CommunityPreviews []communityLeaderboardResponse `json:"communityLeaderboard"`
 }
 
-func newUserCommunityPreviewResponse(communityPreviews []*communityPreviewResponse) *userCommunitiesPreviewResponse {
-	r := new(userCommunitiesPreviewResponse)
-	cp := communityPreviewResponse{}
+func newUserCommunitiesLeaderboardResponse(communityPreviews []*communityLeaderboardResponse) *userCommunitiesLeaderboardResponse {
+	r := new(userCommunitiesLeaderboardResponse)
+	cp := communityLeaderboardResponse{}
 
-	r.CommunityPreviews = make([]communityPreviewResponse, 0)
+	r.CommunityPreviews = make([]communityLeaderboardResponse, 0)
 	for _, communityPreview := range communityPreviews {
-		cp.ID = communityPreview.ID
-		cp.Name = communityPreview.Name
-		cp.Members = communityPreview.Members
+		cp.CommunityLeaderboard.ID = communityPreview.CommunityLeaderboard.ID
+		cp.CommunityLeaderboard.Name = communityPreview.CommunityLeaderboard.Name
+		cp.CommunityLeaderboard.Members = communityPreview.CommunityLeaderboard.Members
 
 		r.CommunityPreviews = append(r.CommunityPreviews, cp)
 	}

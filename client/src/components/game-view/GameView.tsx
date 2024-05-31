@@ -33,6 +33,7 @@ const GameView = ({
       <div className="flex flex-row items-center gap-3 rounded-t-md border-b border-gray-6 bg-colors-indigo-2 py-1 pl-4 pr-1 text-gray-11">
         {gameDuration.contains(currentDate) ? (
           <Tag
+            variant="warning"
             text="Live"
             icon={
               <span className="relative mr-1 flex h-1.5 w-1.5">

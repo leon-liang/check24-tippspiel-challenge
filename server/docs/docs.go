@@ -181,44 +181,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.userCommunitiesPreviewResponse"
+                            "$ref": "#/definitions/http.userCommunitiesLeaderboardResponse"
                         }
                     }
                 }
             }
         },
         "/v1/communities/{community_id}": {
-            "get": {
-                "security": [
-                    {
-                        "OAuth2Implicit": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Communities"
-                ],
-                "summary": "Retrieve a community with the given id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Community ID",
-                        "name": "community_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/http.communityResponse"
-                        }
-                    }
-                }
-            },
             "delete": {
                 "security": [
                     {
@@ -284,6 +253,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/communities/{community_id}/leaderboard": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Get the leaderboard for a specified community",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.communityLeaderboardResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/communities/{community_id}/leave": {
             "put": {
                 "security": [
@@ -312,6 +314,137 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/http.communityResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/communities/{community_id}/members": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Get members at the specified positions [from:from+pageSize)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "From",
+                        "name": "from",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "forward",
+                            "backward"
+                        ],
+                        "type": "string",
+                        "description": "Direction",
+                        "name": "direction",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.communityLeaderboardResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/communities/{community_id}/members/{username}": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Get user with specified username",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.communityLeaderboardResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/communities/{community_id}/pinned_users": {
+            "get": {
+                "security": [
+                    {
+                        "OAuth2Implicit": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "Get all pinned users for the specified community",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "community_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.usersResponse"
                         }
                     }
                 }
@@ -658,20 +791,25 @@ const docTemplate = `{
                 }
             }
         },
-        "http.communityPreviewResponse": {
+        "http.communityLeaderboardResponse": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "members": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dtos.Member"
+                "communityLeaderboard": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "members": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.Member"
+                            }
+                        },
+                        "name": {
+                            "type": "string"
+                        }
                     }
-                },
-                "name": {
-                    "type": "string"
                 }
             }
         },
@@ -792,13 +930,13 @@ const docTemplate = `{
                 }
             }
         },
-        "http.userCommunitiesPreviewResponse": {
+        "http.userCommunitiesLeaderboardResponse": {
             "type": "object",
             "properties": {
-                "communityPreviews": {
+                "communityLeaderboard": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/http.communityPreviewResponse"
+                        "$ref": "#/definitions/http.communityLeaderboardResponse"
                     }
                 }
             }
@@ -827,6 +965,17 @@ const docTemplate = `{
                         "username": {
                             "type": "string"
                         }
+                    }
+                }
+            }
+        },
+        "http.usersResponse": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/http.userResponse"
                     }
                 }
             }
