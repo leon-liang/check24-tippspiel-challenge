@@ -8,9 +8,13 @@ Link: [https://www.youtube.com/watch?v=qluAdJPu7o0&ab_channel=LeonLiang](https:/
 
 ## Respository Structure
 This repository is a _mono repository_ combining both client- and serverside services.
-- [client](client) holds the [Next.js](https://nextjs.org/) frontend for end users and administrators
-- [server](server) holds the [Go Echo](https://echo.labstack.com/) backend
-- [docker](docker) holds the Dockerfiles for all third party dependencies
+- [client](client) holds the [Next.js](https://nextjs.org/) frontend for end users and administrators.
+- [server](server) holds the [Go Echo](https://echo.labstack.com/) backend.
+- [docker](docker) holds the Dockerfiles for all third party services:
+  - [Keycloak](https://www.keycloak.org/) as an open source identity and access management solution.
+  - [Postgresql](https://www.postgresql.org/) as an open source object-relational database solution.
+  - [Kafka](https://kafka.apache.org/) as an open-source distributed event streaming platform.
+  - [Redis](https://redis.io/) for managing task queues.
 
 ## Getting started
 ### Run the local development environment
