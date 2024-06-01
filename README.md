@@ -1,7 +1,10 @@
 # Check24 Tippspiel Challenge
 
-## Link to Demo
-[![Check24 Gendev Video Demo](https://img.youtube.com/vi/qluAdJPu7o0/0.jpg)](https://www.youtube.com/watch?v=qluAdJPu7o0&ab_channel=LeonLiang)
+This coding challenge is about a betting game for the soon-to-be happening European Championship 2024, which takes place in Germany beginning at the 14th of June 2024. The goal is to create a simple application that allows you and your friends to bet on the outcome of the games and to display the current standings of the participants.
+
+## Demo
+[![Check24 Gendev Video Demo](https://img.youtube.com/vi/qluAdJPu7o0/0.jpg)](https://www.youtube.com/watch?v=qluAdJPu7o0&ab_channel=LeonLiang)\
+Link: [https://www.youtube.com/watch?v=qluAdJPu7o0&ab_channel=LeonLiang](https://www.youtube.com/watch?v=qluAdJPu7o0&ab_channel=LeonLiang)
 
 ## Respository Structure
 This repository is a _mono repository_ combining both client- and serverside services.
@@ -18,3 +21,18 @@ This repository is a _mono repository_ combining both client- and serverside ser
 1. Run `task up`
 1. The frontend is available at [http://localhost:3000](http://localhost:3000). 
    The backend is available at [http://localhost:8000](http://localhost:8000).
+   The backend documentation is available at [http://localhost:8000/swagger/index.html](http://localhost:8000/swagger/index.html)
+
+Use the following credentials to authenticate Swagger UI:
+
+| OAuth2Implicit |           |
+|----------------|-----------|
+| client_id      | webclient |
+
+Log in to the admin account using the details below:
+
+| Username | Password |
+|----------|----------|
+| admin    | 123      |
+
+
