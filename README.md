@@ -46,6 +46,8 @@ In order to implement real-time updates, I have decided to opt for a hybrid betw
 The websocket connection merely notifies the client that the scores have been updated, upon which the client's cache is invalidated.
 This prompts the client to re fetch the leaderboard standings from the server. 
 
+Additionally, to deal with the [limitations of websockets](https://ably.com/topic/websockets-pros-cons#what-are-the-disadvantages-and-limitations-of-web-sockets), queries are refetched every 4 min as a contingency to ensure that the data is up to date.   
+
 ### Scalability
 The following steps have been taken to ensure the scalability of the system to millions of users: 
 - In order to prevent polling the database for changes, and causing unnecessary load as we scale up the number of our server instances, I have decided to use Apache Kafka as a distributed queue to propagate changes to the scores across all server instances. 
