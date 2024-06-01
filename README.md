@@ -1,4 +1,4 @@
-# Check24 Tippspiel Challenge
+# [Check24 Tippspiel Challenge](https://github.com/check24-scholarships/check24-betting-challenge)
 
 This coding challenge is about a betting game for the soon-to-be happening European Championship 2024, which takes place in Germany beginning at the 14th of June 2024. The goal is to create a simple application that allows you and your friends to bet on the outcome of the games and to display the current standings of the participants.
 
