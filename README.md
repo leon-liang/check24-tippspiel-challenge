@@ -39,4 +39,27 @@ Log in to the admin account using the details below:
 |----------|----------|
 | admin    | 123      |
 
+## Approach
+
+### Real-time updates
+In order to implement real-time updates, I have decided to opt for a hybrid between websockets and polling. 
+The websocket connection merely notifies the client that the scores have been updated, upon which the client's cache is invalidated.
+This prompts the client to re fetch the leaderboard standings from the server. 
+
+### Scalability
+The following steps have been taken to ensure the scalability of the system to millions of users: 
+- In order to prevent polling the database for changes, and causing unnecessary load as we scale up the number of our server instances, I have decided to use Apache Kafka as a distributed queue to propagate changes to the scores across all server instances. 
+These server instances would notify the client over a websocket that the scores have been updated, prompting them to re fetch the updated leaderboard, as shown in the diagram below:
+
+    ![System Architecture](./system-architecture.svg)
+
+- Furthermore, I have bypassed the ORM for queries that could potentially yield a large number of results, opting instead to write raw SQL to take advantage of database-level optimizations.
+- I also make use of workers to process potentially time intensive jobs, which are backed by Redis. For example, to recalculate the scores of all users in the background, the workers divide the total amount of users between themselves and, once completed, notify all server instances over Kafka, prompting the clients to re fetch the leaderboard. 
+The architecture and services are thus already in place to schedule cron jobs and displaying the delta of the current standings, however due to time constraints I was unfortunately not able to get to it.
+- The leaderboard only fetches the users that are being displayed. When paginating, the additional users are fetched from the server and dynamically rendered into the current leaderboard. 
+
+## Future Improvements
+- Due to time constraints, I was unable to write unit tests for server-side services.
+
+
 
