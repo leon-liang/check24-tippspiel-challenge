@@ -1,5 +1,8 @@
 # Check24 Tippspiel Challenge
 
+## Link to Demo
+[![Check24 Gendev Video Demo](https://img.youtube.com/vi/qluAdJPu7o0/0.jpg)](https://www.youtube.com/watch?v=qluAdJPu7o0&ab_channel=LeonLiang)
+
 ## Respository Structure
 This repository is a _mono repository_ combining both client- and serverside services.
 - [client](client) holds the [Next.js](https://nextjs.org/) frontend for end users and administrators
