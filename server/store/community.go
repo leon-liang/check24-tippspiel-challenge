@@ -110,13 +110,17 @@ func (cs *CommunityStore) IsMember(user *model.User, community *model.Community)
 	var isMember bool
 	query := `
 		SELECT EXISTS (
-			SELECT 1
-			FROM community_members, communities
-			WHERE community_id = ? AND user_id = ? OR communities.owner = ?
-		)
+        SELECT 1
+        FROM communities
+        WHERE communities.id = ? AND communities.owner = ?
+        UNION
+        SELECT 1
+        FROM community_members
+        WHERE community_members.community_id = ? AND community_members.user_id = ?
+    )
 	`
 
-	if err := cs.db.Raw(query, community.ID, user.ID, user.ID).Scan(&isMember).Error; err != nil {
+	if err := cs.db.Raw(query, community.ID, user.ID, community.ID, user.ID).Scan(&isMember).Error; err != nil {
 		return false, err
 	}
 
