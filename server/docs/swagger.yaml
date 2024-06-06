@@ -1,11 +1,13 @@
 definitions:
-  dtos.Member:
+  dto.Member:
     properties:
       id:
         type: string
       points:
         type: integer
       position:
+        type: integer
+      prevPosition:
         type: integer
       rank:
         type: integer
@@ -76,7 +78,7 @@ definitions:
             type: string
           members:
             items:
-              $ref: '#/definitions/dtos.Member'
+              $ref: '#/definitions/dto.Member'
             type: array
           name:
             type: string

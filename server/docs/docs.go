@@ -683,7 +683,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dtos.Member": {
+        "dto.Member": {
             "type": "object",
             "properties": {
                 "id": {
@@ -693,6 +693,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "position": {
+                    "type": "integer"
+                },
+                "prevPosition": {
                     "type": "integer"
                 },
                 "rank": {
@@ -803,7 +806,7 @@ const docTemplate = `{
                         "members": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dtos.Member"
+                                "$ref": "#/definitions/dto.Member"
                             }
                         },
                         "name": {

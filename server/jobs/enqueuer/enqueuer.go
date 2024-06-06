@@ -2,10 +2,9 @@ package enqueuer
 
 import (
 	"github.com/gocraft/work"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
-func NewEnqueuer(namespace string, poolSize int) *work.Enqueuer {
-	redisPool := redis.NewRedisPool(poolSize, poolSize)
-	return work.NewEnqueuer(namespace, redisPool)
+func NewEnqueuer(namespace string, rp *redis.Pool) *work.Enqueuer {
+	return work.NewEnqueuer(namespace, rp)
 }

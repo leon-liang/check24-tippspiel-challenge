@@ -2,10 +2,9 @@ package worker
 
 import (
 	"github.com/gocraft/work"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
-func NewWorkerPool(ctx interface{}, namespace string, poolSize int) *work.WorkerPool {
-	redisPool := redis.NewRedisPool(poolSize, poolSize)
+func NewWorkerPool(ctx interface{}, redisPool *redis.Pool, namespace string) *work.WorkerPool {
 	return work.NewWorkerPool(ctx, 10, namespace, redisPool)
 }
