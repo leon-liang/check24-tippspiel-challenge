@@ -6,7 +6,7 @@ import {
   usePinnedUsers,
 } from "@/hooks/api/communities.api";
 import { useEffect, useMemo, useState } from "react";
-import { DtosMember } from "@/api-client/generated";
+import { DtoMember } from "@/api-client/generated";
 import { useSubscribePointsUpdates } from "@/hooks/api/points.api";
 
 export type Member = {
@@ -37,7 +37,7 @@ export const usePaginatedMembers = (
   );
   const { data: pinnedUsersData } = usePinnedUsers(communityId);
 
-  const [members, setMembers] = useState<DtosMember[]>([]);
+  const [members, setMembers] = useState<DtoMember[]>([]);
 
   useEffect(() => {
     if (message?.message.status === "UPDATED") {
