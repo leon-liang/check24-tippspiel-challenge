@@ -3,8 +3,8 @@ package worker
 import (
 	"fmt"
 	"github.com/gocraft/work"
-	"github.com/gomodule/redigo/redis"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/cache"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
 	"log"
 	"math"
@@ -19,7 +19,9 @@ type LeaderboardContext struct {
 	lc *cache.LeaderboardCache
 }
 
-func NewLeaderboardWorkerPool(cs *store.CommunityStore, lc *cache.LeaderboardCache, rp *redis.Pool) *LeaderboardWorkerPool {
+func NewLeaderboardWorkerPool(cs *store.CommunityStore, lc *cache.LeaderboardCache) *LeaderboardWorkerPool {
+	rp := redis.NewRedisPool(5, 5)
+
 	leaderboardContext := LeaderboardContext{}
 	leaderboardWorkerPool := NewWorkerPool(leaderboardContext, rp, "leaderboard")
 

@@ -2,14 +2,15 @@ package enqueuer
 
 import (
 	"github.com/gocraft/work"
-	"github.com/gomodule/redigo/redis"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
 )
 
 type PointsEnqueuer struct {
 	Enqueuer *work.Enqueuer
 }
 
-func NewPointsEnqueuer(rp *redis.Pool) *PointsEnqueuer {
+func NewPointsEnqueuer() *PointsEnqueuer {
+	rp := redis.NewRedisPool(5, 5)
 	pointsEnqueuer := NewEnqueuer("points", rp)
 
 	return &PointsEnqueuer{

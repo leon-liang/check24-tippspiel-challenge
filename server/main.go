@@ -74,14 +74,14 @@ func main() {
 	mw := mq.NewMatchWriter(matchWriter)
 	jw := mq.NewJobWriter(jobWriter)
 	lc := cache.NewLeaderboardCache(rp)
-	pe := enqueuer.NewPointsEnqueuer(rp)
+	pe := enqueuer.NewPointsEnqueuer()
 
 	// Setup Workers
-	sw := worker.NewPointsWorkerPool(us, bs, js, jw, rp)
+	sw := worker.NewPointsWorkerPool(us, bs, js, jw)
 	sw.WorkerPool.Start()
 	defer sw.WorkerPool.Stop()
 
-	lw := worker.NewLeaderboardWorkerPool(cs, lc, rp)
+	lw := worker.NewLeaderboardWorkerPool(cs, lc)
 	lw.WorkerPool.Start()
 	defer lw.WorkerPool.Stop()
 

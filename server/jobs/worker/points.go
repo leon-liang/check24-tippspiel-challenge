@@ -3,8 +3,8 @@ package worker
 import (
 	"fmt"
 	"github.com/gocraft/work"
-	"github.com/gomodule/redigo/redis"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/mq"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
 	"time"
 )
@@ -20,7 +20,9 @@ type PointsContext struct {
 	jw *mq.JobWriter
 }
 
-func NewPointsWorkerPool(us *store.UserStore, bs *store.BetStore, js *store.JobStore, jw *mq.JobWriter, rp *redis.Pool) *PointsWorkerPool {
+func NewPointsWorkerPool(us *store.UserStore, bs *store.BetStore, js *store.JobStore, jw *mq.JobWriter) *PointsWorkerPool {
+	rp := redis.NewRedisPool(5, 5)
+
 	scoreContext := PointsContext{}
 	pointsWorkerPool := NewWorkerPool(scoreContext, rp, "points")
 
