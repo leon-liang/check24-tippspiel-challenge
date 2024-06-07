@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gocraft/work"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/cache"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
 	"log"
 	"math"
@@ -20,10 +19,8 @@ type LeaderboardContext struct {
 }
 
 func NewLeaderboardWorkerPool(cs *store.CommunityStore, lc *cache.LeaderboardCache) *LeaderboardWorkerPool {
-	rp := redis.NewRedisPool(5, 5)
-
 	leaderboardContext := LeaderboardContext{}
-	leaderboardWorkerPool := NewWorkerPool(leaderboardContext, rp, "leaderboard")
+	leaderboardWorkerPool := NewWorkerPool(leaderboardContext, "leaderboard")
 
 	leaderboardWorkerPool.Middleware(func(ctx *LeaderboardContext, job *work.Job, next work.NextMiddlewareFunc) error {
 		ctx.cs = cs

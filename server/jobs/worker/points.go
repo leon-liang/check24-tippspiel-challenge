@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gocraft/work"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/mq"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
 	"time"
 )
@@ -21,10 +20,8 @@ type PointsContext struct {
 }
 
 func NewPointsWorkerPool(us *store.UserStore, bs *store.BetStore, js *store.JobStore, jw *mq.JobWriter) *PointsWorkerPool {
-	rp := redis.NewRedisPool(5, 5)
-
 	scoreContext := PointsContext{}
-	pointsWorkerPool := NewWorkerPool(scoreContext, rp, "points")
+	pointsWorkerPool := NewWorkerPool(scoreContext, "points")
 
 	pointsWorkerPool.Middleware(func(ctx *PointsContext, job *work.Job, next work.NextMiddlewareFunc) error {
 		ctx.us = us
