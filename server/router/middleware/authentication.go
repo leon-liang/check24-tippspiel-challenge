@@ -6,6 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/auth"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/cache"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
 	"slices"
@@ -84,7 +85,7 @@ func ValidatePermissions(requiredPermissions []string) echo.MiddlewareFunc {
 	}
 }
 
-func GetCurrentUser(us *store.UserStore, cs *store.CommunityStore) echo.MiddlewareFunc {
+func GetCurrentUser(us *store.UserStore, cs *store.CommunityStore, lc *cache.LeaderboardCache) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			token := ctx.Request().Header.Get("Authorization")
@@ -156,6 +157,15 @@ func GetCurrentUser(us *store.UserStore, cs *store.CommunityStore) echo.Middlewa
 			if err := cs.Join(&newUser, global); err != nil {
 				fmt.Println(err)
 				return echo.ErrInternalServerError
+			}
+
+			member, err := cs.GetMembersWithUsername(global, newUser.Username)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			if err := lc.Set(member, global); err != nil {
+				fmt.Println(err)
 			}
 
 			ctx.Set("current_user", &newUser)

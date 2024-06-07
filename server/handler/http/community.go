@@ -3,8 +3,9 @@ package http
 import (
 	"cmp"
 	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/dtos"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/dto"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/utils"
 	"net/http"
@@ -46,6 +47,19 @@ func (h *Handler) CreateCommunity(ctx echo.Context) error {
 
 	if err := h.CommunityStore.Create(&c); err != nil {
 		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
+	}
+
+	member := dto.Member{
+		ID:           currentUser.ID,
+		Username:     currentUser.Username,
+		Points:       currentUser.Points,
+		Position:     1,
+		PrevPosition: 1,
+		Rank:         1,
+	}
+
+	if err := h.LeaderboardCache.Set(&member, &c); err != nil {
+		fmt.Println(err)
 	}
 
 	response := newCommunityResponse(&c)
@@ -120,6 +134,15 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 
 	if err := h.CommunityStore.Join(currentUser, community); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	member, err := h.CommunityStore.GetMembersWithUsername(community, currentUser.Username)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if err := h.LeaderboardCache.Set(member, community); err != nil {
+		fmt.Println(err)
 	}
 
 	response := newCommunityResponse(community)
@@ -219,6 +242,18 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 				return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 			}
 
+			for _, member := range members {
+				prevPosition, err := h.LeaderboardCache.Get(member, &community)
+				if err != nil {
+					fmt.Println("Failed to get prevPosition", err)
+				}
+				if prevPosition != nil {
+					member.PrevPosition = *prevPosition
+				} else {
+					member.PrevPosition = member.Position
+				}
+			}
+
 			communityPreview := newCommunityLeaderboardResponse(&community, members)
 			communityPreviews = append(communityPreviews, communityPreview)
 			continue
@@ -243,6 +278,19 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 			}
 
 			members := append(topSix, last...)
+
+			for _, member := range members {
+				prevPosition, err := h.LeaderboardCache.Get(member, &community)
+				if err != nil {
+					fmt.Println("Failed to get prevPosition", err)
+				}
+				if prevPosition != nil {
+					member.PrevPosition = *prevPosition
+				} else {
+					member.PrevPosition = member.Position
+				}
+			}
+
 			communityPreview := newCommunityLeaderboardResponse(&community, members)
 			communityPreviews = append(communityPreviews, communityPreview)
 			continue
@@ -261,6 +309,19 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 			}
 
 			members := append(topThree, lastFour...)
+
+			for _, member := range members {
+				prevPosition, err := h.LeaderboardCache.Get(member, &community)
+				if err != nil {
+					fmt.Println("Failed to get prevPosition", err)
+				}
+				if prevPosition != nil {
+					member.PrevPosition = *prevPosition
+				} else {
+					member.PrevPosition = member.Position
+				}
+			}
+
 			communityPreview := newCommunityLeaderboardResponse(&community, members)
 			communityPreviews = append(communityPreviews, communityPreview)
 			continue
@@ -285,6 +346,18 @@ func (h *Handler) GetUserCommunitiesPreview(ctx echo.Context) error {
 
 		members := append(topThree, adjacentToUser...)
 		members = append(members, last...)
+
+		for _, member := range members {
+			prevPosition, err := h.LeaderboardCache.Get(member, &community)
+			if err != nil {
+				fmt.Println("Failed to get prevPosition", err)
+			}
+			if prevPosition != nil {
+				member.PrevPosition = *prevPosition
+			} else {
+				member.PrevPosition = member.Position
+			}
+		}
 
 		communityPreview := newCommunityLeaderboardResponse(&community, members)
 		communityPreviews = append(communityPreviews, communityPreview)
@@ -332,7 +405,7 @@ func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 	}
 
 	// get all pinned users
-	pinnedMembers := make([]*dtos.Member, 0)
+	pinnedMembers := make([]*dto.Member, 0)
 	pinnedUsers, err := h.UserCommunityStore.GetPinnedUsers(currentUser, community)
 
 	for _, user := range pinnedUsers {
@@ -374,9 +447,21 @@ func (h *Handler) GetCommunityLeaderboard(ctx echo.Context) error {
 	// remove duplicates and sort members
 	members = utils.Unique(members)
 
-	slices.SortFunc(members, func(a, b *dtos.Member) int {
+	slices.SortFunc(members, func(a, b *dto.Member) int {
 		return cmp.Compare(a.Position, b.Position)
 	})
+
+	for _, member := range members {
+		prevPosition, err := h.LeaderboardCache.Get(member, community)
+		if err != nil {
+			fmt.Println("Failed to get prevPosition", err)
+		}
+		if prevPosition != nil {
+			member.PrevPosition = *prevPosition
+		} else {
+			member.PrevPosition = member.Position
+		}
+	}
 
 	response := newCommunityLeaderboardResponse(community, members)
 	return ctx.JSON(http.StatusOK, response)
@@ -446,6 +531,18 @@ func (h *Handler) PaginateCommunityMembers(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
+	for _, member := range members {
+		prevPosition, err := h.LeaderboardCache.Get(member, community)
+		if err != nil {
+			fmt.Println("Failed to get prevPosition", err)
+		}
+		if prevPosition != nil {
+			member.PrevPosition = *prevPosition
+		} else {
+			member.PrevPosition = member.Position
+		}
+	}
+
 	response := newCommunityLeaderboardResponse(community, members)
 	return ctx.JSON(http.StatusOK, response)
 }
@@ -491,9 +588,21 @@ func (h *Handler) GetUserByUsername(ctx echo.Context) error {
 		}
 	}
 
-	members := make([]*dtos.Member, 0)
+	members := make([]*dto.Member, 0)
 	if member.Username != "" {
 		members = append(members, member)
+	}
+
+	for _, member := range members {
+		prevPosition, err := h.LeaderboardCache.Get(member, community)
+		if err != nil {
+			fmt.Println("Failed to get prevPosition", err)
+		}
+		if prevPosition != nil {
+			member.PrevPosition = *prevPosition
+		} else {
+			member.PrevPosition = member.Position
+		}
 	}
 
 	response := newCommunityLeaderboardResponse(community, members)

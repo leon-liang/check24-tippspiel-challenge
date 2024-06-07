@@ -12,7 +12,7 @@ export const useIsPointsOutOfDate = () => {
   return useMemo(() => {
     if (!isLoading) {
       const pointsLastUpdated = DateTime.fromISO(
-        data?.data.job?.completedAt?.slice(0, -1) ?? "",
+        data?.data.job?.completedAt ?? "",
       );
       return (
         matches.filter((match) => match.resultUpdatedAt > pointsLastUpdated)

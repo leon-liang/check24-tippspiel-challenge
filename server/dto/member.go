@@ -1,11 +1,12 @@
-package dtos
+package dto
 
 type Member struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
-	Points   int    `json:"points"`
-	Position int    `json:"position"`
-	Rank     int    `json:"rank"`
+	ID           string `json:"id"`
+	Username     string `json:"username"`
+	Points       int    `json:"points"`
+	Position     int    `json:"position"`
+	PrevPosition int    `json:"prevPosition"`
+	Rank         int    `json:"rank"`
 }
 
 // Implement Comparable

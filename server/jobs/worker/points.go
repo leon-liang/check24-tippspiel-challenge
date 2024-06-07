@@ -21,7 +21,7 @@ type PointsContext struct {
 
 func NewPointsWorkerPool(us *store.UserStore, bs *store.BetStore, js *store.JobStore, jw *mq.JobWriter) *PointsWorkerPool {
 	scoreContext := PointsContext{}
-	pointsWorkerPool := NewWorkerPool(scoreContext, "points", 5)
+	pointsWorkerPool := NewWorkerPool(scoreContext, "points")
 
 	pointsWorkerPool.Middleware(func(ctx *PointsContext, job *work.Job, next work.NextMiddlewareFunc) error {
 		ctx.us = us

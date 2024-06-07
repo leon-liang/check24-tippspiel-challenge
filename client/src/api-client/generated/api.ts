@@ -26,37 +26,43 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
- * @interface DtosMember
+ * @interface DtoMember
  */
-export interface DtosMember {
+export interface DtoMember {
     /**
      * 
      * @type {string}
-     * @memberof DtosMember
+     * @memberof DtoMember
      */
     'id'?: string;
     /**
      * 
      * @type {number}
-     * @memberof DtosMember
+     * @memberof DtoMember
      */
     'points'?: number;
     /**
      * 
      * @type {number}
-     * @memberof DtosMember
+     * @memberof DtoMember
      */
     'position'?: number;
     /**
      * 
      * @type {number}
-     * @memberof DtosMember
+     * @memberof DtoMember
+     */
+    'prevPosition'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DtoMember
      */
     'rank'?: number;
     /**
      * 
      * @type {string}
-     * @memberof DtosMember
+     * @memberof DtoMember
      */
     'username'?: string;
 }
@@ -215,10 +221,10 @@ export interface HttpCommunityLeaderboardResponseCommunityLeaderboard {
     'id'?: string;
     /**
      * 
-     * @type {Array<DtosMember>}
+     * @type {Array<DtoMember>}
      * @memberof HttpCommunityLeaderboardResponseCommunityLeaderboard
      */
-    'members'?: Array<DtosMember>;
+    'members'?: Array<DtoMember>;
     /**
      * 
      * @type {string}

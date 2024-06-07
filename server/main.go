@@ -6,6 +6,7 @@ import (
 	gorillaWs "github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
 	keycloak "github.com/leon-liang/check24-tippspiel-challenge/server/auth"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/cache"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/db"
 	_ "github.com/leon-liang/check24-tippspiel-challenge/server/docs"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/handler/http"
@@ -15,6 +16,7 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/jobs/worker"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/kafka"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/mq"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/router"
 	authMiddleware "github.com/leon-liang/check24-tippspiel-challenge/server/router/middleware"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
@@ -59,6 +61,9 @@ func main() {
 	d := db.New()
 	db.AutoMigrate(d)
 
+	// Setup redis
+	rp := redis.NewRedisPool(5, 5)
+
 	us := store.NewUserStore(d)
 	cs := store.NewCommunityStore(d)
 	ucs := store.NewUserCommunityStore(d)
@@ -68,6 +73,7 @@ func main() {
 	js := store.NewJobStore(d)
 	mw := mq.NewMatchWriter(matchWriter)
 	jw := mq.NewJobWriter(jobWriter)
+	lc := cache.NewLeaderboardCache(rp)
 	pe := enqueuer.NewPointsEnqueuer()
 
 	// Setup Workers
@@ -75,8 +81,12 @@ func main() {
 	sw.WorkerPool.Start()
 	defer sw.WorkerPool.Stop()
 
+	lw := worker.NewLeaderboardWorkerPool(cs, lc)
+	lw.WorkerPool.Start()
+	defer lw.WorkerPool.Stop()
+
 	// Setup Seeder
-	seedsHandler := seeds.NewHandler(*ms, *ts, *cs, *us, *js)
+	seedsHandler := seeds.NewHandler(*ms, *ts, *cs, *us, *js, *lc)
 	seedsHandler.SeedUsers()
 	seedsHandler.SeedTeams()
 	seedsHandler.SeedMatches()
@@ -92,7 +102,7 @@ func main() {
 		}
 	)
 
-	httpHandler := http.NewHandler(*us, *cs, *ucs, *ms, *ts, *bs, *js, *mw, *jw, *pe)
+	httpHandler := http.NewHandler(*us, *cs, *ucs, *ms, *ts, *bs, *js, *mw, *jw, *pe, *lc)
 	wsHandler := websocket.NewHandler(upgrader, *ms, *mw)
 
 	r.GET("", httpHandler.GetRoot)
@@ -104,7 +114,7 @@ func main() {
 
 	keycloakClient := keycloak.New()
 	v1.Use(authMiddleware.ValidateToken(keycloakClient))
-	v1.Use(authMiddleware.GetCurrentUser(us, cs))
+	v1.Use(authMiddleware.GetCurrentUser(us, cs, lc))
 	v1.Use(authMiddleware.ValidatePermissions([]string{}))
 
 	httpHandler.Register(v1)

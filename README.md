@@ -56,9 +56,11 @@ These server instances would notify the client over a websocket that the scores 
     ![System Architecture](./system-architecture.svg)
 
 - Furthermore, I have bypassed the ORM for queries that could potentially yield a large number of results, opting instead to write raw SQL to take advantage of database-level optimizations.
-- I also make use of workers to process potentially time intensive jobs, which are backed by Redis. For example, to recalculate the scores of all users in the background, the workers divide the total amount of users between themselves and, once completed, notify all server instances over Kafka, prompting the clients to re fetch the leaderboard. 
-The architecture and services are thus already in place to schedule cron jobs and displaying the delta of the current standings, however due to time constraints I was unfortunately not able to get to it.
+- I also make use of workers to process potentially time intensive jobs, which are backed by Redis. For example, to recalculate the scores of all users in the background, the workers divide the total amount of users between themselves and, once completed, notify all server instances over Kafka, prompting the clients to re fetch the leaderboard.
 - The leaderboard only fetches the users that are being displayed. When paginating, the additional users are fetched from the server and dynamically rendered into the current leaderboard. 
+
+## Bonus
+![](delta.png) 
 
 ## Future Improvements
 - Due to time constraints, I was unable to write unit tests for server-side services.

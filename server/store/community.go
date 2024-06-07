@@ -2,7 +2,7 @@ package store
 
 import (
 	"errors"
-	"github.com/leon-liang/check24-tippspiel-challenge/server/dtos"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/dto"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"gorm.io/gorm"
 	"sort"
@@ -110,13 +110,17 @@ func (cs *CommunityStore) IsMember(user *model.User, community *model.Community)
 	var isMember bool
 	query := `
 		SELECT EXISTS (
-			SELECT 1
-			FROM community_members, communities
-			WHERE community_id = ? AND user_id = ? OR communities.owner = ?
-		)
+        SELECT 1
+        FROM communities
+        WHERE communities.id = ? AND communities.owner = ?
+        UNION
+        SELECT 1
+        FROM community_members
+        WHERE community_members.community_id = ? AND community_members.user_id = ?
+    )
 	`
 
-	if err := cs.db.Raw(query, community.ID, user.ID, user.ID).Scan(&isMember).Error; err != nil {
+	if err := cs.db.Raw(query, community.ID, user.ID, community.ID, user.ID).Scan(&isMember).Error; err != nil {
 		return false, err
 	}
 
@@ -164,8 +168,8 @@ func (cs *CommunityStore) GetUserCommunities(user *model.User) ([]model.Communit
 	return communities, nil
 }
 
-func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*dtos.Member, error) {
-	var members []*dtos.Member
+func (cs *CommunityStore) GetCommunityMembers(community *model.Community) ([]*dto.Member, error) {
+	var members []*dto.Member
 
 	query := `
 		WITH members AS (
@@ -265,8 +269,8 @@ func (cs *CommunityStore) GetUserPosition(user *model.User, community *model.Com
 	return rank, nil
 }
 
-func (cs *CommunityStore) GetMembersAtPosition(community *model.Community, from int, to int) ([]*dtos.Member, error) {
-	var members []*dtos.Member
+func (cs *CommunityStore) GetMembersAtPosition(community *model.Community, from int, to int) ([]*dto.Member, error) {
+	var members []*dto.Member
 
 	query := `
 		WITH members AS (
@@ -301,8 +305,8 @@ func (cs *CommunityStore) GetMembersAtPosition(community *model.Community, from 
 	return members, nil
 }
 
-func (cs *CommunityStore) GetMembersWithUsername(community *model.Community, username string) (*dtos.Member, error) {
-	var member dtos.Member
+func (cs *CommunityStore) GetMembersWithUsername(community *model.Community, username string) (*dto.Member, error) {
+	var member dto.Member
 
 	query := `
 		WITH members AS (
@@ -334,4 +338,22 @@ func (cs *CommunityStore) GetMembersWithUsername(community *model.Community, use
 	}
 
 	return &member, nil
+}
+
+func (cs *CommunityStore) GetCommunityCount() (int64, error) {
+	var count int64
+	if err := cs.db.Model(&model.Community{}).Count(&count).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 0, nil
+		}
+		return 0, err
+	}
+	return count, nil
+}
+
+func (cs *CommunityStore) GetAll(offset int, limit int) ([]model.Community, error) {
+	var communities []model.Community
+	err := cs.db.Limit(limit).Offset(offset).Find(&communities).Error
+
+	return communities, err
 }

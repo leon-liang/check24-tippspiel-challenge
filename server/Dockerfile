@@ -1,5 +1,9 @@
 FROM golang:alpine3.18 as development
 
+RUN apk add -U tzdata
+ENV TZ=Europe/Paris
+RUN cp /usr/share/zoneinfo/Europe/Paris /etc/localtime
+
 ENV PROJECT_DIR=/app \
     GO111MODULE=on \
     CGO_ENABLED=0

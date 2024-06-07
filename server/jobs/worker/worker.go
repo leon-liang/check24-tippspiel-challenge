@@ -5,7 +5,7 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/redis"
 )
 
-func NewWorkerPool(ctx interface{}, namespace string, poolSize int) *work.WorkerPool {
-	redisPool := redis.NewRedisPool(poolSize, poolSize)
-	return work.NewWorkerPool(ctx, 10, namespace, redisPool)
+func NewWorkerPool(ctx interface{}, namespace string) *work.WorkerPool {
+	rp := redis.NewRedisPool(5, 5)
+	return work.NewWorkerPool(ctx, 10, namespace, rp)
 }

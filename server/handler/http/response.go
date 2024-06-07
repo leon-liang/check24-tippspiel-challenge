@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/leon-liang/check24-tippspiel-challenge/server/dtos"
+	"github.com/leon-liang/check24-tippspiel-challenge/server/dto"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"sort"
 	"time"
@@ -101,26 +101,27 @@ func newCommunitiesResponse(communities []model.Community) *communitiesResponse 
 
 type communityLeaderboardResponse struct {
 	CommunityLeaderboard struct {
-		ID      string        `json:"id"`
-		Name    string        `json:"name"`
-		Members []dtos.Member `json:"members"`
+		ID      string       `json:"id"`
+		Name    string       `json:"name"`
+		Members []dto.Member `json:"members"`
 	} `json:"communityLeaderboard"`
 }
 
-func newCommunityLeaderboardResponse(community *model.Community, members []*dtos.Member) *communityLeaderboardResponse {
+func newCommunityLeaderboardResponse(community *model.Community, members []*dto.Member) *communityLeaderboardResponse {
 	r := new(communityLeaderboardResponse)
-	m := dtos.Member{}
+	m := dto.Member{}
 
 	r.CommunityLeaderboard.ID = community.ID
 	r.CommunityLeaderboard.Name = community.Name
 
-	r.CommunityLeaderboard.Members = make([]dtos.Member, 0)
+	r.CommunityLeaderboard.Members = make([]dto.Member, 0)
 	for _, member := range members {
 		m.ID = member.ID
 		m.Username = member.Username
 		m.Points = member.Points
 		m.Rank = member.Rank
 		m.Position = member.Position
+		m.PrevPosition = member.PrevPosition
 
 		r.CommunityLeaderboard.Members = append(r.CommunityLeaderboard.Members, m)
 	}

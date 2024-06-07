@@ -9,8 +9,7 @@ type PointsEnqueuer struct {
 }
 
 func NewPointsEnqueuer() *PointsEnqueuer {
-	pointsEnqueuer := NewEnqueuer("points", 5)
-
+	pointsEnqueuer := NewEnqueuer("points")
 	return &PointsEnqueuer{
 		Enqueuer: pointsEnqueuer,
 	}

@@ -129,7 +129,7 @@ const Leaderboard = ({
                       }
                       className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3"
                     >
-                      <td className="text-center" colSpan={4}>
+                      <td className="text-center" colSpan={5}>
                         <ChevronDownIcon
                           height={18}
                           width={18}
@@ -150,7 +150,7 @@ const Leaderboard = ({
                       }}
                       className="cursor-pointer border-b border-gray-6 bg-colors-gray-2 hover:bg-colors-gray-3"
                     >
-                      <td className="text-center" colSpan={4}>
+                      <td className="text-center" colSpan={5}>
                         <ChevronUpIcon
                           height={18}
                           width={18}

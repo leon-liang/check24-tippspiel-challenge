@@ -10,9 +10,7 @@ export const useBets = () => {
 
   return useMemo(() => {
     const bets = data?.data.bets?.map((bet) => {
-      const date = DateTime.fromISO(
-        bet.bet?.match?.match?.gameTime?.slice(0, -1) ?? "",
-      );
+      const date = DateTime.fromISO(bet.bet?.match?.match?.gameTime ?? "");
       const currentRound = rounds.find((round) => round.dates.contains(date));
 
       return {
