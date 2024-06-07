@@ -58,6 +58,9 @@ These server instances would notify the client over a websocket that the scores 
 - Furthermore, I have bypassed the ORM for queries that could potentially yield a large number of results, opting instead to write raw SQL to take advantage of database-level optimizations.
 - The leaderboard only fetches the users that are being displayed. When paginating, the additional users are fetched from the server and dynamically rendered into the current leaderboard. 
 
+## Bonus
+![](delta.png) 
+
 ## Future Improvements
 - Due to time constraints, I was unable to write unit tests for server-side services.
 

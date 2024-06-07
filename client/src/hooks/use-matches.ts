@@ -15,10 +15,10 @@ export const useMatches = () => {
     return (
       data?.data.matches?.map((match) => {
         const gameTime = DateTime.fromISO(
-          match.match?.gameTime?.slice(0, -1) ?? "",
+          match.match?.gameTime ?? "",
         ).toLocaleString(DateTime.DATETIME_MED);
         const resultUpdatedAt = DateTime.fromISO(
-          match.match?.resultUpdatedAt?.slice(0, -1) ?? "",
+          match.match?.resultUpdatedAt ?? "",
         );
         return {
           id: match.match?.id ?? "",
