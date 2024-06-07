@@ -49,6 +49,19 @@ func (h *Handler) CreateCommunity(ctx echo.Context) error {
 		return ctx.JSON(http.StatusUnprocessableEntity, utils.NewError(err))
 	}
 
+	member := dto.Member{
+		ID:           currentUser.ID,
+		Username:     currentUser.Username,
+		Points:       currentUser.Points,
+		Position:     1,
+		PrevPosition: 1,
+		Rank:         1,
+	}
+
+	if err := h.LeaderboardCache.Set(&member, &c); err != nil {
+		fmt.Println(err)
+	}
+
 	response := newCommunityResponse(&c)
 	return ctx.JSON(http.StatusOK, &response)
 }
@@ -121,6 +134,15 @@ func (h *Handler) JoinCommunity(ctx echo.Context) error {
 
 	if err := h.CommunityStore.Join(currentUser, community); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, utils.NewError(err))
+	}
+
+	member, err := h.CommunityStore.GetMembersWithUsername(community, currentUser.Username)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if err := h.LeaderboardCache.Set(member, community); err != nil {
+		fmt.Println(err)
 	}
 
 	response := newCommunityResponse(community)
