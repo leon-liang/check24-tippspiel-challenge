@@ -7,6 +7,7 @@ import (
 	"github.com/leon-liang/check24-tippspiel-challenge/server/model"
 	"github.com/leon-liang/check24-tippspiel-challenge/server/store"
 	"log"
+	"math/rand/v2"
 	"strings"
 )
 
@@ -52,6 +53,10 @@ func (h *Handler) Seed() {
 			log.Fatal(err)
 		}
 		u = &user
+
+		if err := h.UserStore.UpdatePoints(&user, rand.IntN(50)); err != nil {
+			log.Fatal(err)
+		}
 
 		if err := h.CommunityStore.Join(&user, globalCommunity); err != nil {
 			log.Fatal(err)
@@ -105,6 +110,10 @@ func (h *Handler) Seed() {
 		}
 
 		if err := h.UserStore.Create(&user); err != nil {
+			continue
+		}
+
+		if err := h.UserStore.UpdatePoints(&user, rand.IntN(50)); err != nil {
 			log.Fatal(err)
 		}
 
