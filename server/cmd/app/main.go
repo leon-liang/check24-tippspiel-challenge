@@ -87,10 +87,10 @@ func main() {
 
 	// Setup Seeder
 	seedsHandler := seeds.NewHandler(*ms, *ts, *cs, *us, *js, *lc)
-	seedsHandler.SeedUsers()
+	seedsHandler.SeedAdmin()
 	seedsHandler.SeedTeams()
 	seedsHandler.SeedMatches()
-	seedsHandler.SeedCommunities()
+	seedsHandler.SeedGlobalCommunity()
 	seedsHandler.SeedJobs()
 
 	// Setup Websocket

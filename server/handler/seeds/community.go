@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func (h *Handler) SeedCommunities() {
+func (h *Handler) SeedGlobalCommunity() {
 	isEmpty, err := h.CommunityStore.IsEmpty()
 
 	if isEmpty && err == nil {

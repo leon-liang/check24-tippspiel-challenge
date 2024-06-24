@@ -26,6 +26,7 @@ This repository is a _mono repository_ combining both client- and serverside ser
 1. The frontend is available at [http://localhost:3000](http://localhost:3000). 
    The backend is available at [http://localhost:8000](http://localhost:8000).
    The backend documentation is available at [http://localhost:8000/swagger/index.html](http://localhost:8000/swagger/index.html)
+1. (Optionally) Run `task seed` to seed the database with sample data
 
 Use the following credentials to authenticate Swagger UI:
 
@@ -38,6 +39,12 @@ Log in to the admin account using the details below:
 | Username | Password |
 |----------|----------|
 | admin    | 123      |
+
+Example account created with `task seed`:
+
+| Username   | Password |
+|------------|----------|
+| leon.liang | 123      |
 
 ## Approach
 

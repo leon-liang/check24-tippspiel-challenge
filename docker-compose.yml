@@ -80,7 +80,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
       target: development
-    entrypoint: CompileDaemon -build="go build -o /build/server" -command="/build/server"
+    entrypoint: CompileDaemon -build="go build -o /build/server /app/cmd/app/main.go" -command="/build/server"
     depends_on:
       db:
         condition: service_healthy

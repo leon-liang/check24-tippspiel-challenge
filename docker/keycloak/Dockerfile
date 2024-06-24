@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:latest as development
+FROM quay.io/keycloak/keycloak:24.0.1 as development
 
 # Enable health and metrics support
 ENV KC_HEALTH_ENABLED=true
@@ -6,7 +6,7 @@ ENV KC_METRICS_ENABLED=true
 
 WORKDIR /opt/keycloak
 
-FROM quay.io/keycloak/keycloak:latest
+FROM quay.io/keycloak/keycloak:24.0.1
 COPY --from=development /opt/keycloak/ /opt/keycloak/
 
 COPY ./server.crt.pem /opt/keycloak/conf/server.crt.pem
