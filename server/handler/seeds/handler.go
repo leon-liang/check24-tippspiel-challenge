@@ -54,10 +54,6 @@ func (h *Handler) Seed() {
 		}
 		u = &user
 
-		if err := h.UserStore.UpdatePoints(&user, rand.IntN(50)); err != nil {
-			log.Fatal(err)
-		}
-
 		if err := h.CommunityStore.Join(&user, globalCommunity); err != nil {
 			log.Fatal(err)
 		}
@@ -67,6 +63,10 @@ func (h *Handler) Seed() {
 			log.Fatal(err)
 		}
 		if err := h.LeaderboardCache.Set(m, globalCommunity); err != nil {
+			log.Fatal(err)
+		}
+
+		if err := h.UserStore.UpdatePoints(&user, rand.IntN(50)); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -113,10 +113,6 @@ func (h *Handler) Seed() {
 			continue
 		}
 
-		if err := h.UserStore.UpdatePoints(&user, rand.IntN(50)); err != nil {
-			log.Fatal(err)
-		}
-
 		if err := h.CommunityStore.Join(&user, globalCommunity); err != nil {
 			log.Fatal(err)
 		}
@@ -139,6 +135,10 @@ func (h *Handler) Seed() {
 			log.Fatal(err)
 		}
 		if err := h.LeaderboardCache.Set(member, &community); err != nil {
+			log.Fatal(err)
+		}
+
+		if err := h.UserStore.UpdatePoints(&user, rand.IntN(50)); err != nil {
 			log.Fatal(err)
 		}
 	}
