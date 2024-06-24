@@ -51,6 +51,11 @@ tasks:
     cmds:
       - docker compose run --rm --entrypoint="npm run lint ." client
 
+  seed:
+    desc: Run seeder
+    cmds:
+      - docker compose run --rm --entrypoint="go run ./cmd/seeds/main.go" server
+
   logs:
     desc: View logs
     cmds:

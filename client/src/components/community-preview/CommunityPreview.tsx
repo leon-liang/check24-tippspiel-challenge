@@ -109,7 +109,7 @@ const CommunityPreview = ({
                   .rows[index + 1].getValue("position") as number) >
                   (row.getValue("position") as number) + 1 ? (
                   <tr className="border-b border-gray-6 bg-colors-gray-2">
-                    <td className="py-1.5 text-center" colSpan={4}>
+                    <td className="py-1.5 text-center" colSpan={5}>
                       <EllipsisHorizontalIcon
                         height={18}
                         width={18}

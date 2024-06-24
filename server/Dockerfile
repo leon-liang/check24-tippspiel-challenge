@@ -14,7 +14,7 @@ RUN mkdir "/build"
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY *.go ./
+COPY ./ ./
 
 RUN go get github.com/githubnemo/CompileDaemon
 RUN go install github.com/githubnemo/CompileDaemon
@@ -33,7 +33,7 @@ RUN go mod download
 
 COPY ./ ./
 
-RUN go build -o /server
+RUN go build -o /server /app/cmd/app/main.go
 
 EXPOSE 8000
 
