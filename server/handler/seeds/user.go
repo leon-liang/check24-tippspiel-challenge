@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func (h *Handler) SeedUsers() {
+func (h *Handler) SeedAdmin() {
 	count, err := h.UserStore.GetUserCount()
 
 	if count <= 0 && err == nil {
