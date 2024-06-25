@@ -30,6 +30,8 @@ FROM node:21-alpine3.18 AS production
 
 COPY --from=build /app/.next ./.next
 COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/.env.local ./.env.local
+COPY --from=build /app/.env.production ./.env.production
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/public ./public
 
