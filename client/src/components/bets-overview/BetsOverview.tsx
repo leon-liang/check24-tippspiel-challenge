@@ -42,7 +42,7 @@ const BetsOverview = ({ bets }: BetOverviewProps) => {
   const currentDate = DateTime.now();
   const dates = [...new Set(bets.map((bet) => bet.date.toISODate() ?? ""))];
 
-  const [selectedTab, setSelectedTab] = useState(dates[0]);
+  const [selectedTab, setSelectedTab] = useState("");
 
   useEffect(() => {
     const matchDates = dates.map((date) => DateTime.fromISO(date));
