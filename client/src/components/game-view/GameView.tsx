@@ -44,7 +44,10 @@ const GameView = ({
           />
         ) : null}
         <div className="p-1 font-mono text-sm">
-          {gameTime.setLocale("en").toLocaleString(DateTime.DATETIME_SHORT)}
+          {gameTime
+            .setZone("UTC")
+            .setLocale("en")
+            .toLocaleString(DateTime.DATETIME_SHORT)}
         </div>
       </div>
       <table className="w-full overflow-clip">
