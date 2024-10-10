@@ -5,7 +5,7 @@ on:
     branches:
       - release
 env:
-  REGISTRY: ghcr.io
+  DOCKER_HUB_NAMESPACE: liangleon
   IMAGE_NAME: ${{ github.repository }}
 jobs:
   build-and-push-image:
@@ -49,18 +49,17 @@ jobs:
           echo KAFKA_PORT=9092 >> .env
           cat .env
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.DOCKER_HUB_NAMESPACE }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker client image
         id: push-client
