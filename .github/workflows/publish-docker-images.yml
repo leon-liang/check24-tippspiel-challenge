@@ -21,6 +21,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Create .env.local file in client
+        run: |
+          cd client
+          touch .env.local
+          echo KEYCLOAK_CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }} >> .env.local
+          echo NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} >> .env.local
+          cat .env.local
+
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
